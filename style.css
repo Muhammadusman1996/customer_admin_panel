@@ -44,3 +44,61 @@ body {
   box-shadow: 0 0 25px #f8d77a88;
   filter: brightness(1.1);
 }
+/* Customer Panel - Royal Purple VIP Theme */
+#memberDashboard,
+.member-dashboard,
+.dashboard {
+  background: linear-gradient(
+    145deg,
+    rgba(35, 16, 76, 0.96),
+    rgba(10, 24, 58, 0.96),
+    rgba(18, 12, 43, 0.96)
+  );
+  border: 1px solid rgba(150, 110, 255, 0.55);
+  border-radius: 22px;
+  box-shadow: 0 0 25px rgba(115, 70, 255, 0.22);
+  color: #f6f3ff;
+}
+
+#memberDashboard h1,
+#memberDashboard h2,
+#memberDashboard h3,
+.member-dashboard h1,
+.member-dashboard h2,
+.member-dashboard h3,
+.dashboard h1,
+.dashboard h2,
+.dashboard h3 {
+  color: #d9c5ff;
+}
+
+#memberDashboard .stat,
+.member-dashboard .stat,
+.dashboard .stat {
+  background: linear-gradient(
+    135deg,
+    rgba(95, 50, 180, 0.24),
+    rgba(25, 65, 125, 0.28)
+  );
+  border-color: rgba(150, 110, 255, 0.4);
+}
+
+#memberDashboard .balance,
+.member-dashboard .balance,
+.dashboard .balance {
+  color: #78f1ed;
+  text-shadow: 0 0 14px rgba(120, 241, 237, 0.3);
+}
+
+#memberDashboard .btn,
+.member-dashboard .btn,
+.dashboard .btn {
+  background: linear-gradient(110deg, #a78bfa, #6366f1, #38bdf8);
+  color: #fff;
+}
+
+#memberDashboard .btn:hover,
+.member-dashboard .btn:hover,
+.dashboard .btn:hover {
+  box-shadow: 0 0 22px rgba(120, 100, 255, 0.5);
+}
