@@ -1,112 +1,112 @@
-const express = require("express");
-const session = require("express-session");
-const bcrypt = require("bcryptjs");
-const path = require("path");
+const express = require('express');
+const session = require('express-session');
+const helmet = require('helmet');
+const bcrypt = require('bcryptjs');
+const Database = require('better-sqlite3');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "ChangeMe123!";
-const SESSION_SECRET = process.env.SESSION_SECRET || "please-change-this-long-random-secret";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD_HASH || !SESSION_SECRET) {
+  console.error('Set ADMIN_EMAIL, ADMIN_PASSWORD_HASH, and SESSION_SECRET in your hosting environment.');
+  process.exit(1);
+}
+
+const db = new Database(process.env.DB_PATH || 'royal-member.sqlite');
+db.pragma('journal_mode = WAL');
+db.exec(`
+CREATE TABLE IF NOT EXISTS customers (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ name TEXT NOT NULL,
+ email TEXT NOT NULL UNIQUE,
+ status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','approved','rejected')),
+ credits INTEGER NOT NULL DEFAULT 0 CHECK(credits >= 0),
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS packages (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ name TEXT NOT NULL,
+ amount INTEGER NOT NULL CHECK(amount > 0),
+ active INTEGER NOT NULL DEFAULT 1,
+ created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(express.json({ limit: '30kb' }));
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(session({
-  name: "vip_panel_sid",
+  name: 'royal_admin_session',
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 1000 * 60 * 60 * 8 }
+  cookie: { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 2 * 60 * 60 * 1000 }
 }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, 'public')));
 
-const users = new Map();
-let nextId = 1;
-const adminHash = bcrypt.hashSync(ADMIN_PASSWORD, 10);
-
-function safeUser(u) {
-  return { id: u.id, name: u.name, username: u.username, status: u.status, credit: u.credit, createdAt: u.createdAt, transactions: u.transactions };
-}
-function requireUser(req, res, next) {
-  if (!req.session.userId || !users.has(req.session.userId)) return res.status(401).json({ error: "براہ کرم پہلے لاگ اِن کریں۔" });
-  next();
-}
 function requireAdmin(req, res, next) {
-  if (req.session.role !== "admin") return res.status(401).json({ error: "صرف ایڈمن رسائی حاصل کر سکتا ہے۔" });
-  next();
+  if (req.session && req.session.isAdmin) return next();
+  return res.status(401).json({ error: 'Please log in as admin.' });
 }
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "admin.html"));
-});
 
-app.post("/api/register", async (req, res) => {
-  const name = String(req.body.name || "").trim();
-  const username = String(req.body.username || "").trim().toLowerCase();
-  const password = String(req.body.password || "");
-  if (name.length < 2 || username.length < 3 || password.length < 8) {
-    return res.status(400).json({ error: "نام، کم از کم 3 حروف کا یوزر نیم، اور کم از کم 8 حرف کا پاس ورڈ درج کریں۔" });
-  }
-  if (!/^[a-z0-9_.-]+$/.test(username)) return res.status(400).json({ error: "یوزر نیم میں صرف انگریزی حروف، نمبر، نقطہ، ڈیش یا انڈر اسکور استعمال کریں۔" });
-  if (username === ADMIN_USERNAME.toLowerCase() || [...users.values()].some(u => u.username === username)) {
-    return res.status(409).json({ error: "یہ یوزر نیم پہلے سے استعمال ہو رہا ہے۔" });
-  }
-  const user = { id: nextId++, name, username, passwordHash: await bcrypt.hash(password, 10), status: "pending", credit: 0, createdAt: new Date().toISOString(), transactions: [] };
-  users.set(user.id, user);
-  res.json({ message: "اکاؤنٹ کی درخواست جمع ہو گئی ہے۔ ایڈمن کی منظوری کے بعد لاگ اِن کریں۔" });
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 
-app.post("/api/login", async (req, res) => {
-  const username = String(req.body.username || "").trim().toLowerCase();
-  const password = String(req.body.password || "");
-  const user = [...users.values()].find(u => u.username === username);
-  if (!user || !(await bcrypt.compare(password, user.passwordHash))) return res.status(401).json({ error: "یوزر نیم یا پاس ورڈ درست نہیں۔" });
-  if (user.status !== "approved") return res.status(403).json({ error: user.status === "pending" ? "آپ کا اکاؤنٹ ایڈمن کی منظوری کا منتظر ہے۔" : "آپ کا اکاؤنٹ غیر فعال ہے۔ ایڈمن سے رابطہ کریں۔" });
+app.get('/api/session', (req, res) => res.json({ authenticated: !!(req.session && req.session.isAdmin) }));
+app.post('/api/login', (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+  if (email !== ADMIN_EMAIL.toLowerCase() || !bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)) {
+    return res.status(401).json({ error: 'Email or password is incorrect.' });
+  }
   req.session.regenerate(err => {
-    if (err) return res.status(500).json({ error: "لاگ اِن نہیں ہو سکا۔ دوبارہ کوشش کریں۔" });
-    req.session.userId = user.id;
-    req.session.role = "user";
-    res.json({ message: "لاگ اِن کامیاب ہے۔", user: safeUser(user) });
+    if (err) return res.status(500).json({ error: 'Could not create secure session.' });
+    req.session.isAdmin = true;
+    res.json({ ok: true });
   });
 });
+app.post('/api/logout', requireAdmin, (req, res) => req.session.destroy(() => res.json({ ok: true })));
 
-app.post("/api/admin/login", async (req, res) => {
-  const username = String(req.body.username || "");
-  const password = String(req.body.password || "");
-  if (username !== ADMIN_USERNAME || !(await bcrypt.compare(password, adminHash))) return res.status(401).json({ error: "ایڈمن لاگ اِن کی تفصیل درست نہیں۔" });
-  req.session.regenerate(err => {
-    if (err) return res.status(500).json({ error: "لاگ اِن نہیں ہو سکا۔" });
-    req.session.role = "admin";
-    res.json({ message: "ایڈمن لاگ اِن کامیاب ہے۔" });
-  });
+app.get('/api/summary', requireAdmin, (req, res) => {
+  const customers = db.prepare('SELECT COUNT(*) AS total FROM customers').get().total;
+  const pending = db.prepare("SELECT COUNT(*) AS total FROM customers WHERE status='pending'").get().total;
+  const approved = db.prepare("SELECT COUNT(*) AS total FROM customers WHERE status='approved'").get().total;
+  const packages = db.prepare('SELECT COUNT(*) AS total FROM packages WHERE active=1').get().total;
+  res.json({ customers, pending, approved, packages });
 });
-app.get("/api/me", requireUser, (req, res) => res.json({ user: safeUser(users.get(req.session.userId)) }));
-app.get("/api/admin/users", requireAdmin, (_, res) => res.json({ users: [...users.values()].map(safeUser) }));
-app.post("/api/admin/users/:id/approve", requireAdmin, (req, res) => {
-  const user = users.get(Number(req.params.id));
-  if (!user) return res.status(404).json({ error: "اکاؤنٹ نہیں ملا۔" });
-  user.status = "approved";
-  res.json({ message: `${user.username} کا اکاؤنٹ منظور ہو گیا۔` });
+app.get('/api/customers', requireAdmin, (req, res) => {
+  res.json(db.prepare('SELECT id,name,email,status,credits,created_at FROM customers ORDER BY id DESC LIMIT 500').all());
 });
-app.post("/api/admin/users/:id/disable", requireAdmin, (req, res) => {
-  const user = users.get(Number(req.params.id));
-  if (!user) return res.status(404).json({ error: "اکاؤنٹ نہیں ملا۔" });
-  user.status = "disabled";
-  res.json({ message: "اکاؤنٹ غیر فعال کر دیا گیا۔" });
+app.post('/api/customers/:id/status', requireAdmin, (req, res) => {
+  const status = String(req.body.status || '');
+  if (!['approved','rejected','pending'].includes(status)) return res.status(400).json({ error: 'Invalid status.' });
+  const result = db.prepare('UPDATE customers SET status=? WHERE id=?').run(status, Number(req.params.id));
+  if (!result.changes) return res.status(404).json({ error: 'Customer not found.' });
+  res.json({ ok: true });
 });
-app.post("/api/admin/users/:id/credit", requireAdmin, (req, res) => {
-  const user = users.get(Number(req.params.id));
+app.post('/api/customers/:id/credits', requireAdmin, (req, res) => {
   const amount = Number(req.body.amount);
-  const note = String(req.body.note || "ایڈمن ایڈجسٹمنٹ").trim().slice(0, 120);
-  if (!user) return res.status(404).json({ error: "اکاؤنٹ نہیں ملا۔" });
-  if (!Number.isFinite(amount) || amount === 0 || Math.abs(amount) > 10000000) return res.status(400).json({ error: "درست رقم درج کریں۔" });
-  if (user.credit + amount < 0) return res.status(400).json({ error: "بیلنس صفر سے کم نہیں ہو سکتا۔" });
-  user.credit = Math.round((user.credit + amount) * 100) / 100;
-  user.transactions.unshift({ amount, note, at: new Date().toISOString() });
-  res.json({ message: `بیلنس اپ ڈیٹ ہو گیا۔ نیا بیلنس: ${user.credit}` });
+  if (!Number.isSafeInteger(amount) || amount < 0 || amount > 100000000) return res.status(400).json({ error: 'Enter a valid non-negative whole number.' });
+  const result = db.prepare('UPDATE customers SET credits=? WHERE id=?').run(amount, Number(req.params.id));
+  if (!result.changes) return res.status(404).json({ error: 'Customer not found.' });
+  res.json({ ok: true });
 });
-app.post("/api/logout", (req, res) => req.session.destroy(() => res.json({ message: "لاگ آؤٹ ہو گیا۔" })));
-app.use((err, req, res, next) => { console.error(err); res.status(500).json({ error: "سرور میں مسئلہ پیش آیا۔" }); });
-app.listen(PORT, () => console.log(`VIP Panel running on port ${PORT}`));
+app.get('/api/packages', requireAdmin, (req, res) => res.json(db.prepare('SELECT id,name,amount,active FROM packages ORDER BY id DESC').all()));
+app.post('/api/packages', requireAdmin, (req, res) => {
+  const name = String(req.body.name || '').trim().slice(0, 60);
+  const amount = Number(req.body.amount);
+  if (!name || !Number.isSafeInteger(amount) || amount < 1 || amount > 100000000) return res.status(400).json({ error: 'Enter a package name and valid amount.' });
+  const info = db.prepare('INSERT INTO packages(name,amount) VALUES(?,?)').run(name, amount);
+  res.json({ ok: true, id: info.lastInsertRowid });
+});
+app.post('/api/packages/:id/toggle', requireAdmin, (req, res) => {
+  const result = db.prepare('UPDATE packages SET active=CASE active WHEN 1 THEN 0 ELSE 1 END WHERE id=?').run(Number(req.params.id));
+  if (!result.changes) return res.status(404).json({ error: 'Package not found.' });
+  res.json({ ok: true });
+});
+
+app.listen(PORT, () => console.log(`Royal Member admin listening on port ${PORT}`));
