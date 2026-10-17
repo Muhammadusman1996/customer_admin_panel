@@ -35,8 +35,12 @@ function requireAdmin(req, res, next) {
   if (req.session.role !== "admin") return res.status(401).json({ error: "صرف ایڈمن رسائی حاصل کر سکتا ہے۔" });
   next();
 }
-app.get("/", (_, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
-app.get("/admin", (_, res) => res.sendFile(path.join(__dirname, "public", "admin.html")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin.html"));
+});
 
 app.post("/api/register", async (req, res) => {
   const name = String(req.body.name || "").trim();
