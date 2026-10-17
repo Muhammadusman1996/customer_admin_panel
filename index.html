@@ -1,33 +1,584 @@
-<!doctype html>
-<html lang="ur"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VIP Member Portal</title><link rel="stylesheet" href="/style.css"></head>
-<body><main class="wrap">
-  <header class="brand"><div class="logo">✦</div><div><h1>ROYAL<span style="color:var(--gold)"> • </span>MEMBER</h1><p>VIP MEMBER PORTAL</p></div></header>
-  <section id="authView" class="hero">
-    <div class="intro"><div class="eyebrow">EXCLUSIVE • SECURE • PREMIUM</div><h2>Your VIP<br>journey starts here.</h2><p>ایک خوبصورت، محفوظ اور آسان ممبر پورٹل۔ اپنا اکاؤنٹ بنائیں، منظوری کی درخواست بھیجیں اور منظوری کے بعد اپنا کریڈٹ اور اکاؤنٹ کی تفصیلات دیکھیں۔</p><div class="chips"><span class="chip">✧ Premium Design</span><span class="chip">◈ Secure Login</span><span class="chip">✦ Member Dashboard</span></div></div>
-    <section class="card"><h3 id="formTitle">Welcome back</h3><p class="sub" id="formSub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>
-      <div class="tabs"><button class="tab active" id="loginTab" type="button">Login</button><button class="tab" id="registerTab" type="button">Create account</button></div>
-      <form id="loginForm"><label class="field"><span>Username</span><input name="username" autocomplete="username" required minlength="3" placeholder="اپنا یوزر نیم لکھیں"></label><label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required placeholder="پاس ورڈ"></label><button class="btn">Secure Login　↗</button></form>
-      <form id="registerForm" class="hidden"><label class="field"><span>Full name</span><input name="name" required minlength="2" placeholder="آپ کا پورا نام"></label><label class="field"><span>Username</span><input name="username" required minlength="3" pattern="[A-Za-z0-9_.-]+" placeholder="مثلاً maan_user"></label><label class="field"><span>Password (8+ characters)</span><input name="password" type="password" required minlength="8" placeholder="مضبوط پاس ورڈ بنائیں"></label><button class="btn">Create Account　✦</button></form>
-      <div id="msg" class="message"></div><p class="foot">Your account requires admin approval before member login.</p>
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal VIP Member Portal</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --gold: #ffbd59;
+  --bg: #080b19;
+  --panel: #11182d;
+  --text: #f5f6ff;
+  --muted: #9daac7;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top, #30204f 0%, transparent 55%),
+    linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 430px;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.logo {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  border-radius: 20px;
+  font-size: 36px;
+  color: #171025;
+  background: linear-gradient(135deg, #ffe4a1, #ff9b3d);
+  box-shadow: 0 0 30px #ffb54c44;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 27px;
+  letter-spacing: 2px;
+}
+
+.brand p {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+.card {
+  padding: 30px 24px;
+  border: 1px solid #ffffff18;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #18223b, #101426);
+  box-shadow: 0 20px 60px #0008;
+}
+
+.eyebrow {
+  text-align: center;
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 27px;
+  margin: 0 0 8px;
+}
+
+.sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 26px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.field span {
+  display: block;
+  margin-bottom: 9px;
+  color: #dce4ff;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.field input {
+  display: block;
+  width: 100%;
+  height: 51px;
+  padding: 0 15px;
+  border-radius: 12px;
+  outline: none;
+  border: 1px solid #ffffff20;
+  background: #090f20;
+  color: white;
+  font-size: 15px;
+}
+
+.field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px #ffbd5918;
+}
+
+.field input::placeholder {
+  color: #7785a5;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  min-height: 51px;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  color: #21152b;
+  background: linear-gradient(110deg, #ff9b43, #ffe18b);
+  box-shadow: 0 7px 22px #ffad4930;
+}
+
+.btn:active {
+  transform: scale(.99);
+}
+
+.btn.secondary {
+  color: white;
+  background: #26334e;
+  border: 1px solid #ffffff20;
+  box-shadow: none;
+}
+
+.switch {
+  margin-top: 18px;
+  padding: 16px 12px;
+  width: 100%;
+  border-radius: 12px;
+  color: #e8edff;
+  background: #ffffff08;
+  border: 1px solid #ffffff1c;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.switch strong {
+  color: var(--gold);
+}
+
+.foot {
+  margin-top: 22px;
+  text-align: center;
+  color: #8290af;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.message {
+  display: none;
+  padding: 12px;
+  margin-top: 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.message.show {
+  display: block;
+}
+
+.message.error {
+  color: #ffb2b2;
+  background: #7f222233;
+}
+
+.message.success {
+  color: #a9f6cb;
+  background: #17633b33;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.topbar h2 {
+  text-align: left;
+}
+
+.stats {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  padding: 18px;
+  border-radius: 14px;
+  background: #ffffff08;
+  border: 1px solid #ffffff15;
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 9px;
+}
+
+.stat strong {
+  font-size: 22px;
+  color: var(--gold);
+}
+
+.txn {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid #ffffff15;
+}
+
+.txn small {
+  display: block;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+a {
+  color: var(--gold);
+}
+
+@media (max-width: 380px) {
+  .card {
+    padding: 24px 18px;
+  }
+
+  .brand h1 {
+    font-size: 23px;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="wrap">
+
+  <header class="brand">
+    <div class="logo">✦</div>
+    <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
+    <p>VIP MEMBER PORTAL</p>
+  </header>
+
+  <section id="authView" class="card">
+
+    <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
+
+    <!-- LOGIN: default screen -->
+    <section id="loginView">
+      <h2>Login Karein</h2>
+      <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
+
+      <form id="loginForm">
+        <label class="field">
+          <span>USERNAME</span>
+          <input
+            name="username"
+            autocomplete="username"
+            minlength="3"
+            required
+            placeholder="اپنا یوزر نیم لکھیں">
+        </label>
+
+        <label class="field">
+          <span>PASSWORD</span>
+          <input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="اپنا پاس ورڈ لکھیں">
+        </label>
+
+        <button class="btn" type="submit">Secure Login　↗</button>
+      </form>
+
+      <button class="switch" id="openRegister" type="button">
+        ♙　نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
+      </button>
     </section>
+
+    <!-- REGISTRATION: hidden until clicked -->
+    <section id="registerView" class="hidden">
+      <h2>Create Account</h2>
+      <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہے۔</p>
+
+      <form id="registerForm">
+        <label class="field">
+          <span>FULL NAME</span>
+          <input
+            name="name"
+            minlength="2"
+            required
+            autocomplete="name"
+            placeholder="اپنا پورا نام لکھیں">
+        </label>
+
+        <label class="field">
+          <span>USERNAME</span>
+          <input
+            name="username"
+            minlength="3"
+            pattern="[A-Za-z0-9_.-]+"
+            required
+            autocomplete="username"
+            placeholder="مثلاً maan_user">
+        </label>
+
+        <label class="field">
+          <span>PASSWORD (8+ CHARACTERS)</span>
+          <input
+            name="password"
+            type="password"
+            minlength="8"
+            required
+            autocomplete="new-password"
+            placeholder="مضبوط پاس ورڈ بنائیں">
+        </label>
+
+        <button class="btn" type="submit">Create Account　✦</button>
+      </form>
+
+      <button class="switch" id="backToLogin" type="button">
+        ← واپس <strong>Login</strong> پر جائیں
+      </button>
+    </section>
+
+    <div id="msg" class="message" role="status"></div>
+
+    <p class="foot">
+      🔒 Secure Member Access<br>
+      Account approval required
+    </p>
   </section>
+
+  <!-- MEMBER DASHBOARD -->
   <section id="dashboard" class="hidden">
-    <div class="topbar"><div><h2>Member Dashboard</h2><p id="welcome"></p></div><button class="btn secondary" id="logout">Log out ↗</button></div>
-    <div class="stats"><div class="stat"><span>AVAILABLE CREDIT</span><strong id="balance">0.00</strong></div><div class="stat"><span>ACCOUNT STATUS</span><strong style="font-size:18px" id="memberStatus">Approved</strong></div><div class="stat"><span>MEMBER ID</span><strong id="memberId">—</strong></div></div>
-    <div class="card"><h3>Credit history</h3><p class="sub">آپ کے اکاؤنٹ میں ایڈمن کی جانب سے کی گئی کریڈٹ تبدیلیاں۔</p><div id="transactions"></div></div>
-    <div class="foot">VIP Member Portal • Demo starter project</div>
+    <div class="card">
+      <div class="topbar">
+        <div>
+          <h2>Member Dashboard</h2>
+          <p id="welcome" class="sub"></p>
+        </div>
+        <button class="btn secondary" id="logout" type="button">
+          Log out
+        </button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span>AVAILABLE CREDIT</span>
+          <strong id="balance">0.00</strong>
+        </div>
+
+        <div class="stat">
+          <span>ACCOUNT STATUS</span>
+          <strong id="memberStatus">Approved</strong>
+        </div>
+
+        <div class="stat">
+          <span>MEMBER ID</span>
+          <strong id="memberId">—</strong>
+        </div>
+      </div>
+
+      <h3>Credit History</h3>
+      <p class="sub">آپ کے اکاؤنٹ کی کریڈٹ تفصیلات۔</p>
+      <div id="transactions"></div>
+    </div>
   </section>
-  <footer class="foot"><a href="/admin" style="color:#b9c2df;text-decoration:none">Administrator access</a>　•　Please use responsibly</footer>
+
+  <footer class="foot">
+    ROYAL MEMBER PORTAL • VIP ACCESS
+    <br>
+    <a href="/admin">Administrator Access</a>
+  </footer>
+
 </main>
+
 <script>
-const $=s=>document.querySelector(s);let mode='login';
-function showMsg(text,type='success'){const el=$('#msg');el.textContent=text;el.className='message show '+type}
-function setMode(m){mode=m;$('#loginForm').classList.toggle('hidden',m!=='login');$('#registerForm').classList.toggle('hidden',m!=='register');$('#loginTab').classList.toggle('active',m==='login');$('#registerTab').classList.toggle('active',m==='register');$('#formTitle').textContent=m==='login'?'Welcome back':'Join the VIP club';$('#formSub').textContent=m==='login'?'اپنے اکاؤنٹ میں لاگ اِن کریں۔':'نیا اکاؤنٹ بنائیں؛ ایڈمن منظوری ضروری ہے۔';$('#msg').className='message'}
-$('#loginTab').onclick=()=>setMode('login');$('#registerTab').onclick=()=>setMode('register');
-async function api(url,data){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const j=await r.json();if(!r.ok)throw Error(j.error||'درخواست مکمل نہیں ہوئی۔');return j}
-$('#loginForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api('/api/login',Object.fromEntries(f));await loadMe()}catch(err){showMsg(err.message,'error')}};
-$('#registerForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{const r=await api('/api/register',Object.fromEntries(f));showMsg(r.message);e.target.reset();setMode('login')}catch(err){showMsg(err.message,'error')}};
-async function loadMe(){const r=await fetch('/api/me');if(!r.ok)return;const {user:u}=await r.json();$('#authView').classList.add('hidden');$('#dashboard').classList.remove('hidden');$('#welcome').textContent='Welcome, '+u.name;$('#balance').textContent=Number(u.credit).toFixed(2);$('#memberStatus').textContent=u.status;$('#memberId').textContent='VIP-'+String(u.id).padStart(4,'0');$('#transactions').innerHTML=u.transactions.length?u.transactions.map(t=>`<div class="txn"><div>${escapeHtml(t.note)}<small>${new Date(t.at).toLocaleString()}</small></div><strong>${t.amount>0?'+':''}${Number(t.amount).toFixed(2)}</strong></div>`).join(''):'<p class="sub">ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔</p>'}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-$('#logout').onclick=async()=>{await fetch('/api/logout',{method:'POST'});location.reload()};loadMe();
-</script></body></html>
+const $ = selector => document.querySelector(selector);
+
+function showMsg(text, type = 'success') {
+  const el = $('#msg');
+  el.textContent = text;
+  el.className = 'message show ' + type;
+}
+
+function clearMsg() {
+  $('#msg').className = 'message';
+  $('#msg').textContent = '';
+}
+
+function setMode(mode) {
+  const registering = mode === 'register';
+
+  $('#loginView').classList.toggle('hidden', registering);
+  $('#registerView').classList.toggle('hidden', !registering);
+
+  clearMsg();
+}
+
+$('#openRegister').addEventListener('click', () => {
+  setMode('register');
+});
+
+$('#backToLogin').addEventListener('click', () => {
+  setMode('login');
+});
+
+async function api(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || 'درخواست مکمل نہیں ہوئی۔');
+  }
+
+  return result;
+}
+
+// LOGIN
+$('#loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
+
+  try {
+    await api('/api/login', data);
+    await loadMe();
+  } catch (error) {
+    showMsg(error.message, 'error');
+  }
+});
+
+// CREATE ACCOUNT
+$('#registerForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
+
+  try {
+    const result = await api('/api/register', data);
+
+    event.target.reset();
+    setMode('login');
+    showMsg(
+      result.message ||
+      'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
+    );
+  } catch (error) {
+    showMsg(error.message, 'error');
+  }
+});
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+// LOAD MEMBER DASHBOARD
+async function loadMe() {
+  try {
+    const response = await fetch('/api/me');
+
+    if (!response.ok) return;
+
+    const result = await response.json();
+    const user = result.user;
+
+    if (!user) return;
+
+    $('#authView').classList.add('hidden');
+    $('#dashboard').classList.remove('hidden');
+
+    $('#welcome').textContent = 'Welcome, ' + user.name;
+    $('#balance').textContent = Number(user.credit || 0).toFixed(2);
+    $('#memberStatus').textContent = user.status || 'Approved';
+    $('#memberId').textContent =
+      'VIP-' + String(user.id).padStart(4, '0');
+
+    const transactions = user.transactions || [];
+
+    $('#transactions').innerHTML = transactions.length
+      ? transactions.map(transaction => `
+          <div class="txn">
+            <div>
+              ${escapeHtml(transaction.note || '')}
+              <small>
+                ${escapeHtml(
+                  transaction.at
+                    ? new Date(transaction.at).toLocaleString()
+                    : ''
+                )}
+              </small>
+            </div>
+            <strong>
+              ${Number(transaction.amount) > 0 ? '+' : ''}
+              ${Number(transaction.amount || 0).toFixed(2)}
+            </strong>
+          </div>
+        `).join('')
+      : '<p class="sub">ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔</p>';
+
+  } catch (error) {
+    console.error('Could not load member dashboard.');
+  }
+}
+
+// LOGOUT
+$('#logout').addEventListener('click', async () => {
+  try {
+    await fetch('/api/logout', { method: 'POST' });
+  } finally {
+    location.reload();
+  }
+});
+
+// Initial page
+loadMe();
+</script>
+</body>
+</html>
