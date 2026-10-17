@@ -56,9 +56,8 @@ function requireAdmin(req, res, next) {
   return res.status(401).json({ error: 'Please log in as admin.' });
 }
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
-
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
+app.get("/admin", (req, res) => res.sendFile(path.join(__dirname, "admin.html")));
 app.get('/api/session', (req, res) => res.json({ authenticated: !!(req.session && req.session.isAdmin) }));
 app.post('/api/login', (req, res) => {
   const email = String(req.body.email || '').trim().toLowerCase();
