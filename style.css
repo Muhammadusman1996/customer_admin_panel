@@ -3,53 +3,44 @@
 *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,'Noto Nastaliq Urdu',sans-serif;background:radial-gradient(ellipse at 12% 8%,#30245e 0,transparent 38%),radial-gradient(ellipse at 90% 85%,#123b52 0,transparent 34%),linear-gradient(135deg,#080b19,#10142a 55%,#080b19);background-attachment:fixed}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(2px 2px at 15% 22%,#fff9 50%,transparent 100%),radial-gradient(1px 1px at 74% 17%,#f8d77a99 50%,transparent 100%),radial-gradient(2px 2px at 82% 66%,#78f1ed88 50%,transparent 100%),radial-gradient(1px 1px at 31% 81%,#fff8 50%,transparent 100%);opacity:.65}
 .wrap{width:min(1100px,92vw);margin:auto;padding:30px 0 55px;position:relative}.brand{display:flex;align-items:center;gap:13px;margin-bottom:28px}.logo{width:49px;height:49px;border-radius:16px;display:grid;place-items:center;font-size:24px;color:#161127;background:linear-gradient(135deg,#fff2b7,#f6bd4f 55%,#e98c2f);box-shadow:0 0 26px #f5b83f44}.brand h1{font-size:19px;letter-spacing:1.8px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:25px;align-items:stretch}.intro{padding:35px 12px 20px 0}.eyebrow{color:var(--gold);font-size:12px;letter-spacing:3px;font-weight:800}.intro h2{font-size:clamp(31px,5vw,52px);line-height:1.12;margin:16px 0;background:linear-gradient(100deg,#fff,#f8d77a 48%,#78f1ed);-webkit-background-clip:text;background-clip:text;color:transparent}.intro p{color:var(--muted);line-height:1.9;max-width:480px}.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}.chip{border:1px solid var(--line);background:#ffffff08;border-radius:999px;padding:8px 12px;color:#f6e8bd;font-size:12px}.card{background:linear-gradient(145deg,rgba(27,33,64,.94),rgba(13,18,37,.94));border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 18px 70px #0005,0 0 28px #d6a83b0b;backdrop-filter:blur(16px)}.card h3{margin:0 0 7px;font-size:23px}.sub{color:var(--muted);font-size:13px;margin:0 0 22px;line-height:1.8}.tabs{display:flex;padding:5px;background:#080b19;border-radius:13px;margin-bottom:21px}.tab{flex:1;border:0;border-radius:10px;padding:11px;color:var(--muted);background:transparent;font-weight:700;cursor:pointer}.tab.active{color:#20172a;background:linear-gradient(100deg,#ffe9a1,#f4b54b);box-shadow:0 4px 20px #f5b83f25}.field{display:block;margin:14px 0}.field span{display:block;color:#dbe1f7;font-size:12px;margin-bottom:8px}.field input,.field select,.field textarea{width:100%;border:1px solid #ffffff1b;background:#0b1024;color:white;padding:13px 14px;border-radius:12px;outline:none;font:inherit;font-size:14px}.field input:focus{border-color:#f8d77a99;box-shadow:0 0 0 3px #f8d77a14}.btn{border:0;width:100%;border-radius:12px;padding:14px 18px;background:linear-gradient(105deg,#ffe9a1,#f5bd51 55%,#e99b37);color:#21182a;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 8px 24px #e9a23b22;transition:transform .2s,filter .2s}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}.btn.secondary{width:auto;background:#ffffff10;color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.small{width:auto;padding:9px 12px;font-size:12px}.message{display:none;margin:13px 0 0;border-radius:12px;padding:12px;font-size:13px;line-height:1.7}.message.show{display:block}.message.error{background:#ff71841a;border:1px solid #ff718455;color:#ffb6c3}.message.success{background:#80f0bf14;border:1px solid #80f0bf44;color:#a8f6d0}.hidden{display:none!important}.foot{text-align:center;color:#8992b4;font-size:11px;margin-top:24px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:24px}.topbar h2{margin:0;font-size:25px}.topbar p{color:var(--muted);margin:5px 0 0;font-size:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.stat{padding:18px;border:1px solid var(--line);border-radius:18px;background:#ffffff08}.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:26px;margin-top:9px;color:var(--gold)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:13px 10px;border-bottom:1px solid #ffffff12;font-size:12px}th{color:var(--gold);font-weight:700}td{color:#e5e9fb}.status{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;background:#ffffff10}.status.pending{color:#ffd789}.status.approved{color:#80f0bf}.status.disabled{color:#ff9eb1}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions .btn{margin:0}.creditbox{display:flex;gap:8px;min-width:180px}.creditbox input{width:85px;background:#0b1024;border:1px solid #ffffff20;border-radius:9px;color:white;padding:8px}.dashgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.balance{font-size:38px;font-weight:800;color:var(--gold);margin:14px 0}.txn{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #ffffff12;padding:12px 0;font-size:12px}.txn small{display:block;color:var(--muted);margin-top:5px}.txn strong{color:var(--good)}@media(max-width:760px){.hero{grid-template-columns:1fr}.intro{padding:10px 0}.intro h2{font-size:37px}.card{padding:20px}.stats{grid-template-columns:1fr}.dashgrid{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.wrap{padding-top:20px}}
-/* VIP Animated Background */
+/* VIP Premium Animated Background */
 body {
   background: linear-gradient(
     -45deg,
     #080b19,
-    #21113d,
+    #32145b,
     #063b49,
-    #38220d,
+    #51204b,
+    #173c65,
     #080b19
   );
   background-size: 400% 400%;
-  animation: vipBackground 18s ease infinite;
+  animation: vipBackground 14s ease infinite;
+  background-attachment: fixed;
 }
 
 @keyframes vipBackground {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* Gold glowing VIP cards */
 .card {
-  box-shadow:
-    0 18px 70px #0008,
-    0 0 25px #f8d77a20;
-  transition: box-shadow 0.4s ease;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
 
 .card:hover {
-  box-shadow:
-    0 18px 70px #0008,
-    0 0 32px #f8d77a55;
+  box-shadow: 0 18px 70px #0008, 0 0 35px #78f1ed66;
+  transform: translateY(-2px);
 }
 
-/* Shining VIP buttons */
 .btn {
-  background-size: 200% auto;
-  transition: all 0.35s ease;
+  background-size: 250% auto;
+  transition: all 0.4s ease;
 }
 
 .btn:hover {
   background-position: right center;
-  box-shadow: 0 0 25px #f8d77a66;
+  box-shadow: 0 0 25px #f8d77a88;
+  filter: brightness(1.1);
 }
