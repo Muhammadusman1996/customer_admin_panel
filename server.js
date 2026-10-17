@@ -7,8 +7,11 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+const ADMIN_EMAIL = "ms6033291@gmail.com";
+const ADMIN_NAME = "Royal Admin";
+const ADMIN_CONTACT = "03021394509";
+const ADMIN_CONTACT_2 = "03060001167";
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;const ADMIN_PASSWORD_HASH = $2a$10$9NsG5FweXTTzKSqS0vsyFOsH5sFeBO71oiyUsInsiGE2.t/JDd5gi
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
 if (!ADMIN_EMAIL || !ADMIN_PASSWORD_HASH || !SESSION_SECRET) {
