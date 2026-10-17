@@ -102,3 +102,155 @@ body {
 .dashboard .btn:hover {
   box-shadow: 0 0 22px rgba(120, 100, 255, 0.5);
 }
+/* VIP DARK BLUE BLACK RED BACKGROUND */
+:root {
+  --bg: #03050c;
+  --panel: rgba(8, 14, 32, 0.96);
+  --gold: #4da3ff;
+  --gold2: #ff234d;
+  --cyan: #55dfff;
+  --muted: #a8b9d8;
+  --line: rgba(65, 140, 255, 0.35);
+  --text: #f4f7ff;
+}
+
+html {
+  background: #03050c !important;
+}
+
+body {
+  background: linear-gradient(
+    -45deg,
+    #020307,
+    #06122c,
+    #080808,
+    #101d49,
+    #26000b,
+    #03050c,
+    #073454
+  ) !important;
+  background-size: 500% 500% !important;
+  background-attachment: fixed !important;
+  animation: darkBlueBlackRed 16s ease infinite !important;
+}
+
+@keyframes darkBlueBlackRed {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 100%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+body::before {
+  background:
+    radial-gradient(ellipse at 10% 15%, #126bff30, transparent 40%),
+    radial-gradient(ellipse at 90% 75%, #ff003c22, transparent 38%),
+    radial-gradient(ellipse at 50% 50%, #00000020, transparent 70%) !important;
+}
+
+.card {
+  background: linear-gradient(
+    145deg,
+    rgba(9, 22, 48, .97),
+    rgba(5, 7, 16, .98),
+    rgba(32, 5, 17, .95)
+  ) !important;
+  border: 1px solid rgba(65, 140, 255, .35) !important;
+  box-shadow: 0 18px 70px #000a, 0 0 25px #126bff20 !important;
+}
+
+.card:hover {
+  box-shadow: 0 18px 70px #000c, 0 0 30px #126bff55 !important;
+  transform: translateY(-2px);
+}
+
+.btn {
+  background: linear-gradient(
+    110deg,
+    #126bff,
+    #0645a8 55%,
+    #a9002b
+  ) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 18px #126bff30 !important;
+}
+
+.btn:hover {
+  box-shadow: 0 0 28px #126bff70 !important;
+  filter: brightness(1.15);
+}
+
+.tab.active {
+  background: linear-gradient(100deg, #126bff, #a9002b) !important;
+  color: white !important;
+}
+
+.field input,
+.field select,
+.field textarea,
+.creditbox input {
+  background: #050a16 !important;
+  color: white !important;
+  border-color: #246bff55 !important;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #55dfff !important;
+  box-shadow: 0 0 0 3px #126bff25 !important;
+}
+
+.stat {
+  background: rgba(5, 12, 29, .9) !important;
+  border-color: #246bff55 !important;
+}
+
+.stat strong,
+th {
+  color: #55dfff !important;
+}
+
+.logo {
+  background: linear-gradient(135deg, #126bff, #ff234d) !important;
+  color: white !important;
+  box-shadow: 0 0 25px #126bff55 !important;
+}
+
+.chip {
+  background: #07152b !important;
+  color: #d7eaff !important;
+  border-color: #246bff55 !important;
+}
+
+.intro h2 {
+  background: linear-gradient(100deg, #ffffff, #55dfff, #ff4565) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    padding: 10px 0;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .stats,
+  .dashgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
