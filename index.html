@@ -503,7 +503,7 @@ $('#loginForm').addEventListener('submit', async event => {
   const data = Object.fromEntries(form.entries());
 
   try {
-    await api('/api/login', data);
+    await api('/api/member/login', data);
     await loadMe();
   } catch (error) {
     showMsg(error.message, 'error');
