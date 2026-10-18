@@ -1,198 +1,179 @@
-<!DOCTYPE html>
-<html lang="ur">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal VIP Member Portal</title>
-<style>
-*{box-sizing:border-box}
-:root{--gold:#ffbd59;--text:#f5f6ff;--muted:#9daac7}
-body{margin:0;min-height:100vh;padding:24px 16px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at top,#30204f 0%,transparent 55%),linear-gradient(145deg,#080b19,#101c35 55%,#160e29)}
-.wrap{width:100%;max-width:430px}
-.brand{text-align:center;margin-bottom:22px}
-.logo{width:66px;height:66px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border-radius:20px;font-size:36px;color:#171025;background:linear-gradient(135deg,#ffe4a1,#ff9b3d)}
-.brand h1{margin:0;font-size:27px;letter-spacing:2px}
-.brand p{color:var(--gold);font-size:11px;letter-spacing:4px}
-.card{padding:30px 24px;border:1px solid #ffffff18;border-radius:25px;background:linear-gradient(145deg,#18223b,#101426);box-shadow:0 20px 60px #0008}
-h2{text-align:center;font-size:25px}
-.sub{text-align:center;color:var(--muted);font-size:14px;line-height:1.8}
-.field{display:block;margin-bottom:18px}
-.field span{display:block;margin-bottom:9px;font-size:12px}
-.field input,.service-card input{display:block;width:100%;height:49px;padding:12px;border-radius:12px;border:1px solid #ffffff20;background:#090f20;color:white}
-.btn{display:block;width:100%;min-height:49px;padding:13px;border:0;border-radius:12px;cursor:pointer;font-weight:bold;color:#21152b;background:linear-gradient(110deg,#ff9b43,#ffe18b)}
-.switch{margin-top:18px;padding:16px;width:100%;border-radius:12px;color:white;background:#ffffff08;border:1px solid #ffffff1c}
-.hidden{display:none!important}
-.message{margin-top:15px;font-size:13px;overflow-wrap:anywhere}
-.stats{display:grid;gap:12px}
-.stat{padding:16px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff15}
-.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
-.stat strong{color:var(--gold);font-size:20px}
-.services{margin-top:20px}
-.service-card{padding:18px;margin-top:14px;border-radius:16px;background:#0c1428;border:1px solid #9b7b3e}
-.service-card h3{margin-top:0}
-.price{font-size:23px;color:#f2d27b;font-weight:bold}
-.note{color:#c2cbe0;font-size:13px;line-height:1.6}
-.foot{text-align:center;color:#8290af;font-size:12px;line-height:1.8;margin-top:22px}
-a{color:var(--gold)}
-</style>
-</head>
-<body>
-<main class="wrap">
-<header class="brand">
-<div class="logo">✦</div>
-<h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
-<p>VIP MEMBER PORTAL</p>
-</header>
-
-<section id="authView" class="card">
-<div id="loginView">
-<h2>Login Karein</h2>
-<p class="sub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>
-<form id="loginForm">
-<label class="field"><span>USERNAME</span>
-<input name="username" autocomplete="username" required placeholder="اپنا یوزر نیم لکھیں"></label>
-<label class="field"><span>PASSWORD</span>
-<input name="password" type="password" autocomplete="current-password" required placeholder="اپنا پاس ورڈ لکھیں"></label>
-<button class="btn" type="submit">Secure Login ↗</button>
-</form>
-<button class="switch" id="openRegister" type="button">نیا اکاؤنٹ بنائیں؟ Create Account</button>
-</div>
-
-<div id="registerView" class="hidden">
-<h2>Create Account</h2>
-<p class="sub">نیا اکاؤنٹ بنائیں۔ منظوری ایڈمن دے گا۔</p>
-<form id="registerForm">
-<label class="field"><span>FULL NAME</span><input name="name" minlength="2" required placeholder="پورا نام"></label>
-<label class="field"><span>USERNAME</span><input name="username" minlength="3" pattern="[A-Za-z0-9_.-]+" required placeholder="Username"></label>
-<label class="field"><span>PASSWORD</span><input name="password" type="password" minlength="8" required placeholder="کم از کم 8 حروف"></label>
-<button class="btn" type="submit">Create Account</button>
-</form>
-<button class="switch" id="backToLogin" type="button">واپس Login پر جائیں</button>
-</div>
-<div id="msg" class="message" role="status"></div>
-</section>
-
-<section id="dashboard" class="hidden">
-<div class="card">
-<h2>Member Dashboard</h2>
-<p id="welcome" class="sub"></p>
-<div class="stats">
-<div class="stat"><span>AVAILABLE CREDIT</span><strong id="balance">0.00</strong></div>
-<div class="stat"><span>ACCOUNT STATUS</span><strong id="memberStatus">—</strong></div>
-<div class="stat"><span>MEMBER ID</span><strong id="memberId">—</strong></div>
-</div>
-<h3>Credit History</h3>
-<div id="transactions" class="note">کریڈٹ ہسٹری لوڈ نہیں ہوئی۔</div>
-<button class="btn" id="logout" type="button" style="margin-top:20px">Log out</button>
-</div>
-
-<!-- یہ سروسز صرف لاگ اِن کے بعد دکھائی جاتی ہیں -->
-<section class="services" id="rmServices" hidden>
-<h2>👑 Available Services</h2>
-<p class="note">اپنے مجاز اکاؤنٹ اور معلومات ہی استعمال کریں۔</p>
-
-<article class="service-card">
-<h3>UPaisa Services</h3>
-<div class="price">UPaisa</div>
-<p class="note">UPaisa سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>
-</article>
-
-<article class="service-card">
-<h3>OPay Services</h3>
-<div class="price">OPay</div>
-<p class="note">OPay سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>
-</article>
-</section>
-</section>
-
-<footer class="foot">
-<strong style="color:var(--gold)">✦ M. Usman — Admin Contact</strong>
-<p>مدد کے لیے رابطہ کریں</p>
-<a href="https://wa.me/923021394509">WhatsApp: 0302-1394509</a>
-<br>
-<a href="https://wa.me/923060001167">WhatsApp: 0306-0001167</a>
-</footer>
-</main>
-
-<script>
-const $ = s => document.querySelector(s);
-
-function message(text){
-  $('#msg').textContent = text;
-}
-
-function mode(register){
-  $('#loginView').classList.toggle('hidden',register);
-  $('#registerView').classList.toggle('hidden',!register);
-  message('');
-}
-
-$('#openRegister').onclick=()=>mode(true);
-$('#backToLogin').onclick=()=>mode(false);
-
-async function post(url,data){
-  const response=await fetch(url,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(data)
-  });
-  const result=await response.json();
-  if(!response.ok) throw new Error(result.error||'درخواست مکمل نہیں ہوئی۔');
-  return result;
-}
-
-$('#loginForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const data=Object.fromEntries(new FormData(e.target).entries());
-  try{
-    await post('/api/member/login',data);
-    await loadMe();
-  }catch(err){message(err.message);}
-});
-
-$('#registerForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const data=Object.fromEntries(new FormData(e.target).entries());
-  try{
-    const result=await post('/api/register',data);
-    e.target.reset();
-    mode(false);
-    message(result.message||'رجسٹریشن موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔');
-  }catch(err){message(err.message);}
-});
-
-async function loadMe(){
-  try{
-    const response=await fetch('/api/me');
-    if(!response.ok) return;
-    const result=await response.json();
-    const user=result.user;
-    if(!user) return;
-
-    $('#authView').classList.add('hidden');
-    $('#dashboard').classList.remove('hidden');
-    $('#rmServices').hidden=false;
-
-    $('#welcome').textContent='Welcome, '+(user.name||'Member');
-    $('#balance').textContent=Number(user.credits??user.credit??0).toFixed(2);
-    $('#memberStatus').textContent=user.status||'Approved';
-    $('#memberId').textContent='VIP-'+String(user.id??'—').padStart(4,'0');
-
-    const transactions=Array.isArray(result.transactions)?result.transactions:[];
-    $('#transactions').textContent=transactions.length
-      ? transactions.map(t=>(t.note||'Transaction')+' — '+Number(t.amount||0).toFixed(2)).join('\n')
-      : 'ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔';
-  }catch(err){
-    console.error('Could not load member dashboard.');
-  }
-}
-
-$('#logout').addEventListener('click',async()=>{
-  try{await fetch('/api/logout',{method:'POST'});}
-  finally{location.reload();}
-});
-
-loadMe();
-</script>
-</body>
+<!DOCTYPE html>  <html lang="ur">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Royal VIP Member Portal</title>  
+<style>  
+*{box-sizing:border-box}  
+:root{--gold:#ffbd59;--text:#f5f6ff;--muted:#9daac7}  
+body{margin:0;min-height:100vh;padding:24px 16px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at top,#30204f 0%,transparent 55%),linear-gradient(145deg,#080b19,#101c35 55%,#160e29)}  
+.wrap{width:100%;max-width:430px}  
+.brand{text-align:center;margin-bottom:22px}  
+.logo{width:66px;height:66px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border-radius:20px;font-size:36px;color:#171025;background:linear-gradient(135deg,#ffe4a1,#ff9b3d)}  
+.brand h1{margin:0;font-size:27px;letter-spacing:2px}  
+.brand p{color:var(--gold);font-size:11px;letter-spacing:4px}  
+.card{padding:30px 24px;border:1px solid #ffffff18;border-radius:25px;background:linear-gradient(145deg,#18223b,#101426);box-shadow:0 20px 60px #0008}  
+h2{text-align:center;font-size:25px}  
+.sub{text-align:center;color:var(--muted);font-size:14px;line-height:1.8}  
+.field{display:block;margin-bottom:18px}  
+.field span{display:block;margin-bottom:9px;font-size:12px}  
+.field input,.service-card input{display:block;width:100%;height:49px;padding:12px;border-radius:12px;border:1px solid #ffffff20;background:#090f20;color:white}  
+.btn{display:block;width:100%;min-height:49px;padding:13px;border:0;border-radius:12px;cursor:pointer;font-weight:bold;color:#21152b;background:linear-gradient(110deg,#ff9b43,#ffe18b)}  
+.switch{margin-top:18px;padding:16px;width:100%;border-radius:12px;color:white;background:#ffffff08;border:1px solid #ffffff1c}  
+.hidden{display:none!important}  
+.message{margin-top:15px;font-size:13px;overflow-wrap:anywhere}  
+.stats{display:grid;gap:12px}  
+.stat{padding:16px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff15}  
+.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}  
+.stat strong{color:var(--gold);font-size:20px}  
+.services{margin-top:20px}  
+.service-card{padding:18px;margin-top:14px;border-radius:16px;background:#0c1428;border:1px solid #9b7b3e}  
+.service-card h3{margin-top:0}  
+.price{font-size:23px;color:#f2d27b;font-weight:bold}  
+.note{color:#c2cbe0;font-size:13px;line-height:1.6}  
+.foot{text-align:center;color:#8290af;font-size:12px;line-height:1.8;margin-top:22px}  
+a{color:var(--gold)}  
+</style>  
+</head>  
+<body>  
+<main class="wrap">  
+<header class="brand">  
+<div class="logo">✦</div>  
+<h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>  
+<p>VIP MEMBER PORTAL</p>  
+</header>  <section id="authView" class="card">  
+<div id="loginView">  
+<h2>Login Karein</h2>  
+<p class="sub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>  
+<form id="loginForm">  
+<label class="field"><span>USERNAME</span>  
+<input name="username" autocomplete="username" required placeholder="اپنا یوزر نیم لکھیں"></label>  
+<label class="field"><span>PASSWORD</span>  
+<input name="password" type="password" autocomplete="current-password" required placeholder="اپنا پاس ورڈ لکھیں"></label>  
+<button class="btn" type="submit">Secure Login ↗</button>  
+</form>  
+<button class="switch" id="openRegister" type="button">نیا اکاؤنٹ بنائیں؟ Create Account</button>  
+</div>  <div id="registerView" class="hidden">  
+<h2>Create Account</h2>  
+<p class="sub">نیا اکاؤنٹ بنائیں۔ منظوری ایڈمن دے گا۔</p>  
+<form id="registerForm">  
+<label class="field"><span>FULL NAME</span><input name="name" minlength="2" required placeholder="پورا نام"></label>  
+<label class="field"><span>USERNAME</span><input name="username" minlength="3" pattern="[A-Za-z0-9_.-]+" required placeholder="Username"></label>  
+<label class="field"><span>PASSWORD</span><input name="password" type="password" minlength="8" required placeholder="کم از کم 8 حروف"></label>  
+<button class="btn" type="submit">Create Account</button>  
+</form>  
+<button class="switch" id="backToLogin" type="button">واپس Login پر جائیں</button>  
+</div>  
+<div id="msg" class="message" role="status"></div>  
+</section>  <section id="dashboard" class="hidden">  
+<div class="card">  
+<h2>Member Dashboard</h2>  
+<p id="welcome" class="sub"></p>  
+<div class="stats">  
+<div class="stat"><span>AVAILABLE CREDIT</span><strong id="balance">0.00</strong></div>  
+<div class="stat"><span>ACCOUNT STATUS</span><strong id="memberStatus">—</strong></div>  
+<div class="stat"><span>MEMBER ID</span><strong id="memberId">—</strong></div>  
+</div>  
+<h3>Credit History</h3>  
+<div id="transactions" class="note">کریڈٹ ہسٹری لوڈ نہیں ہوئی۔</div>  
+<button class="btn" id="logout" type="button" style="margin-top:20px">Log out</button>  
+</div>  <!-- یہ سروسز صرف لاگ اِن کے بعد دکھائی جاتی ہیں -->  <section class="services" id="rmServices" hidden>  
+<h2>👑 Available Services</h2>  
+<p class="note">اپنے مجاز اکاؤنٹ اور معلومات ہی استعمال کریں۔</p>  <article class="service-card">  
+<h3>UPaisa Services</h3>  
+<div class="price">UPaisa</div>  
+<p class="note">UPaisa سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>  
+</article>  <article class="service-card">  
+<h3>OPay Services</h3>  
+<div class="price">OPay</div>  
+<p class="note">OPay سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>  
+</article>  
+</section>  
+</section>  <footer class="foot">  
+<strong style="color:var(--gold)">✦ M. Usman — Admin Contact</strong>  
+<p>مدد کے لیے رابطہ کریں</p>  
+<a href="https://wa.me/923021394509">WhatsApp: 0302-1394509</a>  
+<br>  
+<a href="https://wa.me/923060001167">WhatsApp: 0306-0001167</a>  
+</footer>  
+</main>  <script>  
+const $ = s => document.querySelector(s);  
+  
+function message(text){  
+  $('#msg').textContent = text;  
+}  
+  
+function mode(register){  
+  $('#loginView').classList.toggle('hidden',register);  
+  $('#registerView').classList.toggle('hidden',!register);  
+  message('');  
+}  
+  
+$('#openRegister').onclick=()=>mode(true);  
+$('#backToLogin').onclick=()=>mode(false);  
+  
+async function post(url,data){  
+  const response=await fetch(url,{  
+    method:'POST',  
+    headers:{'Content-Type':'application/json'},  
+    body:JSON.stringify(data)  
+  });  
+  const result=await response.json();  
+  if(!response.ok) throw new Error(result.error||'درخواست مکمل نہیں ہوئی۔');  
+  return result;  
+}  
+  
+$('#loginForm').addEventListener('submit',async e=>{  
+  e.preventDefault();  
+  const data=Object.fromEntries(new FormData(e.target).entries());  
+  try{  
+    await post('/api/member/login',data);  
+    await loadMe();  
+  }catch(err){message(err.message);}  
+});  
+  
+$('#registerForm').addEventListener('submit',async e=>{  
+  e.preventDefault();  
+  const data=Object.fromEntries(new FormData(e.target).entries());  
+  try{  
+    const result=await post('/api/register',data);  
+    e.target.reset();  
+    mode(false);  
+    message(result.message||'رجسٹریشن موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔');  
+  }catch(err){message(err.message);}  
+});  
+  
+async function loadMe(){  
+  try{  
+    const response=await fetch('/api/me');  
+    if(!response.ok) return;  
+    const result=await response.json();  
+    const user=result.user;  
+    if(!user) return;  
+  
+    $('#authView').classList.add('hidden');  
+    $('#dashboard').classList.remove('hidden');  
+    $('#rmServices').hidden=false;  
+  
+    $('#welcome').textContent='Welcome, '+(user.name||'Member');  
+    $('#balance').textContent=Number(user.credits??user.credit??0).toFixed(2);  
+    $('#memberStatus').textContent=user.status||'Approved';  
+    $('#memberId').textContent='VIP-'+String(user.id??'—').padStart(4,'0');  
+  
+    const transactions=Array.isArray(result.transactions)?result.transactions:[];  
+    $('#transactions').textContent=transactions.length  
+      ? transactions.map(t=>(t.note||'Transaction')+' — '+Number(t.amount||0).toFixed(2)).join('\n')  
+      : 'ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔';  
+  }catch(err){  
+    console.error('Could not load member dashboard.');  
+  }  
+}  
+  
+$('#logout').addEventListener('click',async()=>{  
+  try{await fetch('/api/logout',{method:'POST'});}  
+  finally{location.reload();}  
+});  
+  
+loadMe();  
+</script>  </body>  
 </html>
