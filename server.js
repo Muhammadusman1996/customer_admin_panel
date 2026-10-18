@@ -104,7 +104,7 @@ app.post('/api/register', async (req, res) => {
 
   try {
     const existing = await pool.query(
-      'SELECT id FROM customers WHERE username=$1 OR email=$1',
+      'SELECT id FROM customers WHERE username=$1 OR email=$2',
       [username]
     );
     if (existing.rowCount) {
