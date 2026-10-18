@@ -631,6 +631,207 @@ loadMe();
       </form>
     </article>
 
+    <style>
+.wallet-services {
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 20px 0;
+}
+.wallet-section {
+  background: #11182d;
+  border: 1px solid #8e713a;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 22px;
+}
+.wallet-heading {
+  color: #ffbd59;
+  font-size: 23px;
+  font-weight: bold;
+  margin: 0 0 16px;
+}
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 14px;
+}
+.wallet-card {
+  background: #0a1020;
+  border: 1px solid #34415d;
+  border-radius: 12px;
+  padding: 15px;
+}
+.wallet-card h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 42px;
+  margin: 0 0 10px;
+}
+.wallet-price {
+  color: #ffbd59;
+  font-weight: bold;
+  font-size: 21px;
+  margin: 12px 0;
+}
+.wallet-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid #43516c;
+  background: #18223a;
+  color: white;
+  font-size: 14px;
+}
+.wallet-card button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(100deg,#ffae49,#ffe19a);
+  color: #21182a;
+  font-weight: bold;
+  cursor: pointer;
+}
+.wallet-card button:disabled {
+  opacity: .7;
+}
+.wallet-result {
+  color: #ffcf75;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+</style>
+
+<div class="wallet-services">
+
+  <!-- JAZZCASH -->
+  <section class="wallet-section">
+    <h2 class="wallet-heading">🟠 JazzCash Services</h2>
+    <div class="wallet-grid">
+
+      <article class="wallet-card">
+        <h3>JazzCash PIN Reset</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 80</div>
+        <button type="button" onclick="walletDemo(this,'JazzCash PIN Reset')">Request</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>Jazz Number Fresh / Used Check</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 30</div>
+        <button type="button" onclick="walletDemo(this,'Jazz Number Fresh / Used Check')">Search Number</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>JazzCash Auto Open Account (L1)</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 1,000</div>
+        <button type="button" onclick="walletDemo(this,'JazzCash Account L1')">Create</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>JazzCash Transaction History</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 700</div>
+        <button type="button" onclick="walletDemo(this,'JazzCash Transaction History')">Search</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>JazzCash Merchant All Details</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 800</div>
+        <button type="button" onclick="walletDemo(this,'JazzCash Merchant Details')">Search</button>
+        <div class="wallet-result"></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- OPAY -->
+  <section class="wallet-section">
+    <h2 class="wallet-heading">🟢 OPay Services</h2>
+    <div class="wallet-grid">
+
+      <article class="wallet-card">
+        <h3>OPay Account Open</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 800</div>
+        <button type="button" onclick="walletDemo(this,'OPay Account Open')">Submit Request</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>OPay Limit Upgrade</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 450</div>
+        <button type="button" onclick="walletDemo(this,'OPay Limit Upgrade')">Upgrade</button>
+        <div class="wallet-result"></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- UPAISA -->
+  <section class="wallet-section">
+    <h2 class="wallet-heading">🔵 UPaisa Services</h2>
+    <div class="wallet-grid">
+
+      <article class="wallet-card">
+        <h3>UPaisa Account Open</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 700</div>
+        <button type="button" onclick="walletDemo(this,'UPaisa Account Open')">Open</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>UPaisa Limit Upgrade</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <input type="text" placeholder="CNIC Number" inputmode="numeric" required>
+        <div class="wallet-price">Price not set</div>
+        <button type="button" onclick="walletDemo(this,'UPaisa Limit Upgrade')">Submit</button>
+        <div class="wallet-result"></div>
+      </article>
+
+      <article class="wallet-card">
+        <h3>UPaisa CNIC D-B-I</h3>
+        <input type="tel" placeholder="Mobile Number" required>
+        <div class="wallet-price">Rs. 250</div>
+        <button type="button" onclick="walletDemo(this,'UPaisa CNIC D-B-I')">Request</button>
+        <div class="wallet-result"></div>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+function walletDemo(button, serviceName) {
+  const card = button.closest('.wallet-card');
+  const inputs = [...card.querySelectorAll('input')];
+  const result = card.querySelector('.wallet-result');
+
+  if (inputs.some(input => !input.value.trim())) {
+    result.textContent = 'Please fill in all required fields.';
+    return;
+  }
+
+  result.textContent =
+    serviceName +
+    ': UI is ready, but no service API is connected. ' +
+    'No request was sent and no credit was deducted.';
+}
+</script>
     <article class="rm-service-card">
       <h3>Easypaisa Account PIN Reset</h3>
       <div class="rm-price">Rs. 150</div>
