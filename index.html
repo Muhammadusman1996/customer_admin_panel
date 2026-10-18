@@ -383,17 +383,31 @@ a {
   <!-- MEMBER DASHBOARD -->
   <section id="dashboard" class="hidden">
     <div class="card">
-      <div class="topbar">
-        <div>
-          <h2>Member Dashboard</h2>
-          <p id="welcome" class="sub"></p>
-        </div>
-        <button class="btn secondary" id="logout" type="button">
-          Log out
-        </button>
-      </div>
+   <div class="member-info-bar">
+  <div class="member-info-item">
+    <span>USERNAME</span>
+    <strong id="welcome">Member</strong>
+  </div>
 
-      <div class="stats">
+  <div class="member-info-item">
+    <span>AVAILABLE BALANCE</span>
+    <strong id="balance">0.00</strong>
+  </div>
+
+  <div class="member-info-item">
+    <span>ACCOUNT STATUS</span>
+    <strong id="memberStatus">Pending</strong>
+  </div>
+
+  <div class="member-info-item">
+    <span>MEMBER ID</span>
+    <strong id="memberId">—</strong>
+  </div>
+
+  <button class="btn secondary" id="logout" type="button">
+    Log out
+  </button>
+</div>
         <div class="stat">
           <span>AVAILABLE CREDIT</span>
           <strong id="balance">0.00</strong>
