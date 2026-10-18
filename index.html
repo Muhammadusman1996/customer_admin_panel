@@ -1,1105 +1,672 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal VIP Member Portal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royal VIP Member Portal</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: #101e31;
+      --text: #f3f7ff;
+      --muted: #a9b7cc;
+      --border: #293c55;
+      --green: #00a85a;
+      --blue: #0878d1;
+      --orange: #f28c28;
+    }
 
-:root {
-  --gold: #ffbd59;
-  --bg: #080b19;
-  --panel: #11182d;
-  --text: #f5f6ff;
-  --muted: #9daac7;
-}
+    * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  padding: 24px 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(ellipse at top, #30204f 0%, transparent 55%),
-    linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
 
-.wrap {
-  width: 100%;
-  max-width: 430px;
-}
+    button, input, select, textarea { font: inherit; }
 
-.brand {
-  text-align: center;
-  margin-bottom: 22px;
-}
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      font-weight: 700;
+    }
 
-.logo {
-  width: 66px;
-  height: 66px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  border-radius: 20px;
-  font-size: 36px;
-  color: #171025;
-  background: linear-gradient(135deg, #ffe4a1, #ff9b3d);
-  box-shadow: 0 0 30px #ffb54c44;
-}
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #081423;
+      color: white;
+      margin-top: 6px;
+    }
 
-.brand h1 {
-  margin: 0;
-  font-size: 27px;
-  letter-spacing: 2px;
-}
+    label {
+      display: block;
+      margin: 13px 0;
+      color: #dce7f8;
+      font-size: 14px;
+    }
 
-.brand p {
-  color: var(--gold);
-  font-size: 11px;
-  letter-spacing: 4px;
-  margin-top: 8px;
-}
+    .hidden, [hidden] { display: none !important; }
 
-.card {
-  padding: 30px 24px;
-  border: 1px solid #ffffff18;
-  border-radius: 25px;
-  background: linear-gradient(145deg, #18223b, #101426);
-  box-shadow: 0 20px 60px #0008;
-}
+    header {
+      padding: 20px 16px;
+      text-align: center;
+      background: linear-gradient(135deg, #102b49, #07111f);
+      border-bottom: 1px solid var(--border);
+    }
 
-.eyebrow {
-  text-align: center;
-  color: var(--gold);
-  font-size: 10px;
-  letter-spacing: 2px;
-  margin-bottom: 14px;
-}
+    header h1 { margin: 0 0 7px; }
+    header p { color: var(--muted); margin: 0; }
 
-h2 {
-  text-align: center;
-  font-size: 27px;
-  margin: 0 0 8px;
-}
+    main {
+      width: min(1100px, 94%);
+      margin: 24px auto;
+    }
 
-.sub {
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.8;
-  margin: 0 0 26px;
-}
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
 
-.field {
-  display: block;
-  margin-bottom: 18px;
-}
+    .auth-box {
+      width: min(440px, 100%);
+      margin: 35px auto;
+    }
 
-.field span {
-  display: block;
-  margin-bottom: 9px;
-  color: #dce4ff;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
 
-.field input {
-  display: block;
-  width: 100%;
-  height: 51px;
-  padding: 0 15px;
-  border-radius: 12px;
-  outline: none;
-  border: 1px solid #ffffff20;
-  background: #090f20;
-  color: white;
-  font-size: 15px;
-}
+    .tabs button { flex: 1; background: #20324b; color: white; }
+    .tabs button.active { background: #1678d2; }
 
-.field input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px #ffbd5918;
-}
+    .primary { background: #1479dc; color: white; }
+    .secondary { background: #263a53; color: white; }
+    .danger { background: #b83243; color: white; }
+    .success { background: #087d4a; color: white; }
 
-.field input::placeholder {
-  color: #7785a5;
-}
+    .notice {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #172a40;
+      color: #dce9fa;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
 
-.btn {
-  display: block;
-  width: 100%;
-  min-height: 51px;
-  padding: 13px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: bold;
-  color: #21152b;
-  background: linear-gradient(110deg, #ff9b43, #ffe18b);
-  box-shadow: 0 7px 22px #ffad4930;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
 
-.btn:active {
-  transform: scale(.99);
-}
+    .service-card {
+      border-radius: 14px;
+      padding: 18px;
+      color: white;
+      border: 1px solid #ffffff33;
+      box-shadow: 0 8px 22px #0003;
+      display: flex;
+      flex-direction: column;
+      min-height: 205px;
+    }
 
-.btn.secondary {
-  color: white;
-  background: #26334e;
-  border: 1px solid #ffffff20;
-  box-shadow: none;
-}
+    .service-card h3 { margin: 0 0 10px; }
+    .service-card p { line-height: 1.5; flex: 1; }
+    .service-card .price { font-size: 20px; font-weight: bold; }
+    .service-card button { background: #fff; color: #111827; }
 
-.switch {
-  margin-top: 18px;
-  padding: 16px 12px;
-  width: 100%;
-  border-radius: 12px;
-  color: #e8edff;
-  background: #ffffff08;
-  border: 1px solid #ffffff1c;
-  cursor: pointer;
-  font-size: 14px;
-}
+    .easypaisa { background: linear-gradient(145deg, #009b50, #006b3a); }
+    .upaisa { background: linear-gradient(145deg, #087ed0, #064b8a); }
+    .opay { background: linear-gradient(145deg, #ef8c24, #b84a12); }
 
-.switch strong {
-  color: var(--gold);
-}
+    .service-heading {
+      margin: 30px 0 14px;
+      padding-left: 12px;
+      border-left: 4px solid #4a9df8;
+    }
 
-.foot {
-  margin-top: 22px;
-  text-align: center;
-  color: #8290af;
-  font-size: 11px;
-  line-height: 1.8;
-}
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
 
-.message {
-  display: none;
-  padding: 12px;
-  margin-top: 17px;
-  border-radius: 10px;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
+    .balance {
+      font-size: 24px;
+      font-weight: 800;
+      color: #6ee7a8;
+    }
 
-.message.show {
-  display: block;
-}
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: #000b;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
 
-.message.error {
-  color: #ffb2b2;
-  background: #7f222233;
-}
+    .modal {
+      width: min(520px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #101e31;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 22px;
+    }
 
-.message.success {
-  color: #a9f6cb;
-  background: #17633b33;
-}
+    .modal-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-.hidden {
-  display: none !important;
-}
+    .modal-title h2 { margin-top: 0; }
+    .close-button { background: #263a53; color: white; }
 
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
+    .small { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-.topbar h2 {
-  text-align: left;
-}
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--muted);
+    }
 
-.stats {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-.stat {
-  padding: 18px;
-  border-radius: 14px;
-  background: #ffffff08;
-  border: 1px solid #ffffff15;
-}
-
-.stat span {
-  display: block;
-  color: var(--muted);
-  font-size: 11px;
-  margin-bottom: 9px;
-}
-
-.stat strong {
-  font-size: 22px;
-  color: var(--gold);
-}
-
-.txn {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 14px 0;
-  border-bottom: 1px solid #ffffff15;
-}
-
-.txn small {
-  display: block;
-  color: var(--muted);
-  margin-top: 6px;
-}
-
-a {
-  color: var(--gold);
-}
-
-@media (max-width: 380px) {
-  .card {
-    padding: 24px 18px;
-  }
-
-  .brand h1 {
-    font-size: 23px;
-  }
-}
-</style>
+    @media (max-width: 500px) {
+      .panel { padding: 15px; }
+      header h1 { font-size: 23px; }
+    }
+  </style>
 </head>
 
 <body>
-<main class="wrap">
-
-  <header class="brand">
-    <div class="logo">✦</div>
-    <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
-    <p>VIP MEMBER PORTAL</p>
+  <header>
+    <h1>Royal VIP Member Portal</h1>
+    <p>Customer Dashboard & Services</p>
   </header>
 
-  <section id="authView" class="card">
-
-    <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
-
-    <!-- LOGIN: default screen -->
-    <section id="loginView">
-      <h2>Login Karein</h2>
-      <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
+  <main>
+    <!-- LOGIN / REGISTRATION -->
+    <section id="authView" class="panel auth-box">
+      <div class="tabs">
+        <button id="loginTab" class="active" type="button">Login</button>
+        <button id="registerTab" type="button">Register</button>
+      </div>
 
       <form id="loginForm">
-        <label class="field">
-          <span>USERNAME</span>
-          <input
-            name="username"
-            autocomplete="username"
-            minlength="3"
-            required
-            placeholder="اپنا یوزر نیم لکھیں">
+        <h2>Member Login</h2>
+        <label>Username
+          <input name="username" autocomplete="username" required>
         </label>
-
-        <label class="field">
-          <span>PASSWORD</span>
-          <input
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            placeholder="اپنا پاس ورڈ لکھیں">
+        <label>Password
+          <input name="password" type="password"
+                 autocomplete="current-password" required>
         </label>
-
-        <button class="btn" type="submit">Secure Login　↗</button>
+        <button class="primary" type="submit" style="width:100%">Login</button>
       </form>
 
-      <button class="switch" id="openRegister" type="button">
-        ♙　نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
-      </button>
-    </section>
-
-    <!-- REGISTRATION: hidden until clicked -->
-    <section id="registerView" class="hidden">
-      <h2>Create Account</h2>
-      <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہے۔</p>
-
-      <form id="registerForm">
-        <label class="field">
-          <span>FULL NAME</span>
-          <input
-            name="name"
-            minlength="2"
-            required
-            autocomplete="name"
-            placeholder="اپنا پورا نام لکھیں">
+      <form id="registerForm" class="hidden">
+        <h2>Create Account</h2>
+        <label>Full Name
+          <input name="fullName" autocomplete="name" required>
         </label>
-
-        <label class="field">
-          <span>USERNAME</span>
-          <input
-            name="username"
-            minlength="3"
-            pattern="[A-Za-z0-9_.-]+"
-            required
-            autocomplete="username"
-            placeholder="مثلاً maan_user">
+        <label>Username
+          <input name="username" autocomplete="username" required>
         </label>
-
-        <label class="field">
-          <span>PASSWORD (8+ CHARACTERS)</span>
-          <input
-            name="password"
-            type="password"
-            minlength="8"
-            required
-            autocomplete="new-password"
-            placeholder="مضبوط پاس ورڈ بنائیں">
+        <label>Password
+          <input name="password" type="password"
+                 autocomplete="new-password" minlength="6" required>
         </label>
-
-        <button class="btn" type="submit">Create Account　✦</button>
+        <button class="primary" type="submit" style="width:100%">Register</button>
       </form>
 
-      <button class="switch" id="backToLogin" type="button">
-        ← واپس <strong>Login</strong> پر جائیں
-      </button>
+      <div id="authMessage" class="notice" hidden></div>
+      <p class="small">
+        Registration and login use the website's server API. New accounts may
+        need admin approval before they can access the dashboard.
+      </p>
     </section>
 
-    <div id="msg" class="message" role="status"></div>
-
-    <p class="foot">
-      🔒 Secure Member Access<br>
-      Account approval required
-    </p>
-  </section>
-
-  <!-- MEMBER DASHBOARD -->
-  <section id="dashboard" class="hidden">
-    <div class="card">
-      <div class="topbar">
-        <div>
-          <h2>Member Dashboard</h2>
-          <p id="welcome" class="sub"></p>
-        </div>
-        <button class="btn secondary" id="logout" type="button">
-          Log out
-        </button>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <span>AVAILABLE CREDIT</span>
-          <strong id="balance">0.00</strong>
-        </div>
-
-        <div class="stat">
-          <span>ACCOUNT STATUS</span>
-          <strong id="memberStatus">Approved</strong>
-        </div>
-
-        <div class="stat">
-          <span>MEMBER ID</span>
-          <strong id="memberId">—</strong>
-        </div>
-      </div>
-
-      <h3>Credit History</h3>
-      <p class="sub">آپ کے اکاؤنٹ کی کریڈٹ تفصیلات۔</p>
-      <div id="transactions"></div>
-    </div>
-  </section>
-
-  <footer class="foot">
-    ROYAL MEMBER PORTAL • VIP ACCESS
-    <br>
-<div class="foot">
-  <strong style="color:var(--gold);font-size:16px">
-    ✦ M. Usman — Admin Contact
-  </strong>
-
-  <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
-
-  <a href="https://wa.me/923021394509"
-     target="_blank"
-     rel="noopener noreferrer">
-    WhatsApp: 0302-1394509
-  </a>
-
-  <br><br>
-
-  <a href="https://wa.me/923060001167"
-     target="_blank"
-     rel="noopener noreferrer">
-    WhatsApp: 0306-0001167
-  </a>
-
-  <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
-</div>
-  </footer>
-
-</main>
-
-<script>
-const $ = selector => document.querySelector(selector);
-
-function showMsg(text, type = 'success') {
-  const el = $('#msg');
-  el.textContent = text;
-  el.className = 'message show ' + type;
-}
-
-function clearMsg() {
-  $('#msg').className = 'message';
-  $('#msg').textContent = '';
-}
-
-function setMode(mode) {
-  const registering = mode === 'register';
-
-  $('#loginView').classList.toggle('hidden', registering);
-  $('#registerView').classList.toggle('hidden', !registering);
-
-  clearMsg();
-}
-
-$('#openRegister').addEventListener('click', () => {
-  setMode('register');
-});
-
-$('#backToLogin').addEventListener('click', () => {
-  setMode('login');
-});
-
-async function api(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.error || 'درخواست مکمل نہیں ہوئی۔');
-  }
-
-  return result;
-}
-
-// LOGIN
-$('#loginForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const form = new FormData(event.target);
-  const data = Object.fromEntries(form.entries());
-
-  try {
-    await api('/api/member/login', data);
-    await loadMe();
-  } catch (error) {
-    showMsg(error.message, 'error');
-  }
-});
-
-// CREATE ACCOUNT
-$('#registerForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const form = new FormData(event.target);
-  const data = Object.fromEntries(form.entries());
-
-  try {
-    const result = await api('/api/register', data);
-
-    event.target.reset();
-    setMode('login');
-    showMsg(
-      result.message ||
-      'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
-    );
-  } catch (error) {
-    showMsg(error.message, 'error');
-  }
-});
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[char]);
-}
-
-// LOAD MEMBER DASHBOARD
-async function loadMe() {
-  try {
-    const response = await fetch('/api/me');
-
-    if (!response.ok) return;
-
-    const result = await response.json();
-    const user = result.user;
-
-    if (!user) return;
-
-    $('#authView').classList.add('hidden');
-    $('#dashboard').classList.remove('hidden');
-document.getElementById('rmServices').hidden = false;
-    $('#welcome').textContent = 'Welcome, ' + user.name;
-    $('#balance').textContent = Number(user.credit || 0).toFixed(2);
-    $('#memberStatus').textContent = user.status || 'Approved';
-    $('#memberId').textContent =
-      'VIP-' + String(user.id).padStart(4, '0');
-
-    $('#balance').textContent = Number(user.credits ?? user.credit ?? 0).toFixed(2);
-
-    $('#transactions').innerHTML = transactions.length
-      ? transactions.map(transaction => `
-          <div class="txn">
-            <div>
-              ${escapeHtml(transaction.note || '')}
-              <small>
-                ${escapeHtml(
-                  transaction.at
-                    ? new Date(transaction.at).toLocaleString()
-                    : ''
-                )}
-              </small>
-            </div>
-            <strong>
-              ${Number(transaction.amount) > 0 ? '+' : ''}
-              ${Number(transaction.amount || 0).toFixed(2)}
-            </strong>
+    <!-- EVERYTHING BELOW IS HIDDEN UNTIL LOGIN SUCCEEDS -->
+    <section id="dashboard" hidden>
+      <div class="panel">
+        <div class="topbar">
+          <div>
+            <h2>Welcome, <span id="memberName">Member</span></h2>
+            <p class="small">Your account dashboard</p>
           </div>
-        `).join('')
-      : '<p class="sub">ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔</p>';
+          <button id="logoutButton" class="danger" type="button">Logout</button>
+        </div>
+        <p>Available Balance</p>
+        <div id="memberBalance" class="balance">Rs 0</div>
+        <div id="memberStatus" class="notice">Account status: Loading...</div>
+      </div>
 
-  } catch (error) {
-    console.error('Could not load member dashboard.');
-  }
-}
+      <section id="rmServices" class="panel">
+        <h2>Available Services</h2>
+        <p class="small">
+          Select a service to open its request form. Requests are not processed
+          unless the relevant authorized server integration is configured.
+        </p>
 
-// LOGOUT
-$('#logout').addEventListener('click', async () => {
-  try {
-    await fetch('/api/logout', { method: 'POST' });
-  } finally {
-    location.reload();
-  }
-});
+        <h3 class="service-heading">Easypaisa Services</h3>
+        <div class="grid">
+          <article class="service-card easypaisa">
+            <h3>Easypaisa Account Open</h3>
+            <p>Required: Mobile number and CNIC</p>
+            <div class="price">Rs 1000</div>
+            <button type="button" data-service="easypaisa-open">Open Service</button>
+          </article>
 
-// Initial page
-loadMe();
-  </script>
-  <!-- Royal Member Services -->
-<style>
-.rm-services{max-width:1000px;margin:25px auto;padding:16px;color:#f6f7fb;font-family:Arial,sans-serif}
-.rm-services h2{color:#f2d27b}
-.rm-service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.rm-service-card{background:#0c1428;border:1px solid #9b7b3e;border-radius:16px;padding:18px}
-.rm-price{font-size:24px;color:#f2d27b;font-weight:bold;margin:10px 0}
-.rm-service-card input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0 10px;border-radius:8px;border:1px solid #35415d;background:#101a31;color:white}
-.rm-service-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#e8c56b;color:#171208;font-weight:bold;cursor:pointer}
-.rm-note{font-size:13px;color:#c2cbe0;line-height:1.5}
-.rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere}
-</style>
+          <article class="service-card easypaisa">
+            <h3>Easypaisa PIN Reset</h3>
+            <p>Required: Mobile number</p>
+            <div class="price">Rs 150</div>
+            <button type="button" data-service="easypaisa-pin">Open Service</button>
+          </article>
 
-<section class="rm-services" id="rmServices" hidden>
-  <h2>👑 Available Services</h2>
-  <p class="rm-note">Select a service and submit a request. Use only accounts and identity details you are authorized to provide.</p>
+          <article class="service-card easypaisa">
+            <h3>Easypaisa CNIC Lookup</h3>
+            <p>Required: CNIC</p>
+            <div class="price">Rs 120</div>
+            <button type="button" data-service="easypaisa-lookup">Open Service</button>
+          </article>
 
-  <div class="rm-service-grid">
-    <article class="rm-service-card">
-      <h3>Easypaisa Account Open</h3>
-      <div class="rm-price">Rs. 1,000</div>
-      <form class="rm-service-form" data-service="Easypaisa Account Open" data-price="1000">
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <button type="submit">Send Request</button>
-        <p class="rm-result" aria-live="polite"></p>
+          <article class="service-card easypaisa">
+            <h3>Easypaisa Android ID</h3>
+            <p>Required: CNIC and mobile number</p>
+            <div class="price">Rs 700</div>
+            <button type="button" data-service="easypaisa-android">Open Service</button>
+          </article>
+
+          <article class="service-card easypaisa">
+            <h3>Asaan Digital Account Request</h3>
+            <p>Required: CNIC, mobile number and email</p>
+            <div class="price">Rs 2000</div>
+            <button type="button" data-service="easypaisa-digital">Open Service</button>
+          </article>
+        </div>
+
+        <h3 class="service-heading">UPaisa Services</h3>
+        <div class="grid">
+          <article class="service-card upaisa">
+            <h3>UPaisa Account Open #1</h3>
+            <p>Mobile number and request for OTP</p>
+            <div class="price">Rs 800</div>
+            <button type="button" data-service="upaisa-open">Open Service</button>
+          </article>
+
+          <article class="service-card upaisa">
+            <h3>UPaisa Account Open #2</h3>
+            <p>Required: Mobile number and CNIC</p>
+            <div class="price">Rs 500</div>
+            <button type="button" data-service="upaisa-open2">Open Service</button>
+          </article>
+
+          <article class="service-card upaisa">
+            <h3>UPaisa CNIC #2</h3>
+            <p>Required: Mobile number and request details</p>
+            <div class="price">Rs 350</div>
+            <button type="button" data-service="upaisa-cnic">Open Service</button>
+          </article>
+        </div>
+
+        <h3 class="service-heading">OPay Services</h3>
+        <div class="grid">
+          <article class="service-card opay">
+            <h3>OPay Service Request</h3>
+            <p>Submit a service request through an authorized integration.</p>
+            <div class="price">Price to be configured</div>
+            <button type="button" data-service="opay-request">Open Service</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- ACCOUNT / PAYMENT AREA -->
+      <section class="panel">
+        <h2>Payment System</h2>
+        <p class="small">
+          Enter payment details only after confirming the official receiving
+          account and payment procedure with your administrator.
+        </p>
+        <button id="openPayment" class="success" type="button">
+          Submit Payment Details
+        </button>
+        <div id="paymentMessage" class="notice" hidden></div>
+      </section>
+
+      <section class="panel">
+        <h2>Account Information</h2>
+        <div id="accountInfo">Loading account information...</div>
+        <h3>Recent Transactions</h3>
+        <div id="transactionList" class="small">No transaction data loaded.</div>
+      </section>
+    </section>
+  </main>
+
+  <!-- SERVICE FORM MODAL -->
+  <div id="serviceModal" class="modal-backdrop" hidden>
+    <div class="modal">
+      <div class="modal-title">
+        <h2 id="serviceTitle">Service Request</h2>
+        <button type="button" class="close-button" data-close="serviceModal">Close</button>
+      </div>
+
+      <p id="servicePrice" class="balance"></p>
+      <form id="serviceForm">
+        <input type="hidden" id="serviceKey" name="serviceKey">
+
+        <label>Full Name
+          <input id="customerFullName" name="fullName" required>
+        </label>
+
+        <label>Mobile Number
+          <input id="customerMobile" name="mobile"
+                 inputmode="tel" placeholder="03XXXXXXXXX">
+        </label>
+
+        <label>CNIC Number
+          <input id="customerCnic" name="cnic"
+                 inputmode="numeric" placeholder="XXXXX-XXXXXXX-X">
+        </label>
+
+        <label>Email (if required)
+          <input id="customerEmail" name="email" type="email">
+        </label>
+
+        <label>Additional Request Details
+          <textarea id="customerDetails" name="details" rows="3"
+                    placeholder="Enter only the information required for this service"></textarea>
+        </label>
+
+        <p class="small">
+          Do not enter your account password, PIN, or OTP into this form.
+          Actual processing requires a verified, authorized API.
+        </p>
+
+        <button class="primary" type="submit" style="width:100%">
+          Submit Request
+        </button>
+        <div id="serviceMessage" class="notice" hidden></div>
       </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Easypaisa Account PIN Reset</h3>
-      <div class="rm-price">Rs. 150</div>
-      <form class="rm-service-form" data-service="Easypaisa PIN Reset" data-price="150">
-        <input name="mobile" placeholder="Registered mobile number" inputmode="tel" required>
-        <button type="submit">Request PIN Reset</button>
-        <p class="rm-note">Never enter or share your current PIN or OTP.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Easypaisa CNIC to Mobile Lookup</h3>
-      <div class="rm-price">Rs. 120</div>
-      <form class="rm-service-form" data-service="CNIC to Mobile Lookup" data-price="120">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <button type="submit">Submit Request</button>
-        <p class="rm-note">Lookup must use an authorized service and lawful access.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Easypaisa Android ID</h3>
-      <div class="rm-price">Rs. 700</div>
-      <form class="rm-service-form" data-service="Easypaisa Android ID" data-price="700">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <button type="submit">Request ID</button>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Asaan Digital Account Request</h3>
-      <div class="rm-price">Rs. 2,000</div>
-      <form class="rm-service-form" data-service="Asaan Digital Account Request" data-price="2000">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <input name="email" type="email" placeholder="Email address" required>
-        <button type="submit">Submit Request</button>
-        <p class="rm-note">Do not enter your account PIN or OTP. Complete verification only through the authorized provider.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-  </div>
-</section>
-
-<script>
-document.querySelectorAll('.rm-service-form').forEach(form => {
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const result = form.querySelector('.rm-result');
-    result.textContent =
-      'Form checked. Server connection is not configured yet; no request has been sent or saved.';
-  });
-});
-</script>
-  <!-- Royal Member Payment System -->
-
-<style>
-  #rmPaymentModal {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0, 0, 0, .82);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-sizing: border-box;
-  }
-
-  #rmPaymentModal .payment-box {
-    width: 100%;
-    max-width: 430px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #101b35;
-    color: white;
-    border: 1px solid #f2d27b;
-    border-radius: 16px;
-    padding: 22px;
-    box-sizing: border-box;
-  }
-
-  #rmPaymentModal h2,
-  #rmPaymentModal h3 {
-    color: #f2d27b;
-    margin-top: 0;
-  }
-
-  #rmPaymentModal input,
-  #rmPaymentModal button {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-  }
-
-  #rmPaymentModal input {
-    background: #182743;
-    color: white;
-    border: 1px solid #53627d;
-  }
-
-  #rmPaymentModal button {
-    border: 0;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  #rmPayContinue,
-  #rmCopyAccount {
-    background: #f2d27b;
-    color: #172039;
-  }
-
-  #rmPayLater {
-    background: #344563;
-    color: white;
-  }
-
-  #rmPayMessage {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font-size: 13px;
-    margin-top: 12px;
-  }
-
-  .rm-payment-instructions {
-    background: #182743;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 15px 0;
-    line-height: 1.6;
-  }
-</style>
-
-<div id="rmPaymentModal">
-  <div class="payment-box">
-
-    <h2>Add Payment</h2>
-
-    <div class="rm-payment-instructions">
-      <h3>Payment Instructions</h3>
-
-      <p><strong>Payment Method:</strong> OPay</p>
-      <p><strong>Account Title:</strong> Noor Jahan</p>
-      <p><strong>Account Number:</strong> 03422605178</p>
-<p style="color:#f2d27b; font-weight:bold;">
-  Minimum Payment: Rs. 2000
-</p>
-      <button type="button" id="rmCopyAccount">
-        Copy Account Number
-      </button>
-
-      <p><strong>Step 1:</strong>
-        پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔
-      </p>
-
-      <p><strong>Step 2:</strong>
-        پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔
-      </p>
-
-      <p><strong>Step 3:</strong>
-        Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔
-      </p>
-
-      <p><strong>Step 4:</strong>
-        Send Payment Slip to Admin پر کلک کریں۔
-      </p>
-
-      <p style="color:#f2d27b;">
-        ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔
-      </p>
     </div>
-
-    <form id="rmPaymentForm">
-
-      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
-      <input
-        id="rmPaymentAmount"
-        name="amount"
-        type="number"
-        min="1"
-        step="1"
-        required
-        placeholder="Payment amount"
-      >
-
-      <label for="rmPaymentRef">Transaction ID</label>
-      <input
-        id="rmPaymentRef"
-        name="transactionId"
-        type="text"
-        maxlength="100"
-        required
-        placeholder="Transaction ID"
-      >
-
-      <label for="rmPaymentSlip">Payment Slip</label>
-      <input
-        id="rmPaymentSlip"
-        name="slip"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,application/pdf"
-        required
-      >
-
-      <button type="submit" id="rmPayContinue">
-        Send Payment Slip to Admin
-      </button>
-
-    </form>
-
-    <button type="button" id="rmPayLater">
-      Later
-    </button>
-
-    <div id="rmPayMessage" aria-live="polite"></div>
-
-  </div>
-</div>
-
-<script>
-(() => {
-  const modal = document.getElementById('rmPaymentModal');
-  const form = document.getElementById('rmPaymentForm');
-  const message = document.getElementById('rmPayMessage');
-
-  // Open payment menu when a service form is submitted.
-  document.querySelectorAll('.rm-service-form').forEach(serviceForm => {
-    serviceForm.addEventListener('submit', event => {
-      event.preventDefault();
-      modal.style.display = 'flex';
-      message.textContent = '';
-    });
-  });
-
-  // Close the payment menu.
-  document.getElementById('rmPayLater').addEventListener('click', () => {
-    modal.style.display = 'none';
-    message.textContent = '';
-  });
-
-  // Copy OPay account number.
-  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText('03422605178');
-      message.textContent = 'Account number copied.';
-    } catch {
-      message.textContent =
-        'Please copy manually: 03422605178';
-    }
-  });
-
-  // Validate the payment slip.
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const slip = document.getElementById('rmPaymentSlip').files[0];
-    const amount = document.getElementById('rmPaymentAmount').value;
-    const transactionId = document.getElementById('rmPaymentRef').value.trim();
-
-    if (!slip || !amount || !transactionId) {
-      message.textContent = 'Please complete all payment fields.';
-      return;
-    }
-
-    if (slip.size > 5 * 1024 * 1024) {
-      message.textContent = 'Slip must be 5 MB or smaller.';
-      return;
-    }
-
-    message.textContent =
-      'Payment details checked, but the slip has NOT been sent. ' +
-      'Server upload is not connected yet.';
-  });
-})();
-</script>
-<div id="customerServices" class="service-container" style="display:none;">
-
-  <!-- Service 1 -->
-  <div class="service-card account">
-    <div class="network-name">ACCOUNT OPEN</div>
-    <h3>Service Number 1</h3>
-    <p class="price">Rs. 800</p>
-    <button onclick="openService('service1')">
-      Open Service
-    </button>
-
-    <form id="service1" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
-        Send OTP
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service1')">
-        Close
-      </button>
-    </form>
   </div>
 
-  <!-- Service 2 -->
-  <div class="service-card upaisa">
-    <div class="network-name">UPAISA</div>
-    <h3>UPaisa #1</h3>
-    <p class="price">Rs. 500</p>
-    <button onclick="openService('service2')">
-      Open Service
-    </button>
+  <!-- PAYMENT FORM MODAL -->
+  <div id="paymentModal" class="modal-backdrop" hidden>
+    <div class="modal">
+      <div class="modal-title">
+        <h2>Payment Details</h2>
+        <button type="button" class="close-button" data-close="paymentModal">Close</button>
+      </div>
 
-    <form id="service2" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <input type="text" placeholder="CNIC Number"
-             maxlength="15" required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
-        Send OTP
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service2')">
-        Close
-      </button>
-    </form>
+      <form id="paymentForm">
+        <label>Amount (Rs)
+          <input name="amount" type="number" min="1" required>
+        </label>
+        <label>Transaction ID
+          <input name="transactionId" required>
+        </label>
+        <label>Payment Note
+          <textarea name="note" rows="3"></textarea>
+        </label>
+        <button type="submit" class="success" style="width:100%">
+          Submit Payment Details
+        </button>
+        <div id="paymentFormMessage" class="notice" hidden></div>
+      </form>
+    </div>
   </div>
 
-  <!-- Service 3 -->
-  <div class="service-card cnic">
-    <div class="network-name">UPAISA CNIC</div>
-    <h3>UPaisa CNIC #2</h3>
-    <p class="price">Rs. 350</p>
-    <button onclick="openService('service3')">
-      Open Service
-    </button>
+  <footer>Royal VIP Member Portal</footer>
 
-    <form id="service3" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <button type="button"
-              onclick="alert('Connect your authorized service API first.')">
-        Submit Request
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service3')">
-        Close
-      </button>
-    </form>
-  </div>
+  <script>
+    (() => {
+      "use strict";
 
-</div>
+      const $ = id => document.getElementById(id);
 
-<style>
-.service-container {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit, minmax(240px, 1fr)
-  );
-  gap: 20px;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
+      const authView = $("authView");
+      const dashboard = $("dashboard");
+      const loginForm = $("loginForm");
+      const registerForm = $("registerForm");
+      const authMessage = $("authMessage");
 
-.service-card {
-  color: white;
-  padding: 24px;
-  border-radius: 18px;
-  text-align: center;
-  box-shadow: 0 8px 25px #0003;
-  transition: transform .25s;
-}
+      // Relative URLs keep this page on the same host as server.js.
+      // Change these paths only if your server uses different API routes.
+      const API = {
+        login: "/api/member/login",
+        register: "/api/member/register",
+        me: "/api/me",
+        logout: "/api/logout",
+        services: "/api/member/service-request",
+        payment: "/api/member/payment-request"
+      };
 
-.service-card:hover {
-  transform: translateY(-5px);
-}
+      const serviceDefinitions = {
+        "easypaisa-open": {
+          title: "Easypaisa Account Open",
+          price: 1000,
+          fields: ["mobile", "cnic"]
+        },
+        "easypaisa-pin": {
+          title: "Easypaisa PIN Reset",
+          price: 150,
+          fields: ["mobile"]
+        },
+        "easypaisa-lookup": {
+          title: "Easypaisa CNIC Lookup",
+          price: 120,
+          fields: ["cnic"]
+        },
+        "easypaisa-android": {
+          title: "Easypaisa Android ID",
+          price: 700,
+          fields: ["mobile", "cnic"]
+        },
+        "easypaisa-digital": {
+          title: "Asaan Digital Account Request",
+          price: 2000,
+          fields: ["mobile", "cnic", "email"]
+        },
+        "upaisa-open": {
+          title: "UPaisa Account Open #1",
+          price: 800,
+          fields: ["mobile"]
+        },
+        "upaisa-open2": {
+          title: "UPaisa Account Open #2",
+          price: 500,
+          fields: ["mobile", "cnic"]
+        },
+        "upaisa-cnic": {
+          title: "UPaisa CNIC #2",
+          price: 350,
+          fields: ["mobile"]
+        },
+        "opay-request": {
+          title: "OPay Service Request",
+          price: null,
+          fields: ["mobile"]
+        }
+      };
 
-/* Network-inspired backgrounds */
-.account {
-  background: linear-gradient(135deg,
-    #152c5b, #2878cf);
-}
+      function showMessage(element, message) {
+        element.textContent = message;
+        element.hidden = false;
+      }
 
-.upaisa {
-  background: linear-gradient(135deg,
-    #08783e, #25b76a);
-}
+      function clearMessage(element) {
+        element.textContent = "";
+        element.hidden = true;
+      }
 
-.cnic {
-  background: linear-gradient(135deg,
-    #075e43, #12a887);
-}
+      async function apiRequest(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "same-origin",
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+          }
+        });
 
-.network-name {
-  display: inline-block;
-  background: #ffffff25;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (_) {
+          data = {};
+        }
 
-.service-card h3 {
-  margin: 18px 0 8px;
-  font-size: 21px;
-}
+        if (!response.ok) {
+          throw new Error(data.message || data.error || "Request failed.");
+        }
+        return data;
+      }
 
-.price {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 15px 0;
-}
+      function money(value) {
+        const number = Number(value);
+        return Number.isFinite(number)
+          ? "Rs " + number.toLocaleString("en-PK")
+          : "Not available";
+      }
 
-.service-card button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 9px;
-  background: white;
-  color: #153a36;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 8px;
-}
+      function setLoggedInView(isLoggedIn) {
+        authView.hidden = isLoggedIn;
+        dashboard.hidden = !isLoggedIn;
+      }
 
-.service-form {
-  display: none;
-  margin-top: 18px;
-}
+      $("loginTab").addEventListener("click", () => {
+        loginForm.classList.remove("hidden");
+        registerForm.classList.add("hidden");
+        $("loginTab").classList.add("active");
+        $("registerTab").classList.remove("active");
+        clearMessage(authMessage);
+      });
 
-.service-form input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 13px;
-  margin: 7px 0;
-  border: 0;
-  border-radius: 8px;
-  outline: none;
-}
+      $("registerTab").addEventListener("click", () => {
+        registerForm.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+        $("registerTab").classList.add("active");
+        $("loginTab").classList.remove("active");
+        clearMessage(authMessage);
+      });
 
-.service-form .close-btn {
-  background: #ffffff30;
-  color: white;
-  border: 1px solid #ffffff70;
-}
+      loginForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        clearMessage(authMessage);
 
-@media (max-width: 480px) {
-  .service-container {
-    grid-template-columns: 1fr;
-    padding: 12px;
-  }
-}
-</style>
+        const form = new FormData(loginForm);
+        try {
+          const result = await apiRequest(API.login, {
+            method: "POST",
+            body: JSON.stringify({
+              username: form.get("username"),
+              password: form.get("password")
+            })
+          });
 
-<script>
-function openService(id) {
-  document.querySelectorAll('.service-form')
-    .forEach(form => form.style.display = 'none');
+          if (result.success === false) {
+            throw new Error(result.message || "Login unsuccessful.");
+          }
 
-  document.getElementById(id).style.display = 'block';
-}
+          await loadMe();
+        } catch (error) {
+          showMessage(authMessage, error.message);
+        }
+      });
 
-function closeService(id) {
-  document.getElementById(id).style.display = 'none';
-}
-</script>
-</script>
-</body>
-</html>
+      registerForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        clearMessage(authMessage);
+
+        const form = new FormData(registerForm);
+        try {
+          const result = await apiRequest(API.register, {
+            method: "POST",
+            body: JSON.stringify({
+              fullName: form.get("fullName"),
+              username: form.get("username"),
+              password: form.get("password")
+            })
+          });
+
+          showMessage(
+            authMessage,
+            result.message || "Registration submitted. Please log in after approval."
+          );
+        } catch (error) {
+          showMessage(authMessage, error.message);
+        }
+      });
+
+      async function loadMe() {
+        try {
+          const result = await apiRequest(API.me, { method: "GET" });
+
+          if (result.success === false || result.authenticated === false) {
+            setLoggedInView(false);
+            return;
+          }
+
+          const user = result.user || result.member || result.customer || result;
+          setLoggedInView(true);
+
+          $("memberName").textContent =
+            user.fullName || user.full_name || user.name || user.username || "Member";
+
+          const balance =
+            user.balance ?? user.credits ?? user.credit_balance ?? 0;
+          $("memberBalance").textContent = money(balance);
+
+          $("memberStatus").textContent =
+            "Account status: " + (user.status || "Approved / Logged in");
+
+          $("accountInfo").textContent =
+            "Username: " + (user.username || "Not supplied") +
+            "\nStatus: " + (user.status || "Not supplied");
+
+          const transactions =
+            result.transactions || user.transactions || [];
+
+          $("transactionList").textContent = Array.isArray(transactions) &&
+            transactions.length
+            ? transactions.map(item =>
+                (item.description || item.type || "Transaction") +
+                " — " + money(item.amount)
+              ).join("\n")
+            : "No transaction history supplied by the server.";
+
+        } catch (_) {
+          setLoggedInView(false);
+        }
+      }
+
+      $("logoutButton").addEventListener("click", async () => {
+        try {
+          await apiRequest(API.logout, { method: "POST", body: "{}" });
+        } catch (_) {
+          // The view is still reset locally. Server-side logout should be
+          // implemented by the backend.
+        }
+        se
