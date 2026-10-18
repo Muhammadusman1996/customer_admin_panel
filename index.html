@@ -1,333 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Member Services</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Royal Member</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-body {
-  margin: 0;
-  background: #f4f6fa;
-  font-family: Arial, sans-serif;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #101b35;
+      color: white;
+    }
 
-/* Services */
-.service-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #344563;
+    }
 
-.service-card {
-  color: white;
-  padding: 24px;
-  border-radius: 18px;
-  text-align: center;
-  box-shadow: 0 8px 25px #0003;
-  transition: transform .25s;
-}
+    h1 {
+      margin: 0;
+      color: #f2d27b;
+      font-size: 25px;
+    }
 
-.service-card:hover { transform: translateY(-5px); }
+    main {
+      padding: 20px;
+      text-align: center;
+    }
 
-.account { background: linear-gradient(135deg, #152c5b, #2878cf); }
-.easypaisa { background: linear-gradient(135deg, #08783e, #25b76a); }
-.upaisa { background: linear-gradient(135deg, #08783e, #25b76a); }
-.cnic { background: linear-gradient(135deg, #075e43, #12a887); }
-
-.network-name {
-  display: inline-block;
-  background: #ffffff25;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.service-card h3 { margin: 18px 0 8px; }
-.price { font-size: 26px; font-weight: bold; }
-
-.service-card button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 9px;
-  background: white;
-  color: #153a36;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.service-form { display: none; margin-top: 18px; }
-
-.service-form input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 13px;
-  margin: 7px 0;
-  border: 0;
-  border-radius: 8px;
-}
-
-.service-form .close-btn {
-  background: #ffffff30;
-  color: white;
-  border: 1px solid #ffffff70;
-}
-
-/* Payment modal */
-#rmPaymentModal {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: rgba(0,0,0,.82);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-#rmPaymentModal .payment-box {
-  width: 100%;
-  max-width: 430px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: #101b35;
-  color: white;
-  border: 1px solid #f2d27b;
-  border-radius: 16px;
-  padding: 22px;
-  box-sizing: border-box;
-}
-
-#rmPaymentModal h2,
-#rmPaymentModal h3 {
-  color: #f2d27b;
-  margin-top: 0;
-}
-
-#rmPaymentModal input,
-#rmPaymentModal button {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-}
-
-#rmPaymentModal input {
-  background: #182743;
-  color: white;
-  border: 1px solid #53627d;
-}
-
-#rmPaymentModal button {
-  border: 0;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#rmPayContinue, #rmCopyAccount {
-  background: #f2d27b;
-  color: #172039;
-}
-
-#rmPayLater {
-  background: #344563;
-  color: white;
-}
-
-#rmPayMessage {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-size: 13px;
-  margin-top: 12px;
-}
-
-.rm-payment-instructions {
-  background: #182743;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px 0;
-  line-height: 1.6;
-}
-
-@media (max-width: 480px) {
-  .service-container { grid-template-columns: 1fr; padding: 12px; }
-}
-</style>
+    p {
+      color: #c7d0e0;
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>Royal Member</h1>
+  </header>
 
-<!-- Services: connect this section to your authenticated member page -->
-
-<div class="service-container">
-
-  <!-- Account Open -->
-  <div class="service-card account">
-    <div class="network-name">ACCOUNT OPEN</div>
-    <h3>Service Number 1</h3>
-    <p class="price">Rs. 800</p>
-    <button type="button" onclick="openService('service1')">Open Service</button>
-
-    <form id="service1" class="service-form">
-      <input type="tel" placeholder="Mobile Number" required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">Send OTP</button>
-      <button type="button" class="close-btn" onclick="closeService('service1')">Close</button>
-    </form>
-  </div>
-
-  <!-- Easypaisa -->
-  <div class="service-card easypaisa">
-    <div class="network-name">EASYPAISA</div>
-    <h3>Easypaisa Service</h3>
-    <p class="price">Set Price</p>
-    <button type="button" onclick="openService('easypaisaService')">Open Service</button>
-
-    <form id="easypaisaService" class="service-form">
-      <input type="tel" placeholder="Mobile Number" required>
-      <button type="button" onclick="alert('Connect your authorized Easypaisa service API first.')">Continue</button>
-      <button type="button" class="close-btn" onclick="closeService('easypaisaService')">Close</button>
-    </form>
-  </div>
-
-  <!-- UPaisa -->
-  <div class="service-card upaisa">
-    <div class="network-name">UPAISA</div>
-    <h3>UPaisa #1</h3>
-    <p class="price">Rs. 500</p>
-    <button type="button" onclick="openService('service2')">Open Service</button>
-
-    <form id="service2" class="service-form">
-      <input type="tel" placeholder="Mobile Number" required>
-      <input type="text" placeholder="CNIC Number" maxlength="15" required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">Send OTP</button>
-      <button type="button" class="close-btn" onclick="closeService('service2')">Close</button>
-    </form>
-  </div>
-
-  <!-- UPaisa CNIC -->
-  <div class="service-card cnic">
-    <div class="network-name">UPAISA CNIC</div>
-    <h3>UPaisa CNIC #2</h3>
-    <p class="price">Rs. 350</p>
-    <button type="button" onclick="openService('service3')">Open Service</button>
-
-    <form id="service3" class="service-form">
-      <input type="tel" placeholder="Mobile Number" required>
-      <button type="button" onclick="alert('Connect your authorized service API first.')">Submit Request</button>
-      <button type="button" class="close-btn" onclick="closeService('service3')">Close</button>
-    </form>
-  </div>
-
-</div>
-
-<!-- Payment modal -->
-<div id="rmPaymentModal">
-  <div class="payment-box">
-    <h2>Add Payment</h2>
-
-    <div class="rm-payment-instructions">
-      <h3>Payment Instructions</h3>
-      <p><strong>Payment Method:</strong> OPay</p>
-      <p><strong>Account Title:</strong> Noor Jahan</p>
-      <p><strong>Account Number:</strong> 03422605178</p>
-
-      <button type="button" id="rmCopyAccount">Copy Account Number</button>
-
-      <p><strong>Step 1:</strong> پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔</p>
-      <p><strong>Step 2:</strong> پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔</p>
-      <p><strong>Step 3:</strong> Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔</p>
-      <p><strong>Step 4:</strong> Send Payment Slip to Admin پر کلک کریں۔</p>
-      <p style="color:#f2d27b;">ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔</p>
-    </div>
-
-    <form id="rmPaymentForm">
-      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
-      <input id="rmPaymentAmount" name="amount" type="number" min="1" step="1" required placeholder="Payment amount">
-
-      <label for="rmPaymentRef">Transaction ID</label>
-      <input id="rmPaymentRef" name="transactionId" type="text" maxlength="100" required placeholder="Transaction ID">
-
-      <label for="rmPaymentSlip">Payment Slip</label>
-      <input id="rmPaymentSlip" name="slip" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required>
-
-      <button type="submit" id="rmPayContinue">Send Payment Slip to Admin</button>
-    </form>
-
-    <button type="button" id="rmPayLater">Later</button>
-    <div id="rmPayMessage" aria-live="polite"></div>
-  </div>
-</div>
-
-<script>
-function openService(id) {
-  document.querySelectorAll('.service-form').forEach(form => {
-    form.style.display = 'none';
-  });
-  document.getElementById(id).style.display = 'block';
-}
-
-function closeService(id) {
-  document.getElementById(id).style.display = 'none';
-}
-
-(() => {
-  const modal = document.getElementById('rmPaymentModal');
-  const form = document.getElementById('rmPaymentForm');
-  const message = document.getElementById('rmPayMessage');
-
-  // Service forms can open the payment modal when submitted.
-  document.querySelectorAll('.service-form').forEach(serviceForm => {
-    serviceForm.addEventListener('submit', event => {
-      event.preventDefault();
-      modal.style.display = 'flex';
-      message.textContent = '';
-    });
-  });
-
-  document.getElementById('rmPayLater').addEventListener('click', () => {
-    modal.style.display = 'none';
-    message.textContent = '';
-  });
-
-  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText('03422605178');
-      message.textContent = 'Account number copied.';
-    } catch {
-      message.textContent = 'Please copy manually: 03422605178';
-    }
-  });
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const slip = document.getElementById('rmPaymentSlip').files[0];
-    const amount = document.getElementById('rmPaymentAmount').value;
-    const transactionId = document.getElementById('rmPaymentRef').value.trim();
-
-    if (!slip || !amount || !transactionId) {
-      message.textContent = 'Please complete all payment fields.';
-      return;
-    }
-
-    if (slip.size > 5 * 1024 * 1024) {
-      message.textContent = 'Slip must be 5 MB or smaller.';
-      return;
-    }
-
-    message.textContent =
-      'Payment details checked, but the slip has NOT been sent. ' +
-      'Server upload is not connected yet.';
-  });
-})();
-</script>
-
+  <main>
+    <p>Welcome to Royal Member.</p>
+  </main>
 </body>
 </html>
