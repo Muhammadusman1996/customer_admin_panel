@@ -562,7 +562,7 @@ async function loadMe() {
     $('#memberId').textContent =
       'VIP-' + String(user.id).padStart(4, '0');
 
-    const transactions = user.transactions || [];
+    $('#balance').textContent = Number(user.credits ?? user.credit ?? 0).toFixed(2);
 
     $('#transactions').innerHTML = transactions.length
       ? transactions.map(transaction => `
