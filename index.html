@@ -1,672 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Royal VIP Member Portal</title>
-
-  <style>
-    :root {
-      --bg: #07111f;
-      --panel: #101e31;
-      --text: #f3f7ff;
-      --muted: #a9b7cc;
-      --border: #293c55;
-      --green: #00a85a;
-      --blue: #0878d1;
-      --orange: #f28c28;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-    }
-
-    button, input, select, textarea { font: inherit; }
-
-    button {
-      cursor: pointer;
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 16px;
-      font-weight: 700;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: #081423;
-      color: white;
-      margin-top: 6px;
-    }
-
-    label {
-      display: block;
-      margin: 13px 0;
-      color: #dce7f8;
-      font-size: 14px;
-    }
-
-    .hidden, [hidden] { display: none !important; }
-
-    header {
-      padding: 20px 16px;
-      text-align: center;
-      background: linear-gradient(135deg, #102b49, #07111f);
-      border-bottom: 1px solid var(--border);
-    }
-
-    header h1 { margin: 0 0 7px; }
-    header p { color: var(--muted); margin: 0; }
-
-    main {
-      width: min(1100px, 94%);
-      margin: 24px auto;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .auth-box {
-      width: min(440px, 100%);
-      margin: 35px auto;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .tabs button { flex: 1; background: #20324b; color: white; }
-    .tabs button.active { background: #1678d2; }
-
-    .primary { background: #1479dc; color: white; }
-    .secondary { background: #263a53; color: white; }
-    .danger { background: #b83243; color: white; }
-    .success { background: #087d4a; color: white; }
-
-    .notice {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 8px;
-      background: #172a40;
-      color: #dce9fa;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 16px;
-    }
-
-    .service-card {
-      border-radius: 14px;
-      padding: 18px;
-      color: white;
-      border: 1px solid #ffffff33;
-      box-shadow: 0 8px 22px #0003;
-      display: flex;
-      flex-direction: column;
-      min-height: 205px;
-    }
-
-    .service-card h3 { margin: 0 0 10px; }
-    .service-card p { line-height: 1.5; flex: 1; }
-    .service-card .price { font-size: 20px; font-weight: bold; }
-    .service-card button { background: #fff; color: #111827; }
-
-    .easypaisa { background: linear-gradient(145deg, #009b50, #006b3a); }
-    .upaisa { background: linear-gradient(145deg, #087ed0, #064b8a); }
-    .opay { background: linear-gradient(145deg, #ef8c24, #b84a12); }
-
-    .service-heading {
-      margin: 30px 0 14px;
-      padding-left: 12px;
-      border-left: 4px solid #4a9df8;
-    }
-
-    .topbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .balance {
-      font-size: 24px;
-      font-weight: 800;
-      color: #6ee7a8;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: #000b;
-      z-index: 10;
-      display: grid;
-      place-items: center;
-      padding: 16px;
-      overflow-y: auto;
-    }
-
-    .modal {
-      width: min(520px, 100%);
-      max-height: 90vh;
-      overflow-y: auto;
-      background: #101e31;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 22px;
-    }
-
-    .modal-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .modal-title h2 { margin-top: 0; }
-    .close-button { background: #263a53; color: white; }
-
-    .small { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: var(--muted);
-    }
-
-    @media (max-width: 500px) {
-      .panel { padding: 15px; }
-      header h1 { font-size: 23px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal VIP Member Portal</title>
+<style>
+*{box-sizing:border-box}
+:root{--gold:#ffbd59;--text:#f5f6ff;--muted:#9daac7}
+body{margin:0;min-height:100vh;padding:24px 16px;display:flex;justify-content:center;align-items:center;font-family:Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at top,#30204f 0%,transparent 55%),linear-gradient(145deg,#080b19,#101c35 55%,#160e29)}
+.wrap{width:100%;max-width:430px}
+.brand{text-align:center;margin-bottom:22px}
+.logo{width:66px;height:66px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border-radius:20px;font-size:36px;color:#171025;background:linear-gradient(135deg,#ffe4a1,#ff9b3d)}
+.brand h1{margin:0;font-size:27px;letter-spacing:2px}
+.brand p{color:var(--gold);font-size:11px;letter-spacing:4px}
+.card{padding:30px 24px;border:1px solid #ffffff18;border-radius:25px;background:linear-gradient(145deg,#18223b,#101426);box-shadow:0 20px 60px #0008}
+h2{text-align:center;font-size:25px}
+.sub{text-align:center;color:var(--muted);font-size:14px;line-height:1.8}
+.field{display:block;margin-bottom:18px}
+.field span{display:block;margin-bottom:9px;font-size:12px}
+.field input,.service-card input{display:block;width:100%;height:49px;padding:12px;border-radius:12px;border:1px solid #ffffff20;background:#090f20;color:white}
+.btn{display:block;width:100%;min-height:49px;padding:13px;border:0;border-radius:12px;cursor:pointer;font-weight:bold;color:#21152b;background:linear-gradient(110deg,#ff9b43,#ffe18b)}
+.switch{margin-top:18px;padding:16px;width:100%;border-radius:12px;color:white;background:#ffffff08;border:1px solid #ffffff1c}
+.hidden{display:none!important}
+.message{margin-top:15px;font-size:13px;overflow-wrap:anywhere}
+.stats{display:grid;gap:12px}
+.stat{padding:16px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff15}
+.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+.stat strong{color:var(--gold);font-size:20px}
+.services{margin-top:20px}
+.service-card{padding:18px;margin-top:14px;border-radius:16px;background:#0c1428;border:1px solid #9b7b3e}
+.service-card h3{margin-top:0}
+.price{font-size:23px;color:#f2d27b;font-weight:bold}
+.note{color:#c2cbe0;font-size:13px;line-height:1.6}
+.foot{text-align:center;color:#8290af;font-size:12px;line-height:1.8;margin-top:22px}
+a{color:var(--gold)}
+</style>
 </head>
-
 <body>
-  <header>
-    <h1>Royal VIP Member Portal</h1>
-    <p>Customer Dashboard & Services</p>
-  </header>
+<main class="wrap">
+<header class="brand">
+<div class="logo">✦</div>
+<h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
+<p>VIP MEMBER PORTAL</p>
+</header>
 
-  <main>
-    <!-- LOGIN / REGISTRATION -->
-    <section id="authView" class="panel auth-box">
-      <div class="tabs">
-        <button id="loginTab" class="active" type="button">Login</button>
-        <button id="registerTab" type="button">Register</button>
-      </div>
+<section id="authView" class="card">
+<div id="loginView">
+<h2>Login Karein</h2>
+<p class="sub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>
+<form id="loginForm">
+<label class="field"><span>USERNAME</span>
+<input name="username" autocomplete="username" required placeholder="اپنا یوزر نیم لکھیں"></label>
+<label class="field"><span>PASSWORD</span>
+<input name="password" type="password" autocomplete="current-password" required placeholder="اپنا پاس ورڈ لکھیں"></label>
+<button class="btn" type="submit">Secure Login ↗</button>
+</form>
+<button class="switch" id="openRegister" type="button">نیا اکاؤنٹ بنائیں؟ Create Account</button>
+</div>
 
-      <form id="loginForm">
-        <h2>Member Login</h2>
-        <label>Username
-          <input name="username" autocomplete="username" required>
-        </label>
-        <label>Password
-          <input name="password" type="password"
-                 autocomplete="current-password" required>
-        </label>
-        <button class="primary" type="submit" style="width:100%">Login</button>
-      </form>
+<div id="registerView" class="hidden">
+<h2>Create Account</h2>
+<p class="sub">نیا اکاؤنٹ بنائیں۔ منظوری ایڈمن دے گا۔</p>
+<form id="registerForm">
+<label class="field"><span>FULL NAME</span><input name="name" minlength="2" required placeholder="پورا نام"></label>
+<label class="field"><span>USERNAME</span><input name="username" minlength="3" pattern="[A-Za-z0-9_.-]+" required placeholder="Username"></label>
+<label class="field"><span>PASSWORD</span><input name="password" type="password" minlength="8" required placeholder="کم از کم 8 حروف"></label>
+<button class="btn" type="submit">Create Account</button>
+</form>
+<button class="switch" id="backToLogin" type="button">واپس Login پر جائیں</button>
+</div>
+<div id="msg" class="message" role="status"></div>
+</section>
 
-      <form id="registerForm" class="hidden">
-        <h2>Create Account</h2>
-        <label>Full Name
-          <input name="fullName" autocomplete="name" required>
-        </label>
-        <label>Username
-          <input name="username" autocomplete="username" required>
-        </label>
-        <label>Password
-          <input name="password" type="password"
-                 autocomplete="new-password" minlength="6" required>
-        </label>
-        <button class="primary" type="submit" style="width:100%">Register</button>
-      </form>
+<section id="dashboard" class="hidden">
+<div class="card">
+<h2>Member Dashboard</h2>
+<p id="welcome" class="sub"></p>
+<div class="stats">
+<div class="stat"><span>AVAILABLE CREDIT</span><strong id="balance">0.00</strong></div>
+<div class="stat"><span>ACCOUNT STATUS</span><strong id="memberStatus">—</strong></div>
+<div class="stat"><span>MEMBER ID</span><strong id="memberId">—</strong></div>
+</div>
+<h3>Credit History</h3>
+<div id="transactions" class="note">کریڈٹ ہسٹری لوڈ نہیں ہوئی۔</div>
+<button class="btn" id="logout" type="button" style="margin-top:20px">Log out</button>
+</div>
 
-      <div id="authMessage" class="notice" hidden></div>
-      <p class="small">
-        Registration and login use the website's server API. New accounts may
-        need admin approval before they can access the dashboard.
-      </p>
-    </section>
+<!-- یہ سروسز صرف لاگ اِن کے بعد دکھائی جاتی ہیں -->
+<section class="services" id="rmServices" hidden>
+<h2>👑 Available Services</h2>
+<p class="note">اپنے مجاز اکاؤنٹ اور معلومات ہی استعمال کریں۔</p>
 
-    <!-- EVERYTHING BELOW IS HIDDEN UNTIL LOGIN SUCCEEDS -->
-    <section id="dashboard" hidden>
-      <div class="panel">
-        <div class="topbar">
-          <div>
-            <h2>Welcome, <span id="memberName">Member</span></h2>
-            <p class="small">Your account dashboard</p>
-          </div>
-          <button id="logoutButton" class="danger" type="button">Logout</button>
-        </div>
-        <p>Available Balance</p>
-        <div id="memberBalance" class="balance">Rs 0</div>
-        <div id="memberStatus" class="notice">Account status: Loading...</div>
-      </div>
+<article class="service-card">
+<h3>UPaisa Services</h3>
+<div class="price">UPaisa</div>
+<p class="note">UPaisa سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>
+</article>
 
-      <section id="rmServices" class="panel">
-        <h2>Available Services</h2>
-        <p class="small">
-          Select a service to open its request form. Requests are not processed
-          unless the relevant authorized server integration is configured.
-        </p>
+<article class="service-card">
+<h3>OPay Services</h3>
+<div class="price">OPay</div>
+<p class="note">OPay سروس کے لیے مجاز سرور کنکشن ضروری ہے۔</p>
+</article>
+</section>
+</section>
 
-        <h3 class="service-heading">Easypaisa Services</h3>
-        <div class="grid">
-          <article class="service-card easypaisa">
-            <h3>Easypaisa Account Open</h3>
-            <p>Required: Mobile number and CNIC</p>
-            <div class="price">Rs 1000</div>
-            <button type="button" data-service="easypaisa-open">Open Service</button>
-          </article>
+<footer class="foot">
+<strong style="color:var(--gold)">✦ M. Usman — Admin Contact</strong>
+<p>مدد کے لیے رابطہ کریں</p>
+<a href="https://wa.me/923021394509">WhatsApp: 0302-1394509</a>
+<br>
+<a href="https://wa.me/923060001167">WhatsApp: 0306-0001167</a>
+</footer>
+</main>
 
-          <article class="service-card easypaisa">
-            <h3>Easypaisa PIN Reset</h3>
-            <p>Required: Mobile number</p>
-            <div class="price">Rs 150</div>
-            <button type="button" data-service="easypaisa-pin">Open Service</button>
-          </article>
+<script>
+const $ = s => document.querySelector(s);
 
-          <article class="service-card easypaisa">
-            <h3>Easypaisa CNIC Lookup</h3>
-            <p>Required: CNIC</p>
-            <div class="price">Rs 120</div>
-            <button type="button" data-service="easypaisa-lookup">Open Service</button>
-          </article>
+function message(text){
+  $('#msg').textContent = text;
+}
 
-          <article class="service-card easypaisa">
-            <h3>Easypaisa Android ID</h3>
-            <p>Required: CNIC and mobile number</p>
-            <div class="price">Rs 700</div>
-            <button type="button" data-service="easypaisa-android">Open Service</button>
-          </article>
+function mode(register){
+  $('#loginView').classList.toggle('hidden',register);
+  $('#registerView').classList.toggle('hidden',!register);
+  message('');
+}
 
-          <article class="service-card easypaisa">
-            <h3>Asaan Digital Account Request</h3>
-            <p>Required: CNIC, mobile number and email</p>
-            <div class="price">Rs 2000</div>
-            <button type="button" data-service="easypaisa-digital">Open Service</button>
-          </article>
-        </div>
+$('#openRegister').onclick=()=>mode(true);
+$('#backToLogin').onclick=()=>mode(false);
 
-        <h3 class="service-heading">UPaisa Services</h3>
-        <div class="grid">
-          <article class="service-card upaisa">
-            <h3>UPaisa Account Open #1</h3>
-            <p>Mobile number and request for OTP</p>
-            <div class="price">Rs 800</div>
-            <button type="button" data-service="upaisa-open">Open Service</button>
-          </article>
+async function post(url,data){
+  const response=await fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  });
+  const result=await response.json();
+  if(!response.ok) throw new Error(result.error||'درخواست مکمل نہیں ہوئی۔');
+  return result;
+}
 
-          <article class="service-card upaisa">
-            <h3>UPaisa Account Open #2</h3>
-            <p>Required: Mobile number and CNIC</p>
-            <div class="price">Rs 500</div>
-            <button type="button" data-service="upaisa-open2">Open Service</button>
-          </article>
+$('#loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.target).entries());
+  try{
+    await post('/api/member/login',data);
+    await loadMe();
+  }catch(err){message(err.message);}
+});
 
-          <article class="service-card upaisa">
-            <h3>UPaisa CNIC #2</h3>
-            <p>Required: Mobile number and request details</p>
-            <div class="price">Rs 350</div>
-            <button type="button" data-service="upaisa-cnic">Open Service</button>
-          </article>
-        </div>
+$('#registerForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(e.target).entries());
+  try{
+    const result=await post('/api/register',data);
+    e.target.reset();
+    mode(false);
+    message(result.message||'رجسٹریشن موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔');
+  }catch(err){message(err.message);}
+});
 
-        <h3 class="service-heading">OPay Services</h3>
-        <div class="grid">
-          <article class="service-card opay">
-            <h3>OPay Service Request</h3>
-            <p>Submit a service request through an authorized integration.</p>
-            <div class="price">Price to be configured</div>
-            <button type="button" data-service="opay-request">Open Service</button>
-          </article>
-        </div>
-      </section>
+async function loadMe(){
+  try{
+    const response=await fetch('/api/me');
+    if(!response.ok) return;
+    const result=await response.json();
+    const user=result.user;
+    if(!user) return;
 
-      <!-- ACCOUNT / PAYMENT AREA -->
-      <section class="panel">
-        <h2>Payment System</h2>
-        <p class="small">
-          Enter payment details only after confirming the official receiving
-          account and payment procedure with your administrator.
-        </p>
-        <button id="openPayment" class="success" type="button">
-          Submit Payment Details
-        </button>
-        <div id="paymentMessage" class="notice" hidden></div>
-      </section>
+    $('#authView').classList.add('hidden');
+    $('#dashboard').classList.remove('hidden');
+    $('#rmServices').hidden=false;
 
-      <section class="panel">
-        <h2>Account Information</h2>
-        <div id="accountInfo">Loading account information...</div>
-        <h3>Recent Transactions</h3>
-        <div id="transactionList" class="small">No transaction data loaded.</div>
-      </section>
-    </section>
-  </main>
+    $('#welcome').textContent='Welcome, '+(user.name||'Member');
+    $('#balance').textContent=Number(user.credits??user.credit??0).toFixed(2);
+    $('#memberStatus').textContent=user.status||'Approved';
+    $('#memberId').textContent='VIP-'+String(user.id??'—').padStart(4,'0');
 
-  <!-- SERVICE FORM MODAL -->
-  <div id="serviceModal" class="modal-backdrop" hidden>
-    <div class="modal">
-      <div class="modal-title">
-        <h2 id="serviceTitle">Service Request</h2>
-        <button type="button" class="close-button" data-close="serviceModal">Close</button>
-      </div>
+    const transactions=Array.isArray(result.transactions)?result.transactions:[];
+    $('#transactions').textContent=transactions.length
+      ? transactions.map(t=>(t.note||'Transaction')+' — '+Number(t.amount||0).toFixed(2)).join('\n')
+      : 'ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔';
+  }catch(err){
+    console.error('Could not load member dashboard.');
+  }
+}
 
-      <p id="servicePrice" class="balance"></p>
-      <form id="serviceForm">
-        <input type="hidden" id="serviceKey" name="serviceKey">
+$('#logout').addEventListener('click',async()=>{
+  try{await fetch('/api/logout',{method:'POST'});}
+  finally{location.reload();}
+});
 
-        <label>Full Name
-          <input id="customerFullName" name="fullName" required>
-        </label>
-
-        <label>Mobile Number
-          <input id="customerMobile" name="mobile"
-                 inputmode="tel" placeholder="03XXXXXXXXX">
-        </label>
-
-        <label>CNIC Number
-          <input id="customerCnic" name="cnic"
-                 inputmode="numeric" placeholder="XXXXX-XXXXXXX-X">
-        </label>
-
-        <label>Email (if required)
-          <input id="customerEmail" name="email" type="email">
-        </label>
-
-        <label>Additional Request Details
-          <textarea id="customerDetails" name="details" rows="3"
-                    placeholder="Enter only the information required for this service"></textarea>
-        </label>
-
-        <p class="small">
-          Do not enter your account password, PIN, or OTP into this form.
-          Actual processing requires a verified, authorized API.
-        </p>
-
-        <button class="primary" type="submit" style="width:100%">
-          Submit Request
-        </button>
-        <div id="serviceMessage" class="notice" hidden></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- PAYMENT FORM MODAL -->
-  <div id="paymentModal" class="modal-backdrop" hidden>
-    <div class="modal">
-      <div class="modal-title">
-        <h2>Payment Details</h2>
-        <button type="button" class="close-button" data-close="paymentModal">Close</button>
-      </div>
-
-      <form id="paymentForm">
-        <label>Amount (Rs)
-          <input name="amount" type="number" min="1" required>
-        </label>
-        <label>Transaction ID
-          <input name="transactionId" required>
-        </label>
-        <label>Payment Note
-          <textarea name="note" rows="3"></textarea>
-        </label>
-        <button type="submit" class="success" style="width:100%">
-          Submit Payment Details
-        </button>
-        <div id="paymentFormMessage" class="notice" hidden></div>
-      </form>
-    </div>
-  </div>
-
-  <footer>Royal VIP Member Portal</footer>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const $ = id => document.getElementById(id);
-
-      const authView = $("authView");
-      const dashboard = $("dashboard");
-      const loginForm = $("loginForm");
-      const registerForm = $("registerForm");
-      const authMessage = $("authMessage");
-
-      // Relative URLs keep this page on the same host as server.js.
-      // Change these paths only if your server uses different API routes.
-      const API = {
-        login: "/api/member/login",
-        register: "/api/member/register",
-        me: "/api/me",
-        logout: "/api/logout",
-        services: "/api/member/service-request",
-        payment: "/api/member/payment-request"
-      };
-
-      const serviceDefinitions = {
-        "easypaisa-open": {
-          title: "Easypaisa Account Open",
-          price: 1000,
-          fields: ["mobile", "cnic"]
-        },
-        "easypaisa-pin": {
-          title: "Easypaisa PIN Reset",
-          price: 150,
-          fields: ["mobile"]
-        },
-        "easypaisa-lookup": {
-          title: "Easypaisa CNIC Lookup",
-          price: 120,
-          fields: ["cnic"]
-        },
-        "easypaisa-android": {
-          title: "Easypaisa Android ID",
-          price: 700,
-          fields: ["mobile", "cnic"]
-        },
-        "easypaisa-digital": {
-          title: "Asaan Digital Account Request",
-          price: 2000,
-          fields: ["mobile", "cnic", "email"]
-        },
-        "upaisa-open": {
-          title: "UPaisa Account Open #1",
-          price: 800,
-          fields: ["mobile"]
-        },
-        "upaisa-open2": {
-          title: "UPaisa Account Open #2",
-          price: 500,
-          fields: ["mobile", "cnic"]
-        },
-        "upaisa-cnic": {
-          title: "UPaisa CNIC #2",
-          price: 350,
-          fields: ["mobile"]
-        },
-        "opay-request": {
-          title: "OPay Service Request",
-          price: null,
-          fields: ["mobile"]
-        }
-      };
-
-      function showMessage(element, message) {
-        element.textContent = message;
-        element.hidden = false;
-      }
-
-      function clearMessage(element) {
-        element.textContent = "";
-        element.hidden = true;
-      }
-
-      async function apiRequest(url, options = {}) {
-        const response = await fetch(url, {
-          credentials: "same-origin",
-          ...options,
-          headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {})
-          }
-        });
-
-        let data = {};
-        try {
-          data = await response.json();
-        } catch (_) {
-          data = {};
-        }
-
-        if (!response.ok) {
-          throw new Error(data.message || data.error || "Request failed.");
-        }
-        return data;
-      }
-
-      function money(value) {
-        const number = Number(value);
-        return Number.isFinite(number)
-          ? "Rs " + number.toLocaleString("en-PK")
-          : "Not available";
-      }
-
-      function setLoggedInView(isLoggedIn) {
-        authView.hidden = isLoggedIn;
-        dashboard.hidden = !isLoggedIn;
-      }
-
-      $("loginTab").addEventListener("click", () => {
-        loginForm.classList.remove("hidden");
-        registerForm.classList.add("hidden");
-        $("loginTab").classList.add("active");
-        $("registerTab").classList.remove("active");
-        clearMessage(authMessage);
-      });
-
-      $("registerTab").addEventListener("click", () => {
-        registerForm.classList.remove("hidden");
-        loginForm.classList.add("hidden");
-        $("registerTab").classList.add("active");
-        $("loginTab").classList.remove("active");
-        clearMessage(authMessage);
-      });
-
-      loginForm.addEventListener("submit", async event => {
-        event.preventDefault();
-        clearMessage(authMessage);
-
-        const form = new FormData(loginForm);
-        try {
-          const result = await apiRequest(API.login, {
-            method: "POST",
-            body: JSON.stringify({
-              username: form.get("username"),
-              password: form.get("password")
-            })
-          });
-
-          if (result.success === false) {
-            throw new Error(result.message || "Login unsuccessful.");
-          }
-
-          await loadMe();
-        } catch (error) {
-          showMessage(authMessage, error.message);
-        }
-      });
-
-      registerForm.addEventListener("submit", async event => {
-        event.preventDefault();
-        clearMessage(authMessage);
-
-        const form = new FormData(registerForm);
-        try {
-          const result = await apiRequest(API.register, {
-            method: "POST",
-            body: JSON.stringify({
-              fullName: form.get("fullName"),
-              username: form.get("username"),
-              password: form.get("password")
-            })
-          });
-
-          showMessage(
-            authMessage,
-            result.message || "Registration submitted. Please log in after approval."
-          );
-        } catch (error) {
-          showMessage(authMessage, error.message);
-        }
-      });
-
-      async function loadMe() {
-        try {
-          const result = await apiRequest(API.me, { method: "GET" });
-
-          if (result.success === false || result.authenticated === false) {
-            setLoggedInView(false);
-            return;
-          }
-
-          const user = result.user || result.member || result.customer || result;
-          setLoggedInView(true);
-
-          $("memberName").textContent =
-            user.fullName || user.full_name || user.name || user.username || "Member";
-
-          const balance =
-            user.balance ?? user.credits ?? user.credit_balance ?? 0;
-          $("memberBalance").textContent = money(balance);
-
-          $("memberStatus").textContent =
-            "Account status: " + (user.status || "Approved / Logged in");
-
-          $("accountInfo").textContent =
-            "Username: " + (user.username || "Not supplied") +
-            "\nStatus: " + (user.status || "Not supplied");
-
-          const transactions =
-            result.transactions || user.transactions || [];
-
-          $("transactionList").textContent = Array.isArray(transactions) &&
-            transactions.length
-            ? transactions.map(item =>
-                (item.description || item.type || "Transaction") +
-                " — " + money(item.amount)
-              ).join("\n")
-            : "No transaction history supplied by the server.";
-
-        } catch (_) {
-          setLoggedInView(false);
-        }
-      }
-
-      $("logoutButton").addEventListener("click", async () => {
-        try {
-          await apiRequest(API.logout, { method: "POST", body: "{}" });
-        } catch (_) {
-          // The view is still reset locally. Server-side logout should be
-          // implemented by the backend.
-        }
-        se
+loadMe();
+</script>
+</body>
+</html>
