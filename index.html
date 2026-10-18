@@ -601,6 +601,93 @@ $('#logout').addEventListener('click', async () => {
 
 // Initial page
 loadMe();
+  <!-- Royal Member Services -->
+<style>
+.rm-services{max-width:1000px;margin:25px auto;padding:16px;color:#f6f7fb;font-family:Arial,sans-serif}
+.rm-services h2{color:#f2d27b}
+.rm-service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rm-service-card{background:#0c1428;border:1px solid #9b7b3e;border-radius:16px;padding:18px}
+.rm-price{font-size:24px;color:#f2d27b;font-weight:bold;margin:10px 0}
+.rm-service-card input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0 10px;border-radius:8px;border:1px solid #35415d;background:#101a31;color:white}
+.rm-service-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#e8c56b;color:#171208;font-weight:bold;cursor:pointer}
+.rm-note{font-size:13px;color:#c2cbe0;line-height:1.5}
+.rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere}
+</style>
+
+<section class="rm-services">
+  <h2>👑 Available Services</h2>
+  <p class="rm-note">Select a service and submit a request. Use only accounts and identity details you are authorized to provide.</p>
+
+  <div class="rm-service-grid">
+    <article class="rm-service-card">
+      <h3>Easypaisa Account Open</h3>
+      <div class="rm-price">Rs. 1,000</div>
+      <form class="rm-service-form" data-service="Easypaisa Account Open" data-price="1000">
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <button type="submit">Send Request</button>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa Account PIN Reset</h3>
+      <div class="rm-price">Rs. 150</div>
+      <form class="rm-service-form" data-service="Easypaisa PIN Reset" data-price="150">
+        <input name="mobile" placeholder="Registered mobile number" inputmode="tel" required>
+        <button type="submit">Request PIN Reset</button>
+        <p class="rm-note">Never enter or share your current PIN or OTP.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa CNIC to Mobile Lookup</h3>
+      <div class="rm-price">Rs. 120</div>
+      <form class="rm-service-form" data-service="CNIC to Mobile Lookup" data-price="120">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <button type="submit">Submit Request</button>
+        <p class="rm-note">Lookup must use an authorized service and lawful access.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa Android ID</h3>
+      <div class="rm-price">Rs. 700</div>
+      <form class="rm-service-form" data-service="Easypaisa Android ID" data-price="700">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <button type="submit">Request ID</button>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Asaan Digital Account Request</h3>
+      <div class="rm-price">Rs. 2,000</div>
+      <form class="rm-service-form" data-service="Asaan Digital Account Request" data-price="2000">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <input name="email" type="email" placeholder="Email address" required>
+        <button type="submit">Submit Request</button>
+        <p class="rm-note">Do not enter your account PIN or OTP. Complete verification only through the authorized provider.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+  </div>
+</section>
+
+<script>
+document.querySelectorAll('.rm-service-form').forEach(form => {
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const result = form.querySelector('.rm-result');
+    result.textContent =
+      'Form checked. Server connection is not configured yet; no request has been sent or saved.';
+  });
+});
+</script>
 </script>
 </body>
 </html>
