@@ -1,24 +1,462 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Royal Member Admin</title>
 <style>
-:root{--gold:#f2d27b;--gold2:#b98b32;--panel:#0c1428;--line:#35415d;--muted:#a9b4cc}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#f6f7fb;background:linear-gradient(-45deg,#070b17,#201132,#0b303a,#35220c);background-size:400% 400%;animation:bg 18s ease infinite} @keyframes bg{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}button,input,select{font:inherit}.hidden{display:none!important}.wrap{width:min(1100px,100%);margin:auto;padding:22px}.panel{background:#0b1225ed;border:1px solid #c5a24f80;border-radius:20px;box-shadow:0 20px 60px #0007;padding:22px}.login{max-width:420px;margin:5vh auto;text-align:center}.crown{width:116px;height:116px;margin:0 auto 15px;border-radius:50%;border:3px solid var(--gold);display:grid;place-items:center;background:radial-gradient(circle,#55401a,#11182c);font-size:62px;box-shadow:0 0 30px #e8c56b38}h1{color:var(--gold);letter-spacing:2px;font-size:27px;margin:8px 0}h2{font-size:19px;color:var(--gold);margin:0 0 15px}.muted{color:var(--muted);font-size:13px}.field{text-align:left;margin:16px 0}.field label{display:block;font-size:13px;color:#e9d79d;margin-bottom:7px}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#101a31;color:#fff;outline:none}input:focus{border-color:var(--gold)}button{border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer;background:linear-gradient(100deg,#a87922,#ffe7a0,#b68b35);color:#171208}button.secondary{background:#1b2740;border:1px solid var(--line);color:#fff}button.danger{background:#6e2833;color:white}.full{width:100%}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:20px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{padding:17px;background:#111b32;border:1px solid var(--line);border-radius:14px}.stat b{display:block;font-size:25px;color:var(--gold);margin-top:8px}.grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:540px}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid #293650;font-size:13px}th{color:var(--gold)}td button{margin:3px 2px;padding:7px 9px;font-size:12px}.status{color:var(--gold)}.notice{min-height:20px;color:var(--gold);font-size:13px;margin-top:10px}@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.wrap{padding:13px}.panel{padding:17px}}
-</style></head><body><main class="wrap">
-<section id="loginView" class="panel login"><div class="crown">👑</div><h1>ROYAL MEMBER</h1><p class="muted">Secure Administrator Login</p><form id="loginForm"><div class="field"><label for="email">Admin Email</label><input id="email" type="email" autocomplete="username" required placeholder="Enter admin email"></div><div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Enter password"></div><button class="full" type="submit">LOGIN TO ADMIN PANEL</button></form><p id="loginMsg" class="notice"></p><p class="muted">Royal Member • Secure Access</p></section>
-<section id="dashboard" class="hidden"><header class="top"><div><h1>👑 ROYAL MEMBER</h1><p class="muted">Administrator Dashboard</p></div><button id="logoutBtn" class="secondary">Log out</button></header>
-<div class="stats"><div class="stat">Total Customers<b id="totalCustomers">0</b></div><div class="stat">Pending Approval<b id="pendingCustomers">0</b></div><div class="stat">Approved<b id="approvedCustomers">0</b></div><div class="stat">Active Packages<b id="activePackages">0</b></div></div>
-<div class="grid"><section class="panel"><h2>Customer Accounts</h2><div class="table-wrap"><table><thead><tr><th>Name / Email</th><th>Status</th><th>Credits</th><th>Actions</th></tr></thead><tbody id="customerRows"><tr><td colspan="4">No customer data yet.</td></tr></tbody></table></div><p id="customerMsg" class="notice"></p></section>
-<section class="panel"><h2>Package Management</h2><form id="packageForm"><div class="field"><label for="packageName">Package name</label><input id="packageName" required maxlength="60" placeholder="e.g. Basic Package"></div><div class="field"><label for="packageAmount">Package amount (PKR)</label><input id="packageAmount" type="number" min="1" max="100000000" step="1" required placeholder="e.g. 1000"></div><button class="full" type="submit">ADD PACKAGE</button></form><p id="packageMsg" class="notice"></p><div id="packageRows"></div></section></div></section></main>
+:root {
+  --gold:#f2d27b;
+  --panel:#0c1428;
+  --line:#35415d;
+  --muted:#a9b4cc;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; min-height:100vh; font-family:Arial,sans-serif;
+  color:#f6f7fb;
+  background:linear-gradient(135deg,#070b17,#201132,#0b303a);
+}
+button,input {
+  font:inherit;
+}
+button {
+  cursor:pointer; border:0; border-radius:9px;
+  padding:10px 13px; font-weight:bold;
+  background:linear-gradient(100deg,#a87922,#ffe7a0,#b68b35);
+  color:#171208;
+}
+button:disabled { opacity:.6; cursor:wait; }
+.secondary {
+  background:#1b2740; border:1px solid var(--line); color:white;
+}
+.danger { background:#6e2833; color:white; }
+.hidden { display:none!important; }
+.wrap { width:min(1100px,100%); margin:auto; padding:20px; }
+.panel {
+  background:#0b1225ed; border:1px solid #c5a24f80;
+  border-radius:18px; padding:20px; margin-bottom:16px;
+}
+.login { max-width:430px; margin:6vh auto; text-align:center; }
+h1,h2 { color:var(--gold); }
+h1 { font-size:27px; letter-spacing:1px; }
+h2 { font-size:19px; margin-top:0; }
+.muted { color:var(--muted); font-size:13px; }
+.field { text-align:left; margin:15px 0; }
+label { display:block; margin-bottom:7px; color:#e9d79d; font-size:13px; }
+input {
+  width:100%; padding:12px; border-radius:9px;
+  border:1px solid var(--line); background:#101a31; color:white;
+}
+.full { width:100%; }
+.notice { color:var(--gold); font-size:13px; overflow-wrap:anywhere; }
+.error { color:#ff9a9a; }
+.success { color:#7df0bb; }
+.top {
+  display:flex; justify-content:space-between;
+  align-items:center; gap:12px; flex-wrap:wrap;
+}
+.stats {
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px; margin:18px 0;
+}
+.stat {
+  padding:16px; background:#111b32;
+  border:1px solid var(--line); border-radius:13px;
+}
+.stat b { display:block; font-size:25px; color:var(--gold); margin-top:8px; }
+.grid { display:grid; grid-template-columns:1.3fr 1fr; gap:16px; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:480px; }
+th,td {
+  text-align:left; padding:10px 7px;
+  border-bottom:1px solid #293650; font-size:13px;
+}
+th { color:var(--gold); }
+td button { margin:3px; font-size:12px; }
+.status { color:var(--gold); }
+@media(max-width:760px) {
+  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .grid { grid-template-columns:1fr; }
+  .wrap { padding:12px; }
+  .panel { padding:15px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section id="loginView" class="panel login">
+  <div style="font-size:55px">👑</div>
+  <h1>ROYAL MEMBER</h1>
+  <p class="muted">Secure Administrator Login</p>
+
+  <form id="loginForm">
+    <div class="field">
+      <label for="email">Admin Email</label>
+      <input id="email" type="email" autocomplete="username"
+        required placeholder="Admin email">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password"
+        autocomplete="current-password" required placeholder="Password">
+    </div>
+    <button class="full" type="submit">LOGIN TO ADMIN PANEL</button>
+  </form>
+  <p id="loginMsg" class="notice"></p>
+  <p class="muted">Royal Member • Secure Access</p>
+</section>
+
+<section id="dashboard" class="hidden">
+  <header class="top">
+    <div>
+      <h1>👑 ROYAL MEMBER</h1>
+      <p class="muted">Administrator Dashboard</p>
+    </div>
+    <button id="logoutBtn" class="secondary">Log out</button>
+  </header>
+
+  <p id="globalMsg" class="notice"></p>
+
+  <div class="stats">
+    <div class="stat">Total Customers<b id="totalCustomers">0</b></div>
+    <div class="stat">Pending Approval<b id="pendingCustomers">0</b></div>
+    <div class="stat">Approved<b id="approvedCustomers">0</b></div>
+    <div class="stat">Active Packages<b id="activePackages">0</b></div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Customer Accounts</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name / Username</th>
+              <th>Status</th>
+              <th>Credits</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="customerRows">
+            <tr><td colspan="4">Loading customers...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="customerMsg" class="notice"></p>
+      <button id="refreshBtn" class="secondary">Refresh Data</button>
+    </section>
+
+    <section class="panel">
+      <h2>Package Management</h2>
+      <form id="packageForm">
+        <div class="field">
+          <label for="packageName">Package name</label>
+          <input id="packageName" required maxlength="60"
+            placeholder="e.g. Basic Package">
+        </div>
+        <div class="field">
+          <label for="packageAmount">Package amount (PKR)</label>
+          <input id="packageAmount" type="number" min="1"
+            max="100000000" step="1" required placeholder="e.g. 1000">
+        </div>
+        <button class="full" type="submit">ADD PACKAGE</button>
+      </form>
+      <p id="packageMsg" class="notice"></p>
+      <div id="packageRows"></div>
+    </section>
+  </div>
+</section>
+</main>
+
 <script>
-const $=id=>document.getElementById(id);async function api(url,options={}){const r=await fetch(url,{...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});const d=await r.json().catch(()=>({error:'Unexpected server response'}));if(!r.ok)throw new Error(d.error||'Request failed');return d}function msg(id,t){$(id).textContent=t}
-async function checkSession(){try{const s=await api('/api/session');if(s.authenticated)showDashboard()}catch(e){}}
-function showDashboard(){$('loginView').classList.add('hidden');$('dashboard').classList.remove('hidden');loadAll()}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();msg('loginMsg','Signing in…');try{await api('/api/login',{method:'POST',body:JSON.stringify({email:$('email').value,password:$('password').value})});$('password').value='';msg('loginMsg','');showDashboard()}catch(err){msg('loginMsg',err.message)}});
-$('logoutBtn').onclick=async()=>{try{await api('/api/logout',{method:'POST',body:'{}'})}catch(e){}$('dashboard').classList.add('hidden');$('loginView').classList.remove('hidden')};
-async function loadAll(){try{const s=await api('/api/summary');$('totalCustomers').textContent=s.customers;$('pendingCustomers').textContent=s.pending;$('approvedCustomers').textContent=s.approved;$('activePackages').textContent=s.packages;await loadCustomers();await loadPackages()}catch(e){msg('customerMsg',e.message)}}
-async function loadCustomers(){const rows=await api('/api/customers');$('customerRows').innerHTML='';if(!rows.length){$('customerRows').innerHTML='<tr><td colspan="4">No customer records yet. Connect your registration flow to the customers table.</td></tr>';return}for(const c of rows){const tr=document.createElement('tr');const info=document.createElement('td');info.textContent=c.name+' / '+c.email;const status=document.createElement('td');status.textContent=c.status;status.className='status';const credits=document.createElement('td');credits.textContent=c.credits;const actions=document.createElement('td');for(const [label,st] of [['Approve','approved'],['Reject','rejected']]){const b=document.createElement('button');b.textContent=label;if(st==='rejected')b.className='danger';b.onclick=async()=>{try{await api('/api/customers/'+c.id+'/status',{method:'POST',body:JSON.stringify({status:st})});await loadAll()}catch(e){msg('customerMsg',e.message)}};actions.appendChild(b)}const cb=document.createElement('button');cb.className='secondary';cb.textContent='Set credits';cb.onclick=async()=>{const v=prompt('New credit balance for '+c.name,c.credits);if(v===null)return;try{await api('/api/customers/'+c.id+'/credits',{method:'POST',body:JSON.stringify({amount:Number(v)})});await loadAll()}catch(e){msg('customerMsg',e.message)}};actions.appendChild(cb);tr.append(info,status,credits,actions);$('customerRows').appendChild(tr)}}
-async function loadPackages(){const rows=await api('/api/packages');$('packageRows').innerHTML='';if(!rows.length){$('packageRows').textContent='No packages added yet.';return}for(const p of rows){const div=document.createElement('div');div.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #293650';const label=document.createElement('span');label.textContent=p.name+' — PKR '+p.amount+(p.active?' (Active)':' (Inactive)');const b=document.createElement('button');b.className='secondary';b.textContent=p.active?'Deactivate':'Activate';b.onclick=async()=>{try{await api('/api/packages/'+p.id+'/toggle',{method:'POST',body:'{}'});await loadAll()}catch(e){msg('packageMsg',e.message)}};div.append(label,b);$('packageRows').appendChild(div)}}
-$('packageForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/packages',{method:'POST',body:JSON.stringify({name:$('packageName').value,amount:Number($('packageAmount').value)})});$('packageForm').reset();msg('packageMsg','Package added.');await loadAll()}catch(err){msg('packageMsg',err.message)}});checkSession();
-</script></body></html>
+const $ = id => document.getElementById(id);
+
+async function api(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    credentials: 'same-origin',
+    headers: {
+      ...(options.body ? {'Content-Type':'application/json'} : {}),
+      ...(options.headers || {})
+    }
+  });
+
+  const data = await response.json().catch(() => ({
+    error: 'Server returned an invalid response.'
+  }));
+
+  if (!response.ok) {
+    const error = new Error(data.error || `Request failed (${response.status})`);
+    error.status = response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+function message(id, text, type = '') {
+  const el = $(id);
+  el.textContent = text;
+  el.className = 'notice ' + type;
+}
+
+function showLogin() {
+  $('dashboard').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+}
+
+function showDashboard() {
+  $('loginView').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+}
+
+function handleError(error, target = 'globalMsg') {
+  message(target, error.message, 'error');
+
+  if (error.status === 401) {
+    showLogin();
+    message('loginMsg',
+      'Admin session expired. Please log in again.', 'error');
+  }
+}
+
+async function checkSession() {
+  try {
+    const session = await api('/api/session');
+
+    if (session.authenticated) {
+      showDashboard();
+      await loadAll();
+    } else {
+      showLogin();
+    }
+  } catch (error) {
+    showLogin();
+    message('loginMsg',
+      'Cannot verify admin session: ' + error.message, 'error');
+  }
+}
+
+$('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = $('loginForm').querySelector('button');
+  button.disabled = true;
+  message('loginMsg', 'Signing in...');
+
+  try {
+    await api('/api/login', {
+      method:'POST',
+      body:JSON.stringify({
+        email:$('email').value.trim(),
+        password:$('password').value
+      })
+    });
+
+    $('password').value = '';
+    message('loginMsg', '');
+    showDashboard();
+    await loadAll();
+  } catch (error) {
+    message('loginMsg', error.message, 'error');
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('logoutBtn').addEventListener('click', async () => {
+  try {
+    await api('/api/logout', {
+      method:'POST',
+      body:JSON.stringify({})
+    });
+  } catch (error) {
+    message('globalMsg', error.message, 'error');
+  }
+
+  showLogin();
+});
+
+async function loadAll() {
+  message('globalMsg', 'Loading dashboard...');
+  message('customerMsg', '');
+  message('packageMsg', '');
+
+  try {
+    const summary = await api('/api/summary');
+
+    $('totalCustomers').textContent = summary.customers;
+    $('pendingCustomers').textContent = summary.pending;
+    $('approvedCustomers').textContent = summary.approved;
+    $('activePackages').textContent = summary.packages;
+
+    await Promise.all([loadCustomers(), loadPackages()]);
+    message('globalMsg', 'Dashboard data loaded.', 'success');
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+async function loadCustomers() {
+  const rows = await api('/api/customers');
+  const tbody = $('customerRows');
+  tbody.replaceChildren();
+
+  if (!rows.length) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 4;
+    td.textContent = 'No customer records found in this database.';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  for (const customer of rows) {
+    const tr = document.createElement('tr');
+
+    const info = document.createElement('td');
+    info.textContent =
+      `${customer.name || ''} / ${customer.username || customer.email || 'No username'}`;
+
+    const status = document.createElement('td');
+    status.textContent = customer.status || 'unknown';
+    status.className = 'status';
+
+    const credits = document.createElement('td');
+    credits.textContent = customer.credits ?? 0;
+
+    const actions = document.createElement('td');
+
+    for (const [label, state] of [
+      ['Approve', 'approved'],
+      ['Reject', 'rejected']
+    ]) {
+      const button = document.createElement('button');
+      button.textContent = label;
+      if (state === 'rejected') button.className = 'danger';
+
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        try {
+          await api(`/api/customers/${encodeURIComponent(customer.id)}/status`, {
+            method:'POST',
+            body:JSON.stringify({status:state})
+          });
+          await loadAll();
+        } catch (error) {
+          handleError(error, 'customerMsg');
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      actions.appendChild(button);
+    }
+
+    const creditButton = document.createElement('button');
+    creditButton.className = 'secondary';
+    creditButton.textContent = 'Set credits';
+
+    creditButton.addEventListener('click', async () => {
+      const value = prompt(
+        'New credit balance for ' + customer.name,
+        customer.credits ?? 0
+      );
+      if (value === null) return;
+
+      const amount = Number(value);
+      if (!Number.isSafeInteger(amount) || amount < 0) {
+        message('customerMsg',
+          'Enter a valid non-negative whole number.', 'error');
+        return;
+      }
+
+      try {
+        await api(`/api/customers/${encodeURIComponent(customer.id)}/credits`, {
+          method:'POST',
+          body:JSON.stringify({amount})
+        });
+        await loadAll();
+      } catch (error) {
+        handleError(error, 'customerMsg');
+      }
+    });
+
+    actions.appendChild(creditButton);
+    tr.append(info, status, credits, actions);
+    tbody.appendChild(tr);
+  }
+}
+
+async function loadPackages() {
+  const packages = await api('/api/packages');
+  const container = $('packageRows');
+  container.replaceChildren();
+
+  if (!packages.length) {
+    container.textContent = 'No packages added yet.';
+    return;
+  }
+
+  for (const pkg of packages) {
+    const div = document.createElement('div');
+    div.style.cssText =
+      'display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #293650';
+
+    const label = document.createElement('span');
+    label.textContent =
+      `${pkg.name} — PKR ${pkg.amount} (${Number(pkg.active) ? 'Active' : 'Inactive'})`;
+
+    const button = document.createElement('button');
+    button.className = 'secondary';
+    button.textContent = Number(pkg.active) ? 'Deactivate' : 'Activate';
+
+    button.addEventListener('click', async () => {
+      try {
+        await api(`/api/packages/${encodeURIComponent(pkg.id)}/toggle`, {
+          method:'POST',
+          body:JSON.stringify({})
+        });
+        await loadAll();
+      } catch (error) {
+        handleError(error, 'packageMsg');
+      }
+    });
+
+    div.append(label, button);
+    container.appendChild(div);
+  }
+}
+
+$('packageForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = $('packageForm').querySelector('button');
+  button.disabled = true;
+
+  try {
+    await api('/api/packages', {
+      method:'POST',
+      body:JSON.stringify({
+        name:$('packageName').value.trim(),
+        amount:Number($('packageAmount').value)
+      })
+    });
+
+    $('packageForm').reset();
+    message('packageMsg', 'Package added successfully.', 'success');
+    await loadAll();
+  } catch (error) {
+    handleError(error, 'packageMsg');
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$('refreshBtn').addEventListener('click', loadAll);
+
+checkSession();
+</script>
+</body>
+</html>
