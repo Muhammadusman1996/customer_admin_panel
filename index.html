@@ -1101,5 +1101,273 @@ function closeService(id) {
 }
 </script>
 </script>
+  <!-- Royal Member Panel - Wallet Services -->
+<style>
+#royal-wallet-services {
+  display: none;
+  font-family: Arial, sans-serif;
+  color: #f5f5f5;
+  background: #10131c;
+  padding: 16px;
+  border-radius: 14px;
+}
+#royal-wallet-services * { box-sizing: border-box; }
+#royal-wallet-services .rw-heading {
+  text-align: center;
+  color: #ffca70;
+  margin: 8px 0 20px;
+}
+#royal-wallet-services .rw-group {
+  border: 1px solid #34394a;
+  border-radius: 13px;
+  padding: 13px;
+  margin-bottom: 20px;
+  background: #191e2b;
+}
+#royal-wallet-services .rw-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #383d4c;
+  padding-bottom: 12px;
+  margin-bottom: 13px;
+}
+#royal-wallet-services .rw-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  background: white;
+  border-radius: 10px;
+  padding: 4px;
+}
+#royal-wallet-services .rw-brand h3 {
+  margin: 0;
+  color: #ffca70;
+}
+#royal-wallet-services .rw-card {
+  background: #222838;
+  border: 1px solid #373e51;
+  padding: 13px;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+#royal-wallet-services .rw-card h4 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+#royal-wallet-services .rw-price {
+  color: #70e6a1;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#royal-wallet-services .rw-card input {
+  width: 100%;
+  padding: 12px;
+  margin: 5px 0 10px;
+  background: #111521;
+  border: 1px solid #464d61;
+  border-radius: 7px;
+  color: white;
+  font-size: 15px;
+}
+#royal-wallet-services .rw-btn {
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 7px;
+  color: #151515;
+  background: #ffca70;
+  font-weight: bold;
+  cursor: pointer;
+}
+#royal-wallet-services .rw-note {
+  font-size: 12px;
+  color: #adb6c9;
+  line-height: 1.5;
+  margin-top: 9px;
+}
+</style>
+
+<div id="royal-wallet-services">
+  <h2 class="rw-heading">ROYAL MEMBER SERVICES</h2>
+
+  <!-- JAZZCASH -->
+  <section class="rw-group">
+    <div class="rw-brand">
+      <img class="rw-logo"
+        src="https://www.jazzcash.com.pk/assets/images/jazzcash-logo.png"
+        alt="JazzCash"
+        onerror="this.style.display='none'">
+      <h3>JazzCash Services</h3>
+    </div>
+
+    <div class="rw-card">
+      <h4>JazzCash PIN Reset</h4>
+      <div class="rw-price">Price: Rs 80</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="JazzCash PIN Reset">
+        Research Request
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>Jazz Number Fresh Check</h4>
+      <div class="rw-price">Price: Rs 30</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="Jazz Number Fresh Check">
+        Search Number
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>JazzCash Account Opening (L1)</h4>
+      <div class="rw-price">Price: Rs 1,000</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="JazzCash Account Opening">
+        Create
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>JazzCash Transaction History</h4>
+      <div class="rw-price">Price: Rs 700</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="JazzCash Transaction History">
+        Search
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>JazzCash Merchant Details</h4>
+      <div class="rw-price">Price: Rs 800</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="JazzCash Merchant Details">
+        Search
+      </button>
+    </div>
+  </section>
+
+  <!-- OPAY -->
+  <section class="rw-group">
+    <div class="rw-brand">
+      <img class="rw-logo"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/OPay_logo.svg/200px-OPay_logo.svg.png"
+        alt="OPay"
+        onerror="this.style.display='none'">
+      <h3>OPay Services</h3>
+    </div>
+
+    <div class="rw-card">
+      <h4>OPay Account Opening</h4>
+      <div class="rw-price">Price: Rs 800</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="OPay Account Opening">
+        Submit Request
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>OPay Limit Upgrade</h4>
+      <div class="rw-price">Price: Rs 450</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="OPay Limit Upgrade">
+        Upgrade
+      </button>
+    </div>
+  </section>
+
+  <!-- UPAISA -->
+  <section class="rw-group">
+    <div class="rw-brand">
+      <img class="rw-logo"
+        src="https://www.upaisa.com/assets/images/logo.png"
+        alt="UPaisa"
+        onerror="this.style.display='none'">
+      <h3>UPaisa Services</h3>
+    </div>
+
+    <div class="rw-card">
+      <h4>UPaisa Account Opening</h4>
+      <div class="rw-price">Price: Rs 700</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="UPaisa Account Opening">
+        Open
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>UPaisa Limit Upgrade</h4>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <input type="text" placeholder="CNIC Number"
+        inputmode="numeric" autocomplete="off">
+      <button class="rw-btn" data-service="UPaisa Limit Upgrade">
+        Submit
+      </button>
+    </div>
+
+    <div class="rw-card">
+      <h4>UPaisa CNIC D-B-I</h4>
+      <div class="rw-price">Price: Rs 250</div>
+      <input type="tel" placeholder="Mobile Number"
+        autocomplete="off">
+      <button class="rw-btn" data-service="UPaisa CNIC D-B-I">
+        Research Request
+      </button>
+    </div>
+  </section>
+
+  <p class="rw-note">
+    Service requests are demo-only until connected to an authorized
+    service provider. No payment is deducted and no request is sent.
+  </p>
+</div>
+
+<script>
+(function () {
+  const panel = document.getElementById('royal-wallet-services');
+
+  /*
+   * Connect this panel to your EXISTING login system.
+   * Do not use a URL parameter or localStorage as proof of login.
+   *
+   * Your existing authenticated member page should reveal this
+   * panel only after the server has verified the member session.
+   */
+  if (document.body.classList.contains('member-logged-in')) {
+    panel.style.display = 'block';
+  }
+
+  panel.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-service]');
+    if (!button) return;
+
+    const card = button.closest('.rw-card');
+    const inputs = [...card.querySelectorAll('input')];
+
+    for (const input of inputs) {
+      if (!input.value.trim()) {
+        alert('Please enter ' +
+          (input.placeholder || 'the required information'));
+        input.focus();
+        return;
+      }
+    }
+
+    alert(
+      button.dataset.service +
+      '\n\nDemo only: no request was submitted and no money was deducted.'
+    );
+  });
+})();
+</script>
 </body>
 </html>
