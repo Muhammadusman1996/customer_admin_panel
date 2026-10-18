@@ -1,51 +1,172 @@
 <!DOCTYPE html>
 <html lang="ur">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Royal Member</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: #101b35;
-      color: white;
-    }
-
-    header {
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #344563;
-    }
-
-    h1 {
-      margin: 0;
-      color: #f2d27b;
-      font-size: 25px;
-    }
-
-    main {
-      padding: 20px;
-      text-align: center;
-    }
-
-    p {
-      color: #c7d0e0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Member</title>
+<style>
+*{box-sizing:border-box}
+:root{--c:#00eaff}
+body{
+ margin:0;min-height:100vh;padding:24px 16px;
+ display:flex;justify-content:center;align-items:center;
+ font-family:Arial,sans-serif;color:white;
+ background:#080b16;
+}
+.wrap{width:100%;max-width:430px}
+.brand{text-align:center;margin-bottom:24px}
+.logo{
+ width:70px;height:70px;margin:auto auto 14px;
+ display:grid;place-items:center;border-radius:20px;
+ font-size:38px;background:#11172a;
+ border:2px solid var(--c);
+ box-shadow:0 0 18px var(--c),inset 0 0 18px var(--c);
+ animation:shine 7s linear infinite;
+}
+h1{
+ margin:0;font-size:29px;letter-spacing:2px;
+ animation:shine 7s linear infinite;
+}
+.brand p{letter-spacing:4px;font-size:11px;color:var(--c)}
+.card{
+ padding:28px 22px;border:1px solid var(--c);
+ border-radius:22px;background:#111629;
+ box-shadow:0 0 20px var(--c);
+ animation:shine 7s linear infinite;
+}
+h2{text-align:center;font-size:24px}
+.sub{text-align:center;color:#b8c3d9;line-height:1.8;font-size:14px}
+.field{display:block;margin:18px 0}
+.field span{display:block;margin-bottom:8px;font-size:12px}
+input{
+ width:100%;height:48px;padding:12px;
+ border-radius:11px;border:1px solid var(--c);
+ background:#080d1c;color:white;outline:none;
+}
+input:focus{box-shadow:0 0 12px var(--c)}
+.btn{
+ width:100%;min-height:48px;padding:12px;
+ border:1px solid var(--c);border-radius:12px;
+ background:#10182b;color:white;font-weight:bold;
+ cursor:pointer;box-shadow:0 0 12px var(--c);
+ animation:shine 7s linear infinite;
+}
+.switch{
+ margin-top:15px;width:100%;padding:14px;
+ border:1px solid #49516a;border-radius:12px;
+ background:#1a2033;color:white;cursor:pointer;
+}
+.hidden{display:none!important}
+.message{text-align:center;margin-top:15px;font-size:13px}
+.foot{
+ margin-top:25px;text-align:center;line-height:2;
+ color:#d5d9e8;font-size:14px;
+ border:1px solid var(--c);border-radius:16px;
+ padding:17px;animation:shine 7s linear infinite;
+}
+.foot strong{font-size:17px}
+a{color:var(--c);text-decoration:none}
+@keyframes shine{
+ 0%{--c:#00eaff}
+ 16%{--c:#287bff}
+ 32%{--c:#d946ef}
+ 48%{--c:#ff315b}
+ 64%{--c:#ffb52e}
+ 80%{--c:#42ff91}
+ 100%{--c:#00eaff}
+}
+@property --c{
+ syntax:"<color>";
+ inherits:true;
+ initial-value:#00eaff;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Royal Member</h1>
-  </header>
+<main class="wrap">
+<header class="brand">
+ <div class="logo">👑</div>
+ <h1>ROYAL MEMBER</h1>
+ <p>VIP MEMBER PORTAL</p>
+</header>
 
-  <main>
-    <p>Welcome to Royal Member.</p>
-  </main>
+<section class="card" id="authView">
+ <div id="loginView">
+  <h2>Login Karein</h2>
+  <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>
+  <form id="loginForm">
+   <label class="field">
+    <span>USERNAME</span>
+    <input name="username" required placeholder="اپنا یوزر نیم لکھیں">
+   </label>
+   <label class="field">
+    <span>PASSWORD</span>
+    <input name="password" type="password" required placeholder="اپنا پاس ورڈ لکھیں">
+   </label>
+   <button class="btn" type="submit">Login</button>
+  </form>
+  <button class="switch" id="openRegister" type="button">
+   نیا اکاؤنٹ بنائیں؟ Create Account
+  </button>
+ </div>
+
+ <div id="registerView" class="hidden">
+  <h2>Create Account</h2>
+  <p class="sub">اپنا نیا اکاؤنٹ بنائیں۔</p>
+  <form id="registerForm">
+   <label class="field">
+    <span>FULL NAME</span>
+    <input name="name" minlength="2" required placeholder="پورا نام">
+   </label>
+   <label class="field">
+    <span>USERNAME</span>
+    <input name="username" minlength="3" required placeholder="Username">
+   </label>
+   <label class="field">
+    <span>PASSWORD</span>
+    <input name="password" type="password" minlength="8" required placeholder="کم از کم 8 حروف">
+   </label>
+   <button class="btn" type="submit">Create Account</button>
+  </form>
+  <button class="switch" id="backToLogin" type="button">
+   واپس Login پر جائیں
+  </button>
+ </div>
+ <div id="msg" class="message" role="status"></div>
+</section>
+
+<footer class="foot">
+ <strong>Muhammad Usman — Admin</strong>
+ <p>مدد کے لیے رابطہ کریں</p>
+ <a href="https://wa.me/923021394509">WhatsApp: 0302-1394509</a>
+ <br>
+ <a href="https://wa.me/923060001167">WhatsApp: 0306-0001167</a>
+</footer>
+</main>
+
+<script>
+const $=s=>document.querySelector(s);
+
+function mode(register){
+ $('#loginView').classList.toggle('hidden',register);
+ $('#registerView').classList.toggle('hidden',!register);
+ $('#msg').textContent='';
+}
+
+$('#openRegister').onclick=()=>mode(true);
+$('#backToLogin').onclick=()=>mode(false);
+
+$('#registerForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ $('#msg').textContent=
+ 'یہ صرف ڈیزائن ہے۔ اکاؤنٹ بنانے کے لیے سرور درکار ہے۔';
+});
+
+$('#loginForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ $('#msg').textContent=
+ 'یہ صرف ڈیزائن ہے۔ حقیقی Login کے لیے سرور درکار ہے۔';
+});
+</script>
 </body>
 </html>
