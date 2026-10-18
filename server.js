@@ -7,7 +7,7 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+app.set('trust proxy', 1);
 const ADMIN_EMAIL = 'ms6033291@gmail.com';
 const ADMIN_PASSWORD_HASH =
   '$2a$10$9NsG5FweXTTzKSqS0vsyFOsH5sFeBO71oiyUsInsiGE2.t/JDd5gi';
@@ -19,7 +19,18 @@ if (!SESSION_SECRET || !DATABASE_URL) {
   console.error('Missing SESSION_SECRET or DATABASE_URL.');
   process.exit(1);
 }
-
+app.use(session({
+  name: 'royal_member_sid',
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
 const pool = new Pool({
   connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false }
