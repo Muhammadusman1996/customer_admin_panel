@@ -105,7 +105,7 @@ app.post('/api/register', async (req, res) => {
   try {
     const existing = await pool.query(
       'SELECT id FROM customers WHERE username=$1 OR email=$2',
-      [username]
+      [username, emaill]
     );
     if (existing.rowCount) {
       return res.status(409).json({ error: 'Username already exists.' });
