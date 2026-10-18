@@ -114,7 +114,7 @@ app.post('/api/register', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     const result = await pool.query(`
       INSERT INTO customers (name, email, username, password_hash, status, credits)
-      VALUES ($1, $2, $2, $3, 'pending', 0)
+      VALUES ($1, $2, $3, $4, 'pending', 0)
       RETURNING id
     `, [name, username, passwordHash]);
 
