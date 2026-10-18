@@ -1,172 +1,222 @@
-<!DOCTYPE html>
-<html lang="ur">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal Member</title>
+<!-- Royal Member Payment System -->
+
 <style>
-*{box-sizing:border-box}
-:root{--c:#00eaff}
-body{
- margin:0;min-height:100vh;padding:24px 16px;
- display:flex;justify-content:center;align-items:center;
- font-family:Arial,sans-serif;color:white;
- background:#080b16;
-}
-.wrap{width:100%;max-width:430px}
-.brand{text-align:center;margin-bottom:24px}
-.logo{
- width:70px;height:70px;margin:auto auto 14px;
- display:grid;place-items:center;border-radius:20px;
- font-size:38px;background:#11172a;
- border:2px solid var(--c);
- box-shadow:0 0 18px var(--c),inset 0 0 18px var(--c);
- animation:shine 7s linear infinite;
-}
-h1{
- margin:0;font-size:29px;letter-spacing:2px;
- animation:shine 7s linear infinite;
-}
-.brand p{letter-spacing:4px;font-size:11px;color:var(--c)}
-.card{
- padding:28px 22px;border:1px solid var(--c);
- border-radius:22px;background:#111629;
- box-shadow:0 0 20px var(--c);
- animation:shine 7s linear infinite;
-}
-h2{text-align:center;font-size:24px}
-.sub{text-align:center;color:#b8c3d9;line-height:1.8;font-size:14px}
-.field{display:block;margin:18px 0}
-.field span{display:block;margin-bottom:8px;font-size:12px}
-input{
- width:100%;height:48px;padding:12px;
- border-radius:11px;border:1px solid var(--c);
- background:#080d1c;color:white;outline:none;
-}
-input:focus{box-shadow:0 0 12px var(--c)}
-.btn{
- width:100%;min-height:48px;padding:12px;
- border:1px solid var(--c);border-radius:12px;
- background:#10182b;color:white;font-weight:bold;
- cursor:pointer;box-shadow:0 0 12px var(--c);
- animation:shine 7s linear infinite;
-}
-.switch{
- margin-top:15px;width:100%;padding:14px;
- border:1px solid #49516a;border-radius:12px;
- background:#1a2033;color:white;cursor:pointer;
-}
-.hidden{display:none!important}
-.message{text-align:center;margin-top:15px;font-size:13px}
-.foot{
- margin-top:25px;text-align:center;line-height:2;
- color:#d5d9e8;font-size:14px;
- border:1px solid var(--c);border-radius:16px;
- padding:17px;animation:shine 7s linear infinite;
-}
-.foot strong{font-size:17px}
-a{color:var(--c);text-decoration:none}
-@keyframes shine{
- 0%{--c:#00eaff}
- 16%{--c:#287bff}
- 32%{--c:#d946ef}
- 48%{--c:#ff315b}
- 64%{--c:#ffb52e}
- 80%{--c:#42ff91}
- 100%{--c:#00eaff}
-}
-@property --c{
- syntax:"<color>";
- inherits:true;
- initial-value:#00eaff;
-}
+  #rmPaymentModal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, .82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  #rmPaymentModal .payment-box {
+    width: 100%;
+    max-width: 430px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #101b35;
+    color: white;
+    border: 1px solid #f2d27b;
+    border-radius: 16px;
+    padding: 22px;
+    box-sizing: border-box;
+  }
+
+  #rmPaymentModal h2,
+  #rmPaymentModal h3 {
+    color: #f2d27b;
+    margin-top: 0;
+  }
+
+  #rmPaymentModal input,
+  #rmPaymentModal button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+
+  #rmPaymentModal input {
+    background: #182743;
+    color: white;
+    border: 1px solid #53627d;
+  }
+
+  #rmPaymentModal button {
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #rmPayContinue,
+  #rmCopyAccount {
+    background: #f2d27b;
+    color: #172039;
+  }
+
+  #rmPayLater {
+    background: #344563;
+    color: white;
+  }
+
+  #rmPayMessage {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .rm-payment-instructions {
+    background: #182743;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    line-height: 1.6;
+  }
 </style>
-</head>
-<body>
-<main class="wrap">
-<header class="brand">
- <div class="logo">👑</div>
- <h1>ROYAL MEMBER</h1>
- <p>VIP MEMBER PORTAL</p>
-</header>
 
-<section class="card" id="authView">
- <div id="loginView">
-  <h2>Login Karein</h2>
-  <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کریں۔</p>
-  <form id="loginForm">
-   <label class="field">
-    <span>USERNAME</span>
-    <input name="username" required placeholder="اپنا یوزر نیم لکھیں">
-   </label>
-   <label class="field">
-    <span>PASSWORD</span>
-    <input name="password" type="password" required placeholder="اپنا پاس ورڈ لکھیں">
-   </label>
-   <button class="btn" type="submit">Login</button>
-  </form>
-  <button class="switch" id="openRegister" type="button">
-   نیا اکاؤنٹ بنائیں؟ Create Account
-  </button>
- </div>
+<div id="rmPaymentModal">
+  <div class="payment-box">
 
- <div id="registerView" class="hidden">
-  <h2>Create Account</h2>
-  <p class="sub">اپنا نیا اکاؤنٹ بنائیں۔</p>
-  <form id="registerForm">
-   <label class="field">
-    <span>FULL NAME</span>
-    <input name="name" minlength="2" required placeholder="پورا نام">
-   </label>
-   <label class="field">
-    <span>USERNAME</span>
-    <input name="username" minlength="3" required placeholder="Username">
-   </label>
-   <label class="field">
-    <span>PASSWORD</span>
-    <input name="password" type="password" minlength="8" required placeholder="کم از کم 8 حروف">
-   </label>
-   <button class="btn" type="submit">Create Account</button>
-  </form>
-  <button class="switch" id="backToLogin" type="button">
-   واپس Login پر جائیں
-  </button>
- </div>
- <div id="msg" class="message" role="status"></div>
-</section>
+    <h2>Add Payment</h2>
 
-<footer class="foot">
- <strong>Muhammad Usman — Admin</strong>
- <p>مدد کے لیے رابطہ کریں</p>
- <a href="https://wa.me/923021394509">WhatsApp: 0302-1394509</a>
- <br>
- <a href="https://wa.me/923060001167">WhatsApp: 0306-0001167</a>
-</footer>
-</main>
+    <div class="rm-payment-instructions">
+      <h3>Payment Instructions</h3>
+
+      <p><strong>Payment Method:</strong> OPay</p>
+      <p><strong>Account Title:</strong> Noor Jahan</p>
+      <p><strong>Account Number:</strong> 03422605178</p>
+
+      <button type="button" id="rmCopyAccount">
+        Copy Account Number
+      </button>
+
+      <p><strong>Step 1:</strong>
+        پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔
+      </p>
+
+      <p><strong>Step 2:</strong>
+        پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔
+      </p>
+
+      <p><strong>Step 3:</strong>
+        Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔
+      </p>
+
+      <p><strong>Step 4:</strong>
+        Send Payment Slip to Admin پر کلک کریں۔
+      </p>
+
+      <p style="color:#f2d27b;">
+        ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔
+      </p>
+    </div>
+
+    <form id="rmPaymentForm">
+
+      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
+      <input
+        id="rmPaymentAmount"
+        name="amount"
+        type="number"
+        min="1"
+        step="1"
+        required
+        placeholder="Payment amount"
+      >
+
+      <label for="rmPaymentRef">Transaction ID</label>
+      <input
+        id="rmPaymentRef"
+        name="transactionId"
+        type="text"
+        maxlength="100"
+        required
+        placeholder="Transaction ID"
+      >
+
+      <label for="rmPaymentSlip">Payment Slip</label>
+      <input
+        id="rmPaymentSlip"
+        name="slip"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+        required
+      >
+
+      <button type="submit" id="rmPayContinue">
+        Send Payment Slip to Admin
+      </button>
+
+    </form>
+
+    <button type="button" id="rmPayLater">
+      Later
+    </button>
+
+    <div id="rmPayMessage" aria-live="polite"></div>
+
+  </div>
+</div>
 
 <script>
-const $=s=>document.querySelector(s);
+(() => {
+  const modal = document.getElementById('rmPaymentModal');
+  const form = document.getElementById('rmPaymentForm');
+  const message = document.getElementById('rmPayMessage');
 
-function mode(register){
- $('#loginView').classList.toggle('hidden',register);
- $('#registerView').classList.toggle('hidden',!register);
- $('#msg').textContent='';
-}
+  // Open payment menu when a service form is submitted.
+  document.querySelectorAll('.rm-service-form').forEach(serviceForm => {
+    serviceForm.addEventListener('submit', event => {
+      event.preventDefault();
+      modal.style.display = 'flex';
+      message.textContent = '';
+    });
+  });
 
-$('#openRegister').onclick=()=>mode(true);
-$('#backToLogin').onclick=()=>mode(false);
+  // Close the payment menu.
+  document.getElementById('rmPayLater').addEventListener('click', () => {
+    modal.style.display = 'none';
+    message.textContent = '';
+  });
 
-$('#registerForm').addEventListener('submit',e=>{
- e.preventDefault();
- $('#msg').textContent=
- 'یہ صرف ڈیزائن ہے۔ اکاؤنٹ بنانے کے لیے سرور درکار ہے۔';
-});
+  // Copy OPay account number.
+  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('03422605178');
+      message.textContent = 'Account number copied.';
+    } catch {
+      message.textContent =
+        'Please copy manually: 03422605178';
+    }
+  });
 
-$('#loginForm').addEventListener('submit',e=>{
- e.preventDefault();
- $('#msg').textContent=
- 'یہ صرف ڈیزائن ہے۔ حقیقی Login کے لیے سرور درکار ہے۔';
-});
+  // Validate the payment slip.
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const slip = document.getElementById('rmPaymentSlip').files[0];
+    const amount = document.getElementById('rmPaymentAmount').value;
+    const transactionId = document.getElementById('rmPaymentRef').value.trim();
+
+    if (!slip || !amount || !transactionId) {
+      message.textContent = 'Please complete all payment fields.';
+      return;
+    }
+
+    if (slip.size > 5 * 1024 * 1024) {
+      message.textContent = 'Slip must be 5 MB or smaller.';
+      return;
+    }
+
+    message.textContent =
+      'Payment details checked, but the slip has NOT been sent. ' +
+      'Server upload is not connected yet.';
+  });
+})();
 </script>
-</body>
-</html>
