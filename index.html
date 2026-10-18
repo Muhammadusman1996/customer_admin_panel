@@ -555,7 +555,7 @@ async function loadMe() {
 
     $('#authView').classList.add('hidden');
     $('#dashboard').classList.remove('hidden');
-
+document.getElementById('rmServices').hidden = false;
     $('#welcome').textContent = 'Welcome, ' + user.name;
     $('#balance').textContent = Number(user.credit || 0).toFixed(2);
     $('#memberStatus').textContent = user.status || 'Approved';
@@ -615,7 +615,7 @@ loadMe();
 .rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere}
 </style>
 
-<section class="rm-services">
+<section class="rm-services" id="rmServices" hidden>
   <h2>👑 Available Services</h2>
   <p class="rm-note">Select a service and submit a request. Use only accounts and identity details you are authorized to provide.</p>
 
