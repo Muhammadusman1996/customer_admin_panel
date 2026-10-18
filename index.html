@@ -689,6 +689,228 @@ document.querySelectorAll('.rm-service-form').forEach(form => {
   });
 });
 </script>
+  <!-- Royal Member Payment System -->
+
+<style>
+  #rmPaymentModal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, .82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  #rmPaymentModal .payment-box {
+    width: 100%;
+    max-width: 430px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #101b35;
+    color: white;
+    border: 1px solid #f2d27b;
+    border-radius: 16px;
+    padding: 22px;
+    box-sizing: border-box;
+  }
+
+  #rmPaymentModal h2,
+  #rmPaymentModal h3 {
+    color: #f2d27b;
+    margin-top: 0;
+  }
+
+  #rmPaymentModal input,
+  #rmPaymentModal button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+
+  #rmPaymentModal input {
+    background: #182743;
+    color: white;
+    border: 1px solid #53627d;
+  }
+
+  #rmPaymentModal button {
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #rmPayContinue,
+  #rmCopyAccount {
+    background: #f2d27b;
+    color: #172039;
+  }
+
+  #rmPayLater {
+    background: #344563;
+    color: white;
+  }
+
+  #rmPayMessage {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .rm-payment-instructions {
+    background: #182743;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    line-height: 1.6;
+  }
+</style>
+
+<div id="rmPaymentModal">
+  <div class="payment-box">
+
+    <h2>Add Payment</h2>
+
+    <div class="rm-payment-instructions">
+      <h3>Payment Instructions</h3>
+
+      <p><strong>Payment Method:</strong> OPay</p>
+      <p><strong>Account Title:</strong> Noor Jahan</p>
+      <p><strong>Account Number:</strong> 03422605178</p>
+
+      <button type="button" id="rmCopyAccount">
+        Copy Account Number
+      </button>
+
+      <p><strong>Step 1:</strong>
+        پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔
+      </p>
+
+      <p><strong>Step 2:</strong>
+        پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔
+      </p>
+
+      <p><strong>Step 3:</strong>
+        Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔
+      </p>
+
+      <p><strong>Step 4:</strong>
+        Send Payment Slip to Admin پر کلک کریں۔
+      </p>
+
+      <p style="color:#f2d27b;">
+        ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔
+      </p>
+    </div>
+
+    <form id="rmPaymentForm">
+
+      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
+      <input
+        id="rmPaymentAmount"
+        name="amount"
+        type="number"
+        min="1"
+        step="1"
+        required
+        placeholder="Payment amount"
+      >
+
+      <label for="rmPaymentRef">Transaction ID</label>
+      <input
+        id="rmPaymentRef"
+        name="transactionId"
+        type="text"
+        maxlength="100"
+        required
+        placeholder="Transaction ID"
+      >
+
+      <label for="rmPaymentSlip">Payment Slip</label>
+      <input
+        id="rmPaymentSlip"
+        name="slip"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+        required
+      >
+
+      <button type="submit" id="rmPayContinue">
+        Send Payment Slip to Admin
+      </button>
+
+    </form>
+
+    <button type="button" id="rmPayLater">
+      Later
+    </button>
+
+    <div id="rmPayMessage" aria-live="polite"></div>
+
+  </div>
+</div>
+
+<script>
+(() => {
+  const modal = document.getElementById('rmPaymentModal');
+  const form = document.getElementById('rmPaymentForm');
+  const message = document.getElementById('rmPayMessage');
+
+  // Open payment menu when a service form is submitted.
+  document.querySelectorAll('.rm-service-form').forEach(serviceForm => {
+    serviceForm.addEventListener('submit', event => {
+      event.preventDefault();
+      modal.style.display = 'flex';
+      message.textContent = '';
+    });
+  });
+
+  // Close the payment menu.
+  document.getElementById('rmPayLater').addEventListener('click', () => {
+    modal.style.display = 'none';
+    message.textContent = '';
+  });
+
+  // Copy OPay account number.
+  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('03422605178');
+      message.textContent = 'Account number copied.';
+    } catch {
+      message.textContent =
+        'Please copy manually: 03422605178';
+    }
+  });
+
+  // Validate the payment slip.
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const slip = document.getElementById('rmPaymentSlip').files[0];
+    const amount = document.getElementById('rmPaymentAmount').value;
+    const transactionId = document.getElementById('rmPaymentRef').value.trim();
+
+    if (!slip || !amount || !transactionId) {
+      message.textContent = 'Please complete all payment fields.';
+      return;
+    }
+
+    if (slip.size > 5 * 1024 * 1024) {
+      message.textContent = 'Slip must be 5 MB or smaller.';
+      return;
+    }
+
+    message.textContent =
+      'Payment details checked, but the slip has NOT been sent. ' +
+      'Server upload is not connected yet.';
+  });
+})();
+</script>
 </script>
 </body>
 </html>
