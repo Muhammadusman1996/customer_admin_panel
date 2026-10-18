@@ -30,14 +30,21 @@ async function initDatabase() {
     CREATE TABLE IF NOT EXISTS customers (
       id BIGSERIAL PRIMARY KEY,
       name VARCHAR(60) NOT NULL,
-      email TEXT NOT NULL UNIQUE,
+      email TEXT UNIQUE,
       username VARCHAR(30) UNIQUE,
       password_hash TEXT,
       status TEXT NOT NULL DEFAULT 'pending'
-        CHECK (status IN ('pending','approved','rejected')),
+        CHECK (status IN ('pending', 'approved', 'rejected')),
       credits BIGINT NOT NULL DEFAULT 0 CHECK (credits >= 0),
       created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
+  `);
+
+  // Allow registration without an email address.
+  // This also updates an existing customers table safely.
+  await pool.query(`
+    ALTER TABLE customers
+    ALTER COLUMN email DROP NOT NULL
   `);
 
   await pool.query(`
@@ -72,50 +79,79 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 function requireAdmin(req, res, next) {
   if (req.session?.isAdmin) return next();
-  return res.status(401).json({ error: 'Please log in as admin.' });
+  return res.status(401).json({
+    error: 'Please log in as admin.'
+  });
 }
 
 function requireMember(req, res, next) {
   if (req.session?.memberId) return next();
-  return res.status(401).json({ error: 'Please log in first.' });
+  return res.status(401).json({
+    error: 'Please log in first.'
+  });
 }
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-
-app.get('/api/session', (req, res) => {
-  res.json({ authenticated: !!req.session?.isAdmin });
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// Session status
+app.get('/api/session', (req, res) => {
+  res.json({
+    authenticated: !!req.session?.isAdmin
+  });
+});
+
+// CUSTOMER REGISTRATION
+// Requires only: name, username, password
 app.post('/api/register', async (req, res) => {
   const name = String(req.body.name || '').trim();
-  const username = String(req.body.username || '').trim().toLowerCase();
-  const email = String(req.body.email || '').trim().toLowerCase();
+  const username = String(req.body.username || '')
+    .trim()
+    .toLowerCase();
   const password = String(req.body.password || '');
 
   if (name.length < 2 || name.length > 60) {
-    return res.status(400).json({ error: 'Enter your name.' });
+    return res.status(400).json({
+      error: 'Name must be 2-60 characters.'
+    });
   }
+
   if (!/^[a-z0-9_]{3,30}$/.test(username)) {
-    return res.status(400).json({ error: 'Username must be 3-30 characters: letters, numbers or underscore.' });
+    return res.status(400).json({
+      error:
+        'Username must be 3-30 characters: letters, numbers or underscore.'
+    });
   }
+
   if (password.length < 8 || password.length > 72) {
-    return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    return res.status(400).json({
+      error: 'Password must be 8-72 characters.'
+    });
   }
 
   try {
     const existing = await pool.query(
-      'SELECT id FROM customers WHERE username=$1 OR email=$2',
-      [username, emaill]
+      'SELECT id FROM customers WHERE username = $1',
+      [username]
     );
-    if (existing.rowCount) {
-      return res.status(409).json({ error: 'Username already exists.' });
+
+    if (existing.rowCount > 0) {
+      return res.status(409).json({
+        error: 'Username already exists.'
+      });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+
     const result = await pool.query(`
-      INSERT INTO customers (name, email, username, password_hash, status, credits)
-      VALUES ($1, $2, $3, $4, 'pending', 0)
+      INSERT INTO customers
+        (name, username, password_hash, status, credits)
+      VALUES ($1, $2, $3, 'pending', 0)
       RETURNING id
     `, [name, username, passwordHash]);
 
@@ -126,25 +162,45 @@ app.post('/api/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error.message);
-    return res.status(500).json({ error: 'Could not create account.' });
+
+    if (error.code === '23505') {
+      return res.status(409).json({
+        error: 'Username already exists.'
+      });
+    }
+
+    return res.status(500).json({
+      error: 'Could not create account.'
+    });
   }
 });
 
+// CUSTOMER LOGIN
 app.post('/api/member/login', async (req, res) => {
-  const username = String(req.body.username || '').trim().toLowerCase();
+  const username = String(req.body.username || '')
+    .trim()
+    .toLowerCase();
   const password = String(req.body.password || '');
 
   try {
     const result = await pool.query(`
       SELECT id, name, username, password_hash, status, credits
-      FROM customers WHERE username=$1
+      FROM customers
+      WHERE username = $1
     `, [username]);
+
     const customer = result.rows[0];
 
-    if (!customer || !customer.password_hash ||
-        !(await bcrypt.compare(password, customer.password_hash))) {
-      return res.status(401).json({ error: 'Invalid username or password.' });
+    if (
+      !customer ||
+      !customer.password_hash ||
+      !(await bcrypt.compare(password, customer.password_hash))
+    ) {
+      return res.status(401).json({
+        error: 'Invalid username or password.'
+      });
     }
+
     if (customer.status !== 'approved') {
       return res.status(403).json({
         error: customer.status === 'rejected'
@@ -154,8 +210,14 @@ app.post('/api/member/login', async (req, res) => {
     }
 
     req.session.regenerate(err => {
-      if (err) return res.status(500).json({ error: 'Could not create secure session.' });
+      if (err) {
+        return res.status(500).json({
+          error: 'Could not create secure session.'
+        });
+      }
+
       req.session.memberId = customer.id;
+
       res.json({
         ok: true,
         user: {
@@ -168,58 +230,111 @@ app.post('/api/member/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Member login error:', error.message);
-    res.status(500).json({ error: 'Login failed.' });
+
+    res.status(500).json({
+      error: 'Login failed.'
+    });
   }
 });
 
+// CURRENT CUSTOMER
 app.get('/api/me', requireMember, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT id, name, username, status, credits
-      FROM customers WHERE id=$1
+      FROM customers
+      WHERE id = $1
     `, [req.session.memberId]);
-    if (!result.rows[0]) return res.status(404).json({ error: 'Customer not found.' });
+
+    if (!result.rows[0]) {
+      return res.status(404).json({
+        error: 'Customer not found.'
+      });
+    }
+
     res.json({ user: result.rows[0] });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not load customer.' });
+    console.error('Customer lookup error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not load customer.'
+    });
   }
 });
 
+// CUSTOMER LOGOUT
 app.post('/api/member/logout', requireMember, (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
-});
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({
+        error: 'Could not log out.'
+      });
+    }
 
-app.post('/api/login', (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase();
-  const password = String(req.body.password || '');
-
-  if (email !== ADMIN_EMAIL.toLowerCase() ||
-      !bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)) {
-    return res.status(401).json({ error: 'Email or password is incorrect.' });
-  }
-
-  req.session.regenerate(err => {
-    if (err) return res.status(500).json({ error: 'Could not create secure session.' });
-    req.session.isAdmin = true;
+    res.clearCookie('royal_admin_session');
     res.json({ ok: true });
   });
 });
 
-app.post('/api/logout', requireAdmin, (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
+// ADMIN LOGIN
+app.post('/api/login', (req, res) => {
+  const email = String(req.body.email || '')
+    .trim()
+    .toLowerCase();
+  const password = String(req.body.password || '');
+
+  if (
+    email !== ADMIN_EMAIL.toLowerCase() ||
+    !bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)
+  ) {
+    return res.status(401).json({
+      error: 'Email or password is incorrect.'
+    });
+  }
+
+  req.session.regenerate(err => {
+    if (err) {
+      return res.status(500).json({
+        error: 'Could not create secure session.'
+      });
+    }
+
+    req.session.isAdmin = true;
+
+    res.json({ ok: true });
+  });
 });
 
+// ADMIN LOGOUT
+app.post('/api/logout', requireAdmin, (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({
+        error: 'Could not log out.'
+      });
+    }
+
+    res.clearCookie('royal_admin_session');
+    res.json({ ok: true });
+  });
+});
+
+// ADMIN DASHBOARD SUMMARY
 app.get('/api/summary', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
         (SELECT COUNT(*) FROM customers) AS customers,
-        (SELECT COUNT(*) FROM customers WHERE status='pending') AS pending,
-        (SELECT COUNT(*) FROM customers WHERE status='approved') AS approved,
-        (SELECT COUNT(*) FROM packages WHERE active=1) AS packages
+        (SELECT COUNT(*) FROM customers
+          WHERE status = 'pending') AS pending,
+        (SELECT COUNT(*) FROM customers
+          WHERE status = 'approved') AS approved,
+        (SELECT COUNT(*) FROM packages
+          WHERE active = 1) AS packages
     `);
+
     const row = result.rows[0];
+
     res.json({
       customers: Number(row.customers),
       pending: Number(row.pending),
@@ -227,107 +342,195 @@ app.get('/api/summary', requireAdmin, async (req, res) => {
       packages: Number(row.packages)
     });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not load summary.' });
+    console.error('Summary error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not load summary.'
+    });
   }
 });
 
+// ADMIN: CUSTOMER LIST
 app.get('/api/customers', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, name, email, username, status, credits, created_at
-      FROM customers ORDER BY id DESC LIMIT 500
+      SELECT
+        id, name, email, username, status, credits, created_at
+      FROM customers
+      ORDER BY id DESC
+      LIMIT 500
     `);
+
     res.json(result.rows);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not load customers.' });
+    console.error('Customer list error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not load customers.'
+    });
   }
 });
 
+// ADMIN: APPROVE OR REJECT CUSTOMER
 app.post('/api/customers/:id/status', requireAdmin, async (req, res) => {
   const status = String(req.body.status || '');
+
   if (!['approved', 'rejected', 'pending'].includes(status)) {
-    return res.status(400).json({ error: 'Invalid status.' });
+    return res.status(400).json({
+      error: 'Invalid status.'
+    });
   }
+
   try {
     const result = await pool.query(
-      'UPDATE customers SET status=$1 WHERE id=$2 RETURNING id',
+      `UPDATE customers
+       SET status = $1
+       WHERE id = $2
+       RETURNING id`,
       [status, req.params.id]
     );
-    if (!result.rowCount) return res.status(404).json({ error: 'Customer not found.' });
+
+    if (!result.rowCount) {
+      return res.status(404).json({
+        error: 'Customer not found.'
+      });
+    }
+
     res.json({ ok: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not update customer.' });
+    console.error('Customer status error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not update customer.'
+    });
   }
 });
 
+// ADMIN: UPDATE CUSTOMER CREDITS
 app.post('/api/customers/:id/credits', requireAdmin, async (req, res) => {
   const amount = Number(req.body.amount);
-  if (!Number.isSafeInteger(amount) || amount < 0 || amount > 100000000) {
-    return res.status(400).json({ error: 'Enter a valid non-negative whole number.' });
+
+  if (
+    !Number.isSafeInteger(amount) ||
+    amount < 0 ||
+    amount > 100000000
+  ) {
+    return res.status(400).json({
+      error: 'Enter a valid non-negative whole number.'
+    });
   }
+
   try {
     const result = await pool.query(
-      'UPDATE customers SET credits=$1 WHERE id=$2 RETURNING id',
+      `UPDATE customers
+       SET credits = $1
+       WHERE id = $2
+       RETURNING id`,
       [amount, req.params.id]
     );
-    if (!result.rowCount) return res.status(404).json({ error: 'Customer not found.' });
+
+    if (!result.rowCount) {
+      return res.status(404).json({
+        error: 'Customer not found.'
+      });
+    }
+
     res.json({ ok: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not update credits.' });
+    console.error('Credit update error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not update credits.'
+    });
   }
 });
 
+// ADMIN: LIST PACKAGES
 app.get('/api/packages', requireAdmin, async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, name, amount, active FROM packages ORDER BY id DESC'
-    );
+    const result = await pool.query(`
+      SELECT id, name, amount, active
+      FROM packages
+      ORDER BY id DESC
+    `);
+
     res.json(result.rows);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not load packages.' });
+    console.error('Package list error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not load packages.'
+    });
   }
 });
 
+// ADMIN: CREATE PACKAGE
 app.post('/api/packages', requireAdmin, async (req, res) => {
   const name = String(req.body.name || '').trim().slice(0, 60);
   const amount = Number(req.body.amount);
-  if (!name || !Number.isSafeInteger(amount) || amount < 1 || amount > 100000000) {
-    return res.status(400).json({ error: 'Enter a package name and valid amount.' });
+
+  if (
+    !name ||
+    !Number.isSafeInteger(amount) ||
+    amount < 1 ||
+    amount > 100000000
+  ) {
+    return res.status(400).json({
+      error: 'Enter a package name and valid amount.'
+    });
   }
+
   try {
     const result = await pool.query(
-      'INSERT INTO packages(name, amount) VALUES($1, $2) RETURNING id',
+      `INSERT INTO packages (name, amount)
+       VALUES ($1, $2)
+       RETURNING id`,
       [name, amount]
     );
-    res.json({ ok: true, id: result.rows[0].id });
+
+    res.json({
+      ok: true,
+      id: result.rows[0].id
+    });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not create package.' });
+    console.error('Package creation error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not create package.'
+    });
   }
 });
 
+// ADMIN: ENABLE OR DISABLE PACKAGE
 app.post('/api/packages/:id/toggle', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       UPDATE packages
       SET active = CASE active WHEN 1 THEN 0 ELSE 1 END
-      WHERE id=$1 RETURNING id
+      WHERE id = $1
+      RETURNING id
     `, [req.params.id]);
-    if (!result.rowCount) return res.status(404).json({ error: 'Package not found.' });
+
+    if (!result.rowCount) {
+      return res.status(404).json({
+        error: 'Package not found.'
+      });
+    }
+
     res.json({ ok: true });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Could not update package.' });
+    console.error('Package toggle error:', error.message);
+
+    res.status(500).json({
+      error: 'Could not update package.'
+    });
   }
 });
 
+// START SERVER
 async function start() {
   await initDatabase();
+
   app.listen(PORT, () => {
     console.log(`Royal Member server listening on port ${PORT}`);
   });
