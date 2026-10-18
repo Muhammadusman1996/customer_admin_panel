@@ -602,705 +602,286 @@ $('#logout').addEventListener('click', async () => {
 // Initial page
 loadMe();
   </script>
-  <!-- Royal Member Services -->
+<!-- Royal Member Services: Compact Wallet Layout -->
 <style>
-.rm-services{max-width:1000px;margin:25px auto;padding:16px;color:#f6f7fb;font-family:Arial,sans-serif}
-.rm-services h2{color:#f2d27b}
-.rm-service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.rm-service-card{background:#0c1428;border:1px solid #9b7b3e;border-radius:16px;padding:18px}
-.rm-price{font-size:24px;color:#f2d27b;font-weight:bold;margin:10px 0}
-.rm-service-card input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0 10px;border-radius:8px;border:1px solid #35415d;background:#101a31;color:white}
-.rm-service-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#e8c56b;color:#171208;font-weight:bold;cursor:pointer}
-.rm-note{font-size:13px;color:#c2cbe0;line-height:1.5}
-.rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere}
-</style>
-
-<section class="rm-services" id="rmServices" hidden>
-  <h2>👑 Available Services</h2>
-  <p class="rm-note">Select a service and submit a request. Use only accounts and identity details you are authorized to provide.</p>
-
-  <div class="rm-service-grid">
-    <article class="rm-service-card">
-      <h3>Easypaisa Account Open</h3>
-      <div class="rm-price">Rs. 1,000</div>
-      <form class="rm-service-form" data-service="Easypaisa Account Open" data-price="1000">
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <button type="submit">Send Request</button>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <style>
-.wallet-services {
-  color: #fff;
+#rmServices {
+  width: 100%;
+  max-width: 1000px;
+  margin: 18px auto;
+  padding: 12px;
+  color: #f5f6ff;
   font-family: Arial, sans-serif;
-  margin: 20px 0;
 }
-.wallet-section {
-  background: #11182d;
-  border: 1px solid #8e713a;
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 22px;
-}
-.wallet-heading {
+
+#rmServices .service-title {
   color: #ffbd59;
   font-size: 23px;
-  font-weight: bold;
-  margin: 0 0 16px;
+  margin: 0 0 8px;
 }
-.wallet-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-  gap: 14px;
+
+#rmServices .service-note {
+  color: #aebbd5;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
-.wallet-card {
-  background: #0a1020;
-  border: 1px solid #34415d;
-  border-radius: 12px;
-  padding: 15px;
+
+#rmServices .wallet-section {
+  margin: 0 0 20px;
+  padding: 13px;
+  border: 1px solid #8d713d;
+  border-radius: 14px;
+  background: #11182d;
 }
-.wallet-card h3 {
-  font-size: 16px;
-  line-height: 1.5;
-  min-height: 42px;
-  margin: 0 0 10px;
-}
-.wallet-price {
+
+#rmServices .wallet-heading {
   color: #ffbd59;
+  font-size: 18px;
+  margin: 0 0 13px;
+}
+
+#rmServices .wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#rmServices .wallet-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #303d59;
+  border-radius: 11px;
+  background: #090f20;
+}
+
+#rmServices .wallet-card h4 {
+  min-height: 36px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+#rmServices .wallet-price {
+  color: #ffbd59;
+  font-size: 17px;
   font-weight: bold;
-  font-size: 21px;
-  margin: 12px 0;
+  margin: 10px 0;
 }
-.wallet-card input {
+
+#rmServices .wallet-card input {
   width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  box-sizing: border-box;
-  border-radius: 8px;
-  border: 1px solid #43516c;
-  background: #18223a;
+  min-width: 0;
+  padding: 9px;
+  margin: 5px 0;
+  border: 1px solid #35415d;
+  border-radius: 7px;
+  background: #151e33;
   color: white;
-  font-size: 14px;
+  font-size: 12px;
 }
-.wallet-card button {
+
+#rmServices .wallet-card button {
   width: 100%;
-  padding: 12px;
-  margin-top: 8px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(100deg,#ffae49,#ffe19a);
-  color: #21182a;
+  padding: 10px 5px;
+  margin-top: 7px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(110deg, #ffad49, #ffe19a);
+  color: #21152b;
+  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
 }
-.wallet-card button:disabled {
-  opacity: .7;
-}
-.wallet-result {
+
+#rmServices .wallet-result {
   color: #ffcf75;
-  font-size: 12px;
-  line-height: 1.6;
-  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  margin: 8px 0 0;
+}
+
+@media (max-width: 380px) {
+  #rmServices { padding: 5px; }
+  #rmServices .wallet-section { padding: 9px; }
+  #rmServices .wallet-grid { gap: 7px; }
+  #rmServices .wallet-card { padding: 9px; }
 }
 </style>
 
-<div class="wallet-services">
+<section id="rmServices" hidden>
+  <h2 class="service-title">👑 Available Services</h2>
+  <p class="service-note">
+    سروس منتخب کریں۔ یہ صرف ڈیمو انٹرفیس ہے؛ اصل سروس یا کریڈٹ کٹوتی کے لیے مجاز API ضروری ہے۔
+  </p>
 
-  <!-- JAZZCASH -->
+  <!-- 1. EASYPAISA -->
   <section class="wallet-section">
-    <h2 class="wallet-heading">🟠 JazzCash Services</h2>
+    <h3 class="wallet-heading">🟢 Easypaisa Services</h3>
     <div class="wallet-grid">
 
       <article class="wallet-card">
-        <h3>JazzCash PIN Reset</h3>
-        <input type="tel" placeholder="Mobile Number" required>
-        <div class="wallet-price">Rs. 80</div>
-        <button type="button" onclick="walletDemo(this,'JazzCash PIN Reset')">Request</button>
-        <div class="wallet-result"></div>
-      </article>
-
-      <article class="wallet-card">
-        <h3>Jazz Number Fresh / Used Check</h3>
-        <input type="tel" placeholder="Mobile Number" required>
-        <div class="wallet-price">Rs. 30</div>
-        <button type="button" onclick="walletDemo(this,'Jazz Number Fresh / Used Check')">Search Number</button>
-        <div class="wallet-result"></div>
-      </article>
-
-      <article class="wallet-card">
-        <h3>JazzCash Auto Open Account (L1)</h3>
-        <input type="tel" placeholder="Mobile Number" required>
+        <h4>Easypaisa Account Open</h4>
         <div class="wallet-price">Rs. 1,000</div>
-        <button type="button" onclick="walletDemo(this,'JazzCash Account L1')">Create</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا مجاز موبائل نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
       <article class="wallet-card">
-        <h3>JazzCash Transaction History</h3>
-        <input type="tel" placeholder="Mobile Number" required>
+        <h4>Easypaisa PIN Reset</h4>
+        <div class="wallet-price">Rs. 150</div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>Easypaisa Account Check</h4>
+        <div class="wallet-price">Rs. 120</div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>Easypaisa Transaction History</h4>
         <div class="wallet-price">Rs. 700</div>
-        <button type="button" onclick="walletDemo(this,'JazzCash Transaction History')">Search</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
       <article class="wallet-card">
-        <h3>JazzCash Merchant All Details</h3>
-        <input type="tel" placeholder="Mobile Number" required>
-        <div class="wallet-price">Rs. 800</div>
-        <button type="button" onclick="walletDemo(this,'JazzCash Merchant Details')">Search</button>
-        <div class="wallet-result"></div>
+        <h4>Easypaisa Merchant Service</h4>
+        <div class="wallet-price">Rs. 2,000</div>
+        <input placeholder="اپنا مجاز مرچنٹ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
     </div>
   </section>
 
-  <!-- OPAY -->
+  <!-- 2. JAZZCASH -->
   <section class="wallet-section">
-    <h2 class="wallet-heading">🟢 OPay Services</h2>
+    <h3 class="wallet-heading">🟠 JazzCash Services</h3>
     <div class="wallet-grid">
 
       <article class="wallet-card">
-        <h3>OPay Account Open</h3>
-        <input type="tel" placeholder="Mobile Number" required>
-        <div class="wallet-price">Rs. 800</div>
-        <button type="button" onclick="walletDemo(this,'OPay Account Open')">Submit Request</button>
-        <div class="wallet-result"></div>
+        <h4>JazzCash PIN Reset</h4>
+        <div class="wallet-price">Rs. 80</div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
       <article class="wallet-card">
-        <h3>OPay Limit Upgrade</h3>
-        <input type="tel" placeholder="Mobile Number" required>
+        <h4>Jazz Number Fresh / Used Check</h4>
+        <div class="wallet-price">Rs. 30</div>
+        <input placeholder="اپنا نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Check</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>JazzCash Account L1</h4>
+        <div class="wallet-price">Rs. 1,000</div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>JazzCash Transaction History</h4>
+        <div class="wallet-price">Rs. 700</div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>JazzCash Merchant Service</h4>
+        <div class="wallet-price">Rs. 800</div>
+        <input placeholder="اپنا مجاز مرچنٹ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 3. OPAY -->
+  <section class="wallet-section">
+    <h3 class="wallet-heading">🟢 OPay Services</h3>
+    <div class="wallet-grid">
+
+      <article class="wallet-card">
+        <h4>OPay Account Open</h4>
+        <div class="wallet-price">Rs. 800</div>
+        <input placeholder="اپنا موبائل نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
+      <article class="wallet-card">
+        <h4>OPay Limit Upgrade</h4>
         <div class="wallet-price">Rs. 450</div>
-        <button type="button" onclick="walletDemo(this,'OPay Limit Upgrade')">Upgrade</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
     </div>
   </section>
 
-  <!-- UPAISA -->
+  <!-- 4. UPAISA -->
   <section class="wallet-section">
-    <h2 class="wallet-heading">🔵 UPaisa Services</h2>
+    <h3 class="wallet-heading">🔵 UPaisa Services</h3>
     <div class="wallet-grid">
 
       <article class="wallet-card">
-        <h3>UPaisa Account Open</h3>
-        <input type="tel" placeholder="Mobile Number" required>
+        <h4>UPaisa Account Open</h4>
         <div class="wallet-price">Rs. 700</div>
-        <button type="button" onclick="walletDemo(this,'UPaisa Account Open')">Open</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا موبائل نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
       <article class="wallet-card">
-        <h3>UPaisa Limit Upgrade</h3>
-        <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="CNIC Number" inputmode="numeric" required>
+        <h4>UPaisa Limit Upgrade</h4>
         <div class="wallet-price">Price not set</div>
-        <button type="button" onclick="walletDemo(this,'UPaisa Limit Upgrade')">Submit</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
       <article class="wallet-card">
-        <h3>UPaisa CNIC D-B-I</h3>
-        <input type="tel" placeholder="Mobile Number" required>
+        <h4>UPaisa Account Support</h4>
         <div class="wallet-price">Rs. 250</div>
-        <button type="button" onclick="walletDemo(this,'UPaisa CNIC D-B-I')">Request</button>
-        <div class="wallet-result"></div>
+        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
       </article>
 
     </div>
   </section>
-
-</div>
+</section>
 
 <script>
-function walletDemo(button, serviceName) {
+function royalServiceDemo(button) {
   const card = button.closest('.wallet-card');
-  const inputs = [...card.querySelectorAll('input')];
+  const input = card.querySelector('input');
   const result = card.querySelector('.wallet-result');
 
-  if (inputs.some(input => !input.value.trim())) {
-    result.textContent = 'Please fill in all required fields.';
+  if (input && !input.value.trim()) {
+    result.textContent = 'براہ کرم اپنا نمبر درج کریں۔';
+    input.focus();
     return;
   }
 
   result.textContent =
-    serviceName +
-    ': UI is ready, but no service API is connected. ' +
-    'No request was sent and no credit was deducted.';
+    'ڈیزائن تیار ہے۔ ابھی کوئی API درخواست نہیں بھیجی گئی اور کریڈٹ نہیں کاٹا گیا۔';
 }
 </script>
-    <article class="rm-service-card">
-      <h3>Easypaisa Account PIN Reset</h3>
-      <div class="rm-price">Rs. 150</div>
-      <form class="rm-service-form" data-service="Easypaisa PIN Reset" data-price="150">
-        <input name="mobile" placeholder="Registered mobile number" inputmode="tel" required>
-        <button type="submit">Request PIN Reset</button>
-        <p class="rm-note">Never enter or share your current PIN or OTP.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Easypaisa CNIC to Mobile Lookup</h3>
-      <div class="rm-price">Rs. 120</div>
-      <form class="rm-service-form" data-service="CNIC to Mobile Lookup" data-price="120">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <button type="submit">Submit Request</button>
-        <p class="rm-note">Lookup must use an authorized service and lawful access.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Easypaisa Android ID</h3>
-      <div class="rm-price">Rs. 700</div>
-      <form class="rm-service-form" data-service="Easypaisa Android ID" data-price="700">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <button type="submit">Request ID</button>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-
-    <article class="rm-service-card">
-      <h3>Asaan Digital Account Request</h3>
-      <div class="rm-price">Rs. 2,000</div>
-      <form class="rm-service-form" data-service="Asaan Digital Account Request" data-price="2000">
-        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-        <input name="email" type="email" placeholder="Email address" required>
-        <button type="submit">Submit Request</button>
-        <p class="rm-note">Do not enter your account PIN or OTP. Complete verification only through the authorized provider.</p>
-        <p class="rm-result" aria-live="polite"></p>
-      </form>
-    </article>
-  </div>
-</section>
-
-<script>
-document.querySelectorAll('.rm-service-form').forEach(form => {
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const result = form.querySelector('.rm-result');
-    result.textContent =
-      'Form checked. Server connection is not configured yet; no request has been sent or saved.';
-  });
-});
-</script>
-  <!-- Royal Member Payment System -->
-
-<style>
-  #rmPaymentModal {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: rgba(0, 0, 0, .82);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-sizing: border-box;
-  }
-
-  #rmPaymentModal .payment-box {
-    width: 100%;
-    max-width: 430px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: #101b35;
-    color: white;
-    border: 1px solid #f2d27b;
-    border-radius: 16px;
-    padding: 22px;
-    box-sizing: border-box;
-  }
-
-  #rmPaymentModal h2,
-  #rmPaymentModal h3 {
-    color: #f2d27b;
-    margin-top: 0;
-  }
-
-  #rmPaymentModal input,
-  #rmPaymentModal button {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 8px;
-  }
-
-  #rmPaymentModal input {
-    background: #182743;
-    color: white;
-    border: 1px solid #53627d;
-  }
-
-  #rmPaymentModal button {
-    border: 0;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  #rmPayContinue,
-  #rmCopyAccount {
-    background: #f2d27b;
-    color: #172039;
-  }
-
-  #rmPayLater {
-    background: #344563;
-    color: white;
-  }
-
-  #rmPayMessage {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    font-size: 13px;
-    margin-top: 12px;
-  }
-
-  .rm-payment-instructions {
-    background: #182743;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 15px 0;
-    line-height: 1.6;
-  }
-</style>
-
-<div id="rmPaymentModal">
-  <div class="payment-box">
-
-    <h2>Add Payment</h2>
-
-    <div class="rm-payment-instructions">
-      <h3>Payment Instructions</h3>
-
-      <p><strong>Payment Method:</strong> OPay</p>
-      <p><strong>Account Title:</strong> Noor Jahan</p>
-      <p><strong>Account Number:</strong> 03422605178</p>
-<p style="color:#f2d27b; font-weight:bold;">
-  Minimum Payment: Rs. 2000
-</p>
-      <button type="button" id="rmCopyAccount">
-        Copy Account Number
-      </button>
-
-      <p><strong>Step 1:</strong>
-        پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔
-      </p>
-
-      <p><strong>Step 2:</strong>
-        پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔
-      </p>
-
-      <p><strong>Step 3:</strong>
-        Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔
-      </p>
-
-      <p><strong>Step 4:</strong>
-        Send Payment Slip to Admin پر کلک کریں۔
-      </p>
-
-      <p style="color:#f2d27b;">
-        ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔
-      </p>
-    </div>
-
-    <form id="rmPaymentForm">
-
-      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
-      <input
-        id="rmPaymentAmount"
-        name="amount"
-        type="number"
-        min="1"
-        step="1"
-        required
-        placeholder="Payment amount"
-      >
-
-      <label for="rmPaymentRef">Transaction ID</label>
-      <input
-        id="rmPaymentRef"
-        name="transactionId"
-        type="text"
-        maxlength="100"
-        required
-        placeholder="Transaction ID"
-      >
-
-      <label for="rmPaymentSlip">Payment Slip</label>
-      <input
-        id="rmPaymentSlip"
-        name="slip"
-        type="file"
-        accept="image/jpeg,image/png,image/webp,application/pdf"
-        required
-      >
-
-      <button type="submit" id="rmPayContinue">
-        Send Payment Slip to Admin
-      </button>
-
-    </form>
-
-    <button type="button" id="rmPayLater">
-      Later
-    </button>
-
-    <div id="rmPayMessage" aria-live="polite"></div>
-
-  </div>
-</div>
-
-<script>
-(() => {
-  const modal = document.getElementById('rmPaymentModal');
-  const form = document.getElementById('rmPaymentForm');
-  const message = document.getElementById('rmPayMessage');
-
-  // Open payment menu when a service form is submitted.
-  document.querySelectorAll('.rm-service-form').forEach(serviceForm => {
-    serviceForm.addEventListener('submit', event => {
-      event.preventDefault();
-      modal.style.display = 'flex';
-      message.textContent = '';
-    });
-  });
-
-  // Close the payment menu.
-  document.getElementById('rmPayLater').addEventListener('click', () => {
-    modal.style.display = 'none';
-    message.textContent = '';
-  });
-
-  // Copy OPay account number.
-  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText('03422605178');
-      message.textContent = 'Account number copied.';
-    } catch {
-      message.textContent =
-        'Please copy manually: 03422605178';
-    }
-  });
-
-  // Validate the payment slip.
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const slip = document.getElementById('rmPaymentSlip').files[0];
-    const amount = document.getElementById('rmPaymentAmount').value;
-    const transactionId = document.getElementById('rmPaymentRef').value.trim();
-
-    if (!slip || !amount || !transactionId) {
-      message.textContent = 'Please complete all payment fields.';
-      return;
-    }
-
-    if (slip.size > 5 * 1024 * 1024) {
-      message.textContent = 'Slip must be 5 MB or smaller.';
-      return;
-    }
-
-    message.textContent =
-      'Payment details checked, but the slip has NOT been sent. ' +
-      'Server upload is not connected yet.';
-  });
-})();
-</script>
-<div id="customerServices" class="service-container" style="display:none;">
-
-  <!-- Service 1 -->
-  <div class="service-card account">
-    <div class="network-name">ACCOUNT OPEN</div>
-    <h3>Service Number 1</h3>
-    <p class="price">Rs. 800</p>
-    <button onclick="openService('service1')">
-      Open Service
-    </button>
-
-    <form id="service1" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
-        Send OTP
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service1')">
-        Close
-      </button>
-    </form>
-  </div>
-
-  <!-- Service 2 -->
-  <div class="service-card upaisa">
-    <div class="network-name">UPAISA</div>
-    <h3>UPaisa #1</h3>
-    <p class="price">Rs. 500</p>
-    <button onclick="openService('service2')">
-      Open Service
-    </button>
-
-    <form id="service2" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <input type="text" placeholder="CNIC Number"
-             maxlength="15" required>
-      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
-        Send OTP
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service2')">
-        Close
-      </button>
-    </form>
-  </div>
-
-  <!-- Service 3 -->
-  <div class="service-card cnic">
-    <div class="network-name">UPAISA CNIC</div>
-    <h3>UPaisa CNIC #2</h3>
-    <p class="price">Rs. 350</p>
-    <button onclick="openService('service3')">
-      Open Service
-    </button>
-
-    <form id="service3" class="service-form">
-      <input type="tel" placeholder="Mobile Number"
-             required>
-      <button type="button"
-              onclick="alert('Connect your authorized service API first.')">
-        Submit Request
-      </button>
-      <button type="button" class="close-btn"
-              onclick="closeService('service3')">
-        Close
-      </button>
-    </form>
-  </div>
-
-</div>
-
-<style>
-.service-container {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit, minmax(240px, 1fr)
-  );
-  gap: 20px;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.service-card {
-  color: white;
-  padding: 24px;
-  border-radius: 18px;
-  text-align: center;
-  box-shadow: 0 8px 25px #0003;
-  transition: transform .25s;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Network-inspired backgrounds */
-.account {
-  background: linear-gradient(135deg,
-    #152c5b, #2878cf);
-}
-
-.upaisa {
-  background: linear-gradient(135deg,
-    #08783e, #25b76a);
-}
-
-.cnic {
-  background: linear-gradient(135deg,
-    #075e43, #12a887);
-}
-
-.network-name {
-  display: inline-block;
-  background: #ffffff25;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.service-card h3 {
-  margin: 18px 0 8px;
-  font-size: 21px;
-}
-
-.price {
-  font-size: 26px;
-  font-weight: bold;
-  margin: 15px 0;
-}
-
-.service-card button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 9px;
-  background: white;
-  color: #153a36;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.service-form {
-  display: none;
-  margin-top: 18px;
-}
-
-.service-form input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 13px;
-  margin: 7px 0;
-  border: 0;
-  border-radius: 8px;
-  outline: none;
-}
-
-.service-form .close-btn {
-  background: #ffffff30;
-  color: white;
-  border: 1px solid #ffffff70;
-}
-
-@media (max-width: 480px) {
-  .service-container {
-    grid-template-columns: 1fr;
-    padding: 12px;
-  }
-}
-</style>
-
-<script>
-function openService(id) {
-  document.querySelectorAll('.service-form')
-    .forEach(form => form.style.display = 'none');
-
-  document.getElementById(id).style.display = 'block';
-}
-
-function closeService(id) {
-  document.getElementById(id).style.display = 'none';
-}
-</script>
-</script>
-</body>
-</html>
