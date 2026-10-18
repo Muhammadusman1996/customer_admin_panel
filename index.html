@@ -6,74 +6,275 @@
 <title>Royal VIP Member Portal</title>
 
 <style>
-*{box-sizing:border-box}
-:root{--gold:#ffbd59;--bg:#080b19;--panel:#11182d;--text:#f5f6ff;--muted:#9daac7}
-body{margin:0;min-height:100vh;padding:24px 16px;display:flex;justify-content:center;align-items:flex-start;font-family:Arial,sans-serif;color:var(--text);background:radial-gradient(ellipse at top,#30204f 0%,transparent 55%),linear-gradient(145deg,#080b19,#101c35 55%,#160e29)}
-.wrap{width:100%;max-width:1000px;margin:auto}
-.brand{text-align:center;margin:0 auto 22px}
-.logo{width:66px;height:66px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border-radius:20px;font-size:36px;color:#171025;background:linear-gradient(135deg,#ffe4a1,#ff9b3d);box-shadow:0 0 30px #ffb54c44}
-.brand h1{margin:0;font-size:27px;letter-spacing:2px}
-.brand p{color:var(--gold);font-size:11px;letter-spacing:4px;margin-top:8px}
-.card{padding:26px 22px;border:1px solid #ffffff18;border-radius:22px;background:linear-gradient(145deg,#18223b,#101426);box-shadow:0 20px 60px #0005;margin-bottom:20px}
-.auth-card{max-width:430px;margin:0 auto 20px}
-.eyebrow{text-align:center;color:var(--gold);font-size:10px;letter-spacing:2px;margin-bottom:14px}
-h2{text-align:center;font-size:25px;margin:0 0 8px}
-.sub{text-align:center;color:var(--muted);font-size:14px;line-height:1.8;margin:0 0 22px}
-.field{display:block;margin-bottom:16px}
-.field span{display:block;margin-bottom:8px;color:#dce4ff;font-size:12px;letter-spacing:1px}
-input{font:inherit}
-.field input,.rm-service-card input,#rmPaymentModal input{display:block;width:100%;min-height:48px;padding:12px 14px;border-radius:10px;outline:none;border:1px solid #ffffff20;background:#090f20;color:white;font-size:15px}
-input:focus{border-color:var(--gold)!important;box-shadow:0 0 0 3px #ffbd5918}
-input::placeholder{color:#7785a5}
-.btn,.rm-service-card button,#rmPaymentModal button{display:block;width:100%;min-height:47px;padding:12px;border:0;border-radius:11px;cursor:pointer;font-size:14px;font-weight:bold;color:#21152b;background:linear-gradient(110deg,#ff9b43,#ffe18b)}
-.btn.secondary{color:white;background:#26334e;border:1px solid #ffffff20;box-shadow:none}
-.btn:disabled,button:disabled{opacity:.65;cursor:not-allowed}
-.switch{margin-top:14px;padding:15px 12px;width:100%;border-radius:12px;color:#e8edff;background:#ffffff08;border:1px solid #ffffff1c;cursor:pointer;font-size:14px}
-.switch strong{color:var(--gold)}
-.foot{margin-top:18px;text-align:center;color:#8290af;font-size:11px;line-height:1.8;overflow-wrap:anywhere}
-.message{display:none;padding:12px;margin-top:15px;border-radius:10px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
-.message.show{display:block}
-.message.error{color:#ffb2b2;background:#7f222233}
-.message.success{color:#a9f6cb;background:#17633b33}
-.hidden{display:none!important}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-.topbar h2{text-align:left}
-.topbar .sub{text-align:left;margin:7px 0 0}
-.top-actions{display:flex;gap:8px;flex-wrap:wrap}
-.top-actions .btn{width:auto;min-width:100px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
-.stat{padding:17px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff15;min-width:0}
-.stat span{display:block;color:var(--muted);font-size:11px;margin-bottom:9px}
-.stat strong{font-size:20px;color:var(--gold);overflow-wrap:anywhere}
-.txn{display:flex;justify-content:space-between;gap:10px;padding:14px 0;border-bottom:1px solid #ffffff15}
-.txn small{display:block;color:var(--muted);margin-top:6px}
-.rm-services{margin:22px auto;padding:18px 0;color:#f6f7fb}
-.rm-services h2{color:#f2d27b;text-align:left}
-.rm-note{font-size:13px;color:#c2cbe0;line-height:1.6}
-.rm-service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.rm-service-card{background:#0c1428;border:1px solid #9b7b3e;border-radius:16px;padding:17px;min-width:0}
-.rm-service-card h3{margin:0 0 8px;font-size:17px}
-.rm-price{font-size:23px;color:#f2d27b;font-weight:bold;margin:10px 0 14px}
-.rm-service-card input{margin:7px 0 10px}
-.rm-service-card button{margin-top:4px}
-.rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere;line-height:1.5}
-#rmPaymentModal{position:fixed;inset:0;z-index:99999;background:#000d;display:none;align-items:center;justify-content:center;padding:16px}
-#rmPaymentModal .payment-box{width:100%;max-width:430px;max-height:90vh;overflow-y:auto;background:#101b35;color:white;border:1px solid #f2d27b;border-radius:16px;padding:22px}
-#rmPaymentModal h2,#rmPaymentModal h3{color:#f2d27b;margin-top:0}
-#rmPaymentModal label{display:block;margin-top:12px;font-size:13px;color:#e8edff}
-#rmPaymentModal input{margin-top:7px;background:#182743;border-color:#53627d}
-#rmPaymentModal button{margin-top:10px}
-#rmPayLater{background:#344563!important;color:white!important}
-.rm-payment-instructions{background:#182743;padding:14px;border-radius:10px;margin:15px 0;line-height:1.6;font-size:13px}
-#rmPayMessage{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;margin-top:12px;line-height:1.5}
-@media(max-width:520px){
-body{padding:18px 12px}
-.card{padding:22px 17px}
-.brand h1{font-size:23px}
-.topbar{align-items:flex-start;flex-direction:column}
-.top-actions{width:100%}
-.top-actions .btn{flex:1}
-.rm-services{padding:10px 0}
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --gold: #ffbd59;
+  --bg: #080b19;
+  --panel: #11182d;
+  --text: #f5f6ff;
+  --muted: #9daac7;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at top, #30204f 0%, transparent 55%),
+    linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 430px;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.logo {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  border-radius: 20px;
+  font-size: 36px;
+  color: #171025;
+  background: linear-gradient(135deg, #ffe4a1, #ff9b3d);
+  box-shadow: 0 0 30px #ffb54c44;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 27px;
+  letter-spacing: 2px;
+}
+
+.brand p {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+.card {
+  padding: 30px 24px;
+  border: 1px solid #ffffff18;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #18223b, #101426);
+  box-shadow: 0 20px 60px #0008;
+}
+
+.eyebrow {
+  text-align: center;
+  color: var(--gold);
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 27px;
+  margin: 0 0 8px;
+}
+
+.sub {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0 0 26px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.field span {
+  display: block;
+  margin-bottom: 9px;
+  color: #dce4ff;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.field input {
+  display: block;
+  width: 100%;
+  height: 51px;
+  padding: 0 15px;
+  border-radius: 12px;
+  outline: none;
+  border: 1px solid #ffffff20;
+  background: #090f20;
+  color: white;
+  font-size: 15px;
+}
+
+.field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px #ffbd5918;
+}
+
+.field input::placeholder {
+  color: #7785a5;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  min-height: 51px;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  color: #21152b;
+  background: linear-gradient(110deg, #ff9b43, #ffe18b);
+  box-shadow: 0 7px 22px #ffad4930;
+}
+
+.btn:active {
+  transform: scale(.99);
+}
+
+.btn.secondary {
+  color: white;
+  background: #26334e;
+  border: 1px solid #ffffff20;
+  box-shadow: none;
+}
+
+.switch {
+  margin-top: 18px;
+  padding: 16px 12px;
+  width: 100%;
+  border-radius: 12px;
+  color: #e8edff;
+  background: #ffffff08;
+  border: 1px solid #ffffff1c;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.switch strong {
+  color: var(--gold);
+}
+
+.foot {
+  margin-top: 22px;
+  text-align: center;
+  color: #8290af;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.message {
+  display: none;
+  padding: 12px;
+  margin-top: 17px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.message.show {
+  display: block;
+}
+
+.message.error {
+  color: #ffb2b2;
+  background: #7f222233;
+}
+
+.message.success {
+  color: #a9f6cb;
+  background: #17633b33;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.topbar h2 {
+  text-align: left;
+}
+
+.stats {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  padding: 18px;
+  border-radius: 14px;
+  background: #ffffff08;
+  border: 1px solid #ffffff15;
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 9px;
+}
+
+.stat strong {
+  font-size: 22px;
+  color: var(--gold);
+}
+
+.txn {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid #ffffff15;
+}
+
+.txn small {
+  display: block;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+a {
+  color: var(--gold);
+}
+
+@media (max-width: 380px) {
+  .card {
+    padding: 24px 18px;
+  }
+
+  .brand h1 {
+    font-size: 23px;
+  }
 }
 </style>
 </head>
@@ -81,336 +282,257 @@ body{padding:18px 12px}
 <body>
 <main class="wrap">
 
-<header class="brand">
-  <div class="logo">✦</div>
-  <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
-  <p>VIP MEMBER PORTAL</p>
-</header>
+  <header class="brand">
+    <div class="logo">✦</div>
+    <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
+    <p>VIP MEMBER PORTAL</p>
+  </header>
 
-<section id="authView" class="card auth-card">
-  <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
+  <section id="authView" class="card">
 
-  <section id="loginView">
-    <h2>Login Karein</h2>
-    <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
+    <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
 
-    <form id="loginForm">
-      <label class="field">
-        <span>USERNAME</span>
-        <input name="username" autocomplete="username" minlength="3" required placeholder="اپنا یوزر نیم لکھیں">
-      </label>
+    <!-- LOGIN: default screen -->
+    <section id="loginView">
+      <h2>Login Karein</h2>
+      <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
 
-      <label class="field">
-        <span>PASSWORD</span>
-        <input name="password" type="password" autocomplete="current-password" required placeholder="اپنا پاس ورڈ لکھیں">
-      </label>
+      <form id="loginForm">
+        <label class="field">
+          <span>USERNAME</span>
+          <input
+            name="username"
+            autocomplete="username"
+            minlength="3"
+            required
+            placeholder="اپنا یوزر نیم لکھیں">
+        </label>
 
-      <button class="btn" type="submit">Secure Login ↗</button>
-    </form>
+        <label class="field">
+          <span>PASSWORD</span>
+          <input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="اپنا پاس ورڈ لکھیں">
+        </label>
 
-    <button class="switch" id="openRegister" type="button">
-      ♙ نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
-    </button>
-  </section>
+        <button class="btn" type="submit">Secure Login　↗</button>
+      </form>
 
-  <section id="registerView" class="hidden">
-    <h2>Create Account</h2>
-    <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہو سکتی ہے۔</p>
+      <button class="switch" id="openRegister" type="button">
+        ♙　نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
+      </button>
+    </section>
 
-    <form id="registerForm">
-      <label class="field">
-        <span>FULL NAME</span>
-        <input name="name" minlength="2" required autocomplete="name" placeholder="اپنا پورا نام لکھیں">
-      </label>
+    <!-- REGISTRATION: hidden until clicked -->
+    <section id="registerView" class="hidden">
+      <h2>Create Account</h2>
+      <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہے۔</p>
 
-      <label class="field">
-        <span>USERNAME</span>
-        <input name="username" minlength="3" pattern="[A-Za-z0-9_.-]+" required autocomplete="username" placeholder="مثلاً maan_user">
-      </label>
+      <form id="registerForm">
+        <label class="field">
+          <span>FULL NAME</span>
+          <input
+            name="name"
+            minlength="2"
+            required
+            autocomplete="name"
+            placeholder="اپنا پورا نام لکھیں">
+        </label>
 
-      <label class="field">
-        <span>PASSWORD (8+ CHARACTERS)</span>
-        <input name="password" type="password" minlength="8" required autocomplete="new-password" placeholder="مضبوط پاس ورڈ بنائیں">
-      </label>
+        <label class="field">
+          <span>USERNAME</span>
+          <input
+            name="username"
+            minlength="3"
+            pattern="[A-Za-z0-9_.-]+"
+            required
+            autocomplete="username"
+            placeholder="مثلاً maan_user">
+        </label>
 
-      <button class="btn" type="submit">Create Account ✦</button>
-    </form>
+        <label class="field">
+          <span>PASSWORD (8+ CHARACTERS)</span>
+          <input
+            name="password"
+            type="password"
+            minlength="8"
+            required
+            autocomplete="new-password"
+            placeholder="مضبوط پاس ورڈ بنائیں">
+        </label>
 
-    <button class="switch" id="backToLogin" type="button">
-      ← واپس <strong>Login</strong> پر جائیں
-    </button>
-  </section>
+        <button class="btn" type="submit">Create Account　✦</button>
+      </form>
 
-  <div id="msg" class="message" role="status"></div>
-  <p class="foot">🔒 Secure Member Access<br>Account approval may be required</p>
-</section>
+      <button class="switch" id="backToLogin" type="button">
+        ← واپس <strong>Login</strong> پر جائیں
+      </button>
+    </section>
 
-<section id="dashboard" class="hidden">
-  <div class="card">
-    <div class="topbar">
-      <div>
-        <h2>Member Dashboard</h2>
-        <p id="welcome" class="sub"></p>
-      </div>
+    <div id="msg" class="message" role="status"></div>
 
-      <div class="top-actions">
-        <button class="btn" id="openPayment" type="button">＋ Add Payment</button>
-        <button class="btn secondary" id="logout" type="button">Log out</button>
-      </div>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <span>AVAILABLE CREDIT</span>
-        <strong id="balance">0.00</strong>
-      </div>
-      <div class="stat">
-        <span>ACCOUNT STATUS</span>
-        <strong id="memberStatus">—</strong>
-      </div>
-      <div class="stat">
-        <span>MEMBER ID</span>
-        <strong id="memberId">—</strong>
-      </div>
-    </div>
-
-    <h3>Credit History</h3>
-    <p class="sub">آپ کے اکاؤنٹ کی کریڈٹ تفصیلات۔</p>
-    <div id="transactions"><p class="sub">ٹرانزیکشنز لوڈ ہو رہی ہیں۔</p></div>
-    <div id="dashboardMsg" class="message" role="status"></div>
-  </div>
-
-  <section class="rm-services" id="rmServices">
-    <h2>👑 Available Services</h2>
-    <p class="rm-note">
-      سروس منتخب کرکے درخواست درج کریں۔ یہ فارم صرف درخواست کا ڈیمو دکھاتے ہیں؛
-      سرور کنکشن شامل کیے بغیر درخواست محفوظ یا کریڈٹ کٹوتی نہیں ہوگی۔
-      صرف وہی معلومات درج کریں جن کے استعمال کی آپ کو اجازت ہے۔
+    <p class="foot">
+      🔒 Secure Member Access<br>
+      Account approval required
     </p>
+  </section>
 
-    <div class="rm-service-grid">
+  <!-- MEMBER DASHBOARD -->
+  <section id="dashboard" class="hidden">
+    <div class="card">
+      <div class="topbar">
+        <div>
+          <h2>Member Dashboard</h2>
+          <p id="welcome" class="sub"></p>
+        </div>
+        <button class="btn secondary" id="logout" type="button">
+          Log out
+        </button>
+      </div>
 
-      <article class="rm-service-card">
-        <h3>Easypaisa Account Open</h3>
-        <div class="rm-price">Rs. 1,000</div>
-        <form class="rm-service-form" data-service="Easypaisa Account Open">
-          <input name="mobile" placeholder="Mobile number" inputmode="tel" autocomplete="tel" required>
-          <input name="cnic" placeholder="CNIC number (only if required)" inputmode="numeric" required>
-          <button type="submit">Send Request</button>
-          <p class="rm-result" aria-live="polite"></p>
-        </form>
-      </article>
+      <div class="stats">
+        <div class="stat">
+          <span>AVAILABLE CREDIT</span>
+          <strong id="balance">0.00</strong>
+        </div>
 
-      <article class="rm-service-card">
-        <h3>Easypaisa Account PIN Reset</h3>
-        <div class="rm-price">Rs. 150</div>
-        <form class="rm-service-form" data-service="Easypaisa PIN Reset">
-          <input name="mobile" placeholder="Registered mobile number" inputmode="tel" required>
-          <button type="submit">Request PIN Reset</button>
-          <p class="rm-note">اپنا PIN یا OTP کبھی درج یا شیئر نہ کریں۔</p>
-          <p class="rm-result" aria-live="polite"></p>
-        </form>
-      </article>
+        <div class="stat">
+          <span>ACCOUNT STATUS</span>
+          <strong id="memberStatus">Approved</strong>
+        </div>
 
-      <article class="rm-service-card">
-        <h3>Easypaisa CNIC to Mobile Lookup</h3>
-        <div class="rm-price">Rs. 120</div>
-        <form class="rm-service-form" data-service="CNIC to Mobile Lookup">
-          <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-          <button type="submit">Submit Request</button>
-          <p class="rm-note">یہ درخواست صرف مجاز اور قانونی سروس کے ذریعے انجام دی جا سکتی ہے۔</p>
-          <p class="rm-result" aria-live="polite"></p>
-        </form>
-      </article>
+        <div class="stat">
+          <span>MEMBER ID</span>
+          <strong id="memberId">—</strong>
+        </div>
+      </div>
 
-      <article class="rm-service-card">
-        <h3>Easypaisa Android ID</h3>
-        <div class="rm-price">Rs. 700</div>
-        <form class="rm-service-form" data-service="Easypaisa Android ID">
-          <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-          <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-          <button type="submit">Request ID</button>
-          <p class="rm-result" aria-live="polite"></p>
-        </form>
-      </article>
-
-      <article class="rm-service-card">
-        <h3>Asaan Digital Account Request</h3>
-        <div class="rm-price">Rs. 2,000</div>
-        <form class="rm-service-form" data-service="Asaan Digital Account Request">
-          <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
-          <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
-          <input name="email" type="email" placeholder="Email address" required>
-          <button type="submit">Submit Request</button>
-          <p class="rm-note">PIN یا OTP نہ دیں۔ تصدیق صرف مجاز فراہم کنندہ کے ذریعے مکمل کریں۔</p>
-          <p class="rm-result" aria-live="polite"></p>
-        </form>
-      </article>
-
+      <h3>Credit History</h3>
+      <p class="sub">آپ کے اکاؤنٹ کی کریڈٹ تفصیلات۔</p>
+      <div id="transactions"></div>
     </div>
   </section>
-</section>
 
-<footer class="foot">
-  <strong style="color:var(--gold);font-size:16px">✦ M. Usman — Admin Contact</strong>
+  <footer class="foot">
+    ROYAL MEMBER PORTAL • VIP ACCESS
+    <br>
+<div class="foot">
+  <strong style="color:var(--gold);font-size:16px">
+    ✦ M. Usman — Admin Contact
+  </strong>
+
   <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
-  <a href="https://wa.me/923021394509" target="_blank" rel="noopener noreferrer">WhatsApp: 0302-1394509</a>
+
+  <a href="https://wa.me/923021394509"
+     target="_blank"
+     rel="noopener noreferrer">
+    WhatsApp: 0302-1394509
+  </a>
+
   <br><br>
-  <a href="https://wa.me/923060001167" target="_blank" rel="noopener noreferrer">WhatsApp: 0306-0001167</a>
+
+  <a href="https://wa.me/923060001167"
+     target="_blank"
+     rel="noopener noreferrer">
+    WhatsApp: 0306-0001167
+  </a>
+
   <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
-</footer>
+</div>
+  </footer>
 
 </main>
 
-<div id="rmPaymentModal" role="dialog" aria-modal="true" aria-labelledby="rmPaymentTitle">
-  <div class="payment-box">
-    <h2 id="rmPaymentTitle">Add Payment</h2>
-
-    <div class="rm-payment-instructions">
-      <h3>Payment Instructions</h3>
-      <p><strong>Payment Method:</strong> OPay</p>
-      <p><strong>Account Title:</strong> Noor Jahan</p>
-      <p><strong>Account Number:</strong> <span id="rmAccountNumber">03422605178</span></p>
-      <p style="color:#f2d27b;font-weight:bold">Minimum Payment: Rs. 2000</p>
-
-      <button type="button" id="rmCopyAccount">Copy Account Number</button>
-
-      <p>1. پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔</p>
-      <p>2. بھیجی گئی رقم درج کریں۔</p>
-      <p>3. Transaction ID اور پیمنٹ سلپ منتخب کریں۔</p>
-      <p>4. درخواست جمع کریں۔ ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔</p>
-    </div>
-
-    <form id="rmPaymentForm">
-      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
-      <input id="rmPaymentAmount" name="amount" type="number" min="2000" step="1" required placeholder="Minimum 2000">
-
-      <label for="rmPaymentRef">Transaction ID</label>
-      <input id="rmPaymentRef" name="transactionId" type="text" maxlength="100" required placeholder="Transaction ID">
-
-      <label for="rmPaymentSlip">Payment Slip (JPG, PNG, WEBP, PDF; max 5 MB)</label>
-      <input id="rmPaymentSlip" name="slip" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required>
-
-      <button type="submit" id="rmPayContinue">Submit Payment Request</button>
-    </form>
-
-    <button type="button" id="rmPayLater">Close</button>
-    <div id="rmPayMessage" aria-live="polite"></div>
-  </div>
-</div>
-
 <script>
-'use strict';
-
 const $ = selector => document.querySelector(selector);
 
-function showMsg(text, type = 'success', target = '#msg') {
-  const el = $(target);
-  if (!el) return;
+function showMsg(text, type = 'success') {
+  const el = $('#msg');
   el.textContent = text;
   el.className = 'message show ' + type;
 }
 
-function clearMsg(target = '#msg') {
-  const el = $(target);
-  if (el) {
-    el.className = 'message';
-    el.textContent = '';
-  }
+function clearMsg() {
+  $('#msg').className = 'message';
+  $('#msg').textContent = '';
 }
 
 function setMode(mode) {
   const registering = mode === 'register';
+
   $('#loginView').classList.toggle('hidden', registering);
   $('#registerView').classList.toggle('hidden', !registering);
+
   clearMsg();
 }
 
-$('#openRegister').addEventListener('click', () => setMode('register'));
-$('#backToLogin').addEventListener('click', () => setMode('login'));
+$('#openRegister').addEventListener('click', () => {
+  setMode('register');
+});
 
-async function readResponse(response) {
-  const contentType = response.headers.get('content-type') || '';
-  let result = {};
+$('#backToLogin').addEventListener('click', () => {
+  setMode('login');
+});
 
-  if (contentType.includes('application/json')) {
-    result = await response.json();
-  } else {
-    const text = await response.text();
-    result = {error: text || 'سرور سے درست جواب موصول نہیں ہوا۔'};
-  }
+async function api(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.error || result.message || 'درخواست مکمل نہیں ہوئی۔');
+    throw new Error(result.error || 'درخواست مکمل نہیں ہوئی۔');
   }
 
   return result;
 }
 
-async function api(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-  });
-
-  return readResponse(response);
-}
-
+// LOGIN
 $('#loginForm').addEventListener('submit', async event => {
   event.preventDefault();
 
-  const button = event.submitter;
-  if (button) button.disabled = true;
-
-  clearMsg();
-  const data = Object.fromEntries(new FormData(event.target).entries());
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
 
   try {
     await api('/api/member/login', data);
-
-    const loaded = await loadMe();
-
-    if (!loaded) {
-      showMsg(
-        'لاگ اِن کے بعد ممبر معلومات لوڈ نہیں ہو سکیں۔ سرور کی /api/me سروس چیک کریں۔',
-        'error'
-      );
-    }
+    await loadMe();
   } catch (error) {
-    showMsg(error.message || 'لاگ اِن نہیں ہو سکا۔', 'error');
-  } finally {
-    if (button) button.disabled = false;
+    showMsg(error.message, 'error');
   }
 });
 
+// CREATE ACCOUNT
 $('#registerForm').addEventListener('submit', async event => {
   event.preventDefault();
 
-  const button = event.submitter;
-  if (button) button.disabled = true;
-
-  const data = Object.fromEntries(new FormData(event.target).entries());
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
 
   try {
     const result = await api('/api/register', data);
 
     event.target.reset();
     setMode('login');
-
     showMsg(
-      result.message || 'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
+      result.message ||
+      'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
     );
   } catch (error) {
-    showMsg(error.message || 'اکاؤنٹ نہیں بن سکا۔', 'error');
-  } finally {
-    if (button) button.disabled = false;
+    showMsg(error.message, 'error');
   }
 });
 
 function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, char => ({
+  return String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -419,101 +541,565 @@ function escapeHtml(value) {
   })[char]);
 }
 
-function money(value) {
-  const n = Number(value);
-  return Number.isFinite(n) ? n.toFixed(2) : '0.00';
-}
-
+// LOAD MEMBER DASHBOARD
 async function loadMe() {
   try {
-    const response = await fetch('/api/me', {credentials: 'same-origin'});
+    const response = await fetch('/api/me');
 
-    if (response.status === 401 || response.status === 403) {
-      return false;
-    }
+    if (!response.ok) return;
 
-    if (!response.ok) {
-      throw new Error('Member profile could not be loaded');
-    }
-
-    const result = await readResponse(response);
+    const result = await response.json();
     const user = result.user;
 
-    if (!user) return false;
+    if (!user) return;
 
     $('#authView').classList.add('hidden');
     $('#dashboard').classList.remove('hidden');
+document.getElementById('rmServices').hidden = false;
+    $('#welcome').textContent = 'Welcome, ' + user.name;
+    $('#balance').textContent = Number(user.credit || 0).toFixed(2);
+    $('#memberStatus').textContent = user.status || 'Approved';
+    $('#memberId').textContent =
+      'VIP-' + String(user.id).padStart(4, '0');
 
-    $('#welcome').textContent = 'Welcome, ' + (user.name || user.username || 'Member');
-    $('#balance').textContent = money(user.credits ?? user.credit ?? 0);
-    $('#memberStatus').textContent = user.status || 'Pending';
-    $('#memberId').textContent = user.id != null
-      ? 'VIP-' + String(user.id).padStart(4, '0')
-      : '—';
-
-    const transactions = Array.isArray(result.transactions)
-      ? result.transactions
-      : [];
+    $('#balance').textContent = Number(user.credits ?? user.credit ?? 0).toFixed(2);
 
     $('#transactions').innerHTML = transactions.length
-      ? transactions.map(transaction => {
-          const amount = Number(transaction.amount || 0);
-          const dateValue = transaction.at || transaction.created_at || transaction.createdAt || '';
-
-          const dateText = dateValue && !Number.isNaN(new Date(dateValue).getTime())
-            ? new Date(dateValue).toLocaleString()
-            : '';
-
-          return `<div class="txn">
+      ? transactions.map(transaction => `
+          <div class="txn">
             <div>
-              ${escapeHtml(transaction.note || transaction.description || 'Credit transaction')}
-              <small>${escapeHtml(dateText)}</small>
+              ${escapeHtml(transaction.note || '')}
+              <small>
+                ${escapeHtml(
+                  transaction.at
+                    ? new Date(transaction.at).toLocaleString()
+                    : ''
+                )}
+              </small>
             </div>
-            <strong>${amount > 0 ? '+' : ''}${money(amount)}</strong>
-          </div>`;
-        }).join('')
+            <strong>
+              ${Number(transaction.amount) > 0 ? '+' : ''}
+              ${Number(transaction.amount || 0).toFixed(2)}
+            </strong>
+          </div>
+        `).join('')
       : '<p class="sub">ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔</p>';
 
-    return true;
   } catch (error) {
-    console.error('Could not load member dashboard:', error);
-    return false;
+    console.error('Could not load member dashboard.');
   }
 }
 
+// LOGOUT
 $('#logout').addEventListener('click', async () => {
   try {
-    await fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'same-origin'
-    });
+    await fetch('/api/logout', { method: 'POST' });
   } finally {
     location.reload();
   }
 });
 
-// Service forms are demo-only until an authorized backend endpoint is connected.
+// Initial page
+loadMe();
+  </script>
+  <!-- Royal Member Services -->
+<style>
+.rm-services{max-width:1000px;margin:25px auto;padding:16px;color:#f6f7fb;font-family:Arial,sans-serif}
+.rm-services h2{color:#f2d27b}
+.rm-service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.rm-service-card{background:#0c1428;border:1px solid #9b7b3e;border-radius:16px;padding:18px}
+.rm-price{font-size:24px;color:#f2d27b;font-weight:bold;margin:10px 0}
+.rm-service-card input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0 10px;border-radius:8px;border:1px solid #35415d;background:#101a31;color:white}
+.rm-service-card button{width:100%;padding:12px;border:0;border-radius:8px;background:#e8c56b;color:#171208;font-weight:bold;cursor:pointer}
+.rm-note{font-size:13px;color:#c2cbe0;line-height:1.5}
+.rm-result{font-size:13px;color:#f2d27b;margin-top:10px;overflow-wrap:anywhere}
+</style>
+
+<section class="rm-services" id="rmServices" hidden>
+  <h2>👑 Available Services</h2>
+  <p class="rm-note">Select a service and submit a request. Use only accounts and identity details you are authorized to provide.</p>
+
+  <div class="rm-service-grid">
+    <article class="rm-service-card">
+      <h3>Easypaisa Account Open</h3>
+      <div class="rm-price">Rs. 1,000</div>
+      <form class="rm-service-form" data-service="Easypaisa Account Open" data-price="1000">
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <button type="submit">Send Request</button>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa Account PIN Reset</h3>
+      <div class="rm-price">Rs. 150</div>
+      <form class="rm-service-form" data-service="Easypaisa PIN Reset" data-price="150">
+        <input name="mobile" placeholder="Registered mobile number" inputmode="tel" required>
+        <button type="submit">Request PIN Reset</button>
+        <p class="rm-note">Never enter or share your current PIN or OTP.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa CNIC to Mobile Lookup</h3>
+      <div class="rm-price">Rs. 120</div>
+      <form class="rm-service-form" data-service="CNIC to Mobile Lookup" data-price="120">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <button type="submit">Submit Request</button>
+        <p class="rm-note">Lookup must use an authorized service and lawful access.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Easypaisa Android ID</h3>
+      <div class="rm-price">Rs. 700</div>
+      <form class="rm-service-form" data-service="Easypaisa Android ID" data-price="700">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <button type="submit">Request ID</button>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article class="rm-service-card">
+      <h3>Asaan Digital Account Request</h3>
+      <div class="rm-price">Rs. 2,000</div>
+      <form class="rm-service-form" data-service="Asaan Digital Account Request" data-price="2000">
+        <input name="cnic" placeholder="CNIC number" inputmode="numeric" required>
+        <input name="mobile" placeholder="Mobile number" inputmode="tel" required>
+        <input name="email" type="email" placeholder="Email address" required>
+        <button type="submit">Submit Request</button>
+        <p class="rm-note">Do not enter your account PIN or OTP. Complete verification only through the authorized provider.</p>
+        <p class="rm-result" aria-live="polite"></p>
+      </form>
+    </article>
+  </div>
+</section>
+
+<script>
 document.querySelectorAll('.rm-service-form').forEach(form => {
   form.addEventListener('submit', event => {
     event.preventDefault();
-
     const result = form.querySelector('.rm-result');
-
     result.textContent =
-      'فارم کی معلومات چیک ہو گئیں، لیکن سرور کنکشن موجود نہیں؛ درخواست محفوظ یا ارسال نہیں ہوئی اور کریڈٹ نہیں کٹا۔';
+      'Form checked. Server connection is not configured yet; no request has been sent or saved.';
   });
 });
+</script>
+  <!-- Royal Member Payment System -->
 
-// Payment modal: UI validation only. It does not upload the slip or credit an account.
-const paymentModal = $('#rmPaymentModal');
+<style>
+  #rmPaymentModal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, .82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+  }
 
-function openPaymentModal() {
-  $('#rmPayMessage').textContent = '';
-  paymentModal.style.display = 'flex';
+  #rmPaymentModal .payment-box {
+    width: 100%;
+    max-width: 430px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #101b35;
+    color: white;
+    border: 1px solid #f2d27b;
+    border-radius: 16px;
+    padding: 22px;
+    box-sizing: border-box;
+  }
+
+  #rmPaymentModal h2,
+  #rmPaymentModal h3 {
+    color: #f2d27b;
+    margin-top: 0;
+  }
+
+  #rmPaymentModal input,
+  #rmPaymentModal button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+  }
+
+  #rmPaymentModal input {
+    background: #182743;
+    color: white;
+    border: 1px solid #53627d;
+  }
+
+  #rmPaymentModal button {
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #rmPayContinue,
+  #rmCopyAccount {
+    background: #f2d27b;
+    color: #172039;
+  }
+
+  #rmPayLater {
+    background: #344563;
+    color: white;
+  }
+
+  #rmPayMessage {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .rm-payment-instructions {
+    background: #182743;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+    line-height: 1.6;
+  }
+</style>
+
+<div id="rmPaymentModal">
+  <div class="payment-box">
+
+    <h2>Add Payment</h2>
+
+    <div class="rm-payment-instructions">
+      <h3>Payment Instructions</h3>
+
+      <p><strong>Payment Method:</strong> OPay</p>
+      <p><strong>Account Title:</strong> Noor Jahan</p>
+      <p><strong>Account Number:</strong> 03422605178</p>
+<p style="color:#f2d27b; font-weight:bold;">
+  Minimum Payment: Rs. 2000
+</p>
+      <button type="button" id="rmCopyAccount">
+        Copy Account Number
+      </button>
+
+      <p><strong>Step 1:</strong>
+        پہلے ایڈمن کے OPay اکاؤنٹ میں پیمنٹ بھیجیں۔
+      </p>
+
+      <p><strong>Step 2:</strong>
+        پیمنٹ کرنے کے بعد بھیجی گئی رقم درج کریں۔
+      </p>
+
+      <p><strong>Step 3:</strong>
+        Transaction ID درج کریں اور پیمنٹ سلپ منتخب کریں۔
+      </p>
+
+      <p><strong>Step 4:</strong>
+        Send Payment Slip to Admin پر کلک کریں۔
+      </p>
+
+      <p style="color:#f2d27b;">
+        ایڈمن کی تصدیق کے بعد ہی پیمنٹ منظور ہوگی۔
+      </p>
+    </div>
+
+    <form id="rmPaymentForm">
+
+      <label for="rmPaymentAmount">Amount Sent (Rs.)</label>
+      <input
+        id="rmPaymentAmount"
+        name="amount"
+        type="number"
+        min="1"
+        step="1"
+        required
+        placeholder="Payment amount"
+      >
+
+      <label for="rmPaymentRef">Transaction ID</label>
+      <input
+        id="rmPaymentRef"
+        name="transactionId"
+        type="text"
+        maxlength="100"
+        required
+        placeholder="Transaction ID"
+      >
+
+      <label for="rmPaymentSlip">Payment Slip</label>
+      <input
+        id="rmPaymentSlip"
+        name="slip"
+        type="file"
+        accept="image/jpeg,image/png,image/webp,application/pdf"
+        required
+      >
+
+      <button type="submit" id="rmPayContinue">
+        Send Payment Slip to Admin
+      </button>
+
+    </form>
+
+    <button type="button" id="rmPayLater">
+      Later
+    </button>
+
+    <div id="rmPayMessage" aria-live="polite"></div>
+
+  </div>
+</div>
+
+<script>
+(() => {
+  const modal = document.getElementById('rmPaymentModal');
+  const form = document.getElementById('rmPaymentForm');
+  const message = document.getElementById('rmPayMessage');
+
+  // Open payment menu when a service form is submitted.
+  document.querySelectorAll('.rm-service-form').forEach(serviceForm => {
+    serviceForm.addEventListener('submit', event => {
+      event.preventDefault();
+      modal.style.display = 'flex';
+      message.textContent = '';
+    });
+  });
+
+  // Close the payment menu.
+  document.getElementById('rmPayLater').addEventListener('click', () => {
+    modal.style.display = 'none';
+    message.textContent = '';
+  });
+
+  // Copy OPay account number.
+  document.getElementById('rmCopyAccount').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('03422605178');
+      message.textContent = 'Account number copied.';
+    } catch {
+      message.textContent =
+        'Please copy manually: 03422605178';
+    }
+  });
+
+  // Validate the payment slip.
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const slip = document.getElementById('rmPaymentSlip').files[0];
+    const amount = document.getElementById('rmPaymentAmount').value;
+    const transactionId = document.getElementById('rmPaymentRef').value.trim();
+
+    if (!slip || !amount || !transactionId) {
+      message.textContent = 'Please complete all payment fields.';
+      return;
+    }
+
+    if (slip.size > 5 * 1024 * 1024) {
+      message.textContent = 'Slip must be 5 MB or smaller.';
+      return;
+    }
+
+    message.textContent =
+      'Payment details checked, but the slip has NOT been sent. ' +
+      'Server upload is not connected yet.';
+  });
+})();
+</script>
+<div id="customerServices" class="service-container" style="display:none;">
+
+  <!-- Service 1 -->
+  <div class="service-card account">
+    <div class="network-name">ACCOUNT OPEN</div>
+    <h3>Service Number 1</h3>
+    <p class="price">Rs. 800</p>
+    <button onclick="openService('service1')">
+      Open Service
+    </button>
+
+    <form id="service1" class="service-form">
+      <input type="tel" placeholder="Mobile Number"
+             required>
+      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
+        Send OTP
+      </button>
+      <button type="button" class="close-btn"
+              onclick="closeService('service1')">
+        Close
+      </button>
+    </form>
+  </div>
+
+  <!-- Service 2 -->
+  <div class="service-card upaisa">
+    <div class="network-name">UPAISA</div>
+    <h3>UPaisa #1</h3>
+    <p class="price">Rs. 500</p>
+    <button onclick="openService('service2')">
+      Open Service
+    </button>
+
+    <form id="service2" class="service-form">
+      <input type="tel" placeholder="Mobile Number"
+             required>
+      <input type="text" placeholder="CNIC Number"
+             maxlength="15" required>
+      <button type="button" onclick="alert('Connect your authorized OTP provider first.')">
+        Send OTP
+      </button>
+      <button type="button" class="close-btn"
+              onclick="closeService('service2')">
+        Close
+      </button>
+    </form>
+  </div>
+
+  <!-- Service 3 -->
+  <div class="service-card cnic">
+    <div class="network-name">UPAISA CNIC</div>
+    <h3>UPaisa CNIC #2</h3>
+    <p class="price">Rs. 350</p>
+    <button onclick="openService('service3')">
+      Open Service
+    </button>
+
+    <form id="service3" class="service-form">
+      <input type="tel" placeholder="Mobile Number"
+             required>
+      <button type="button"
+              onclick="alert('Connect your authorized service API first.')">
+        Submit Request
+      </button>
+      <button type="button" class="close-btn"
+              onclick="closeService('service3')">
+        Close
+      </button>
+    </form>
+  </div>
+
+</div>
+
+<style>
+.service-container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit, minmax(240px, 1fr)
+  );
+  gap: 20px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-function closePaymentModal() {
-  paymentModal.style.display = 'none';
+.service-card {
+  color: white;
+  padding: 24px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 8px 25px #0003;
+  transition: transform .25s;
 }
 
-$('#openPayment').addEventListener('click', openP
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Network-inspired backgrounds */
+.account {
+  background: linear-gradient(135deg,
+    #152c5b, #2878cf);
+}
+
+.upaisa {
+  background: linear-gradient(135deg,
+    #08783e, #25b76a);
+}
+
+.cnic {
+  background: linear-gradient(135deg,
+    #075e43, #12a887);
+}
+
+.network-name {
+  display: inline-block;
+  background: #ffffff25;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.service-card h3 {
+  margin: 18px 0 8px;
+  font-size: 21px;
+}
+
+.price {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.service-card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 9px;
+  background: white;
+  color: #153a36;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.service-form {
+  display: none;
+  margin-top: 18px;
+}
+
+.service-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  margin: 7px 0;
+  border: 0;
+  border-radius: 8px;
+  outline: none;
+}
+
+.service-form .close-btn {
+  background: #ffffff30;
+  color: white;
+  border: 1px solid #ffffff70;
+}
+
+@media (max-width: 480px) {
+  .service-container {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+}
+</style>
+
+<script>
+function openService(id) {
+  document.querySelectorAll('.service-form')
+    .forEach(form => form.style.display = 'none');
+
+  document.getElementById(id).style.display = 'block';
+}
+
+function closeService(id) {
+  document.getElementById(id).style.display = 'none';
+}
+</script>
+</script>
+</body>
+</html>
