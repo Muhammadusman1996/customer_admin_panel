@@ -90,6 +90,7 @@ app.get('/api/session', (req, res) => {
 app.post('/api/register', async (req, res) => {
   const name = String(req.body.name || '').trim();
   const username = String(req.body.username || '').trim().toLowerCase();
+  const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || '');
 
   if (name.length < 2 || name.length > 60) {
