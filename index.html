@@ -895,7 +895,160 @@ function royalServiceDemo(button) {
     return;
   }
 
-  result.textContent =
-    'ڈیزائن تیار ہے۔ ابھی کوئی API درخواست نہیں بھیجی گئی اور کریڈٹ نہیں کاٹا گیا۔';
+<!-- Royal Member Customer Payment -->
+<style>
+#rmPayOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 18px;
+  background: rgba(3, 8, 20, .96);
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
+#rmPayOverlay .rm-pay-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  border: 1px solid #d9ad53;
+  border-radius: 18px;
+  background: #13213a;
+  text-align: center;
+}
+#rmPayOverlay h2 { color: #ffca67; }
+#rmPayOverlay p { line-height: 1.7; }
+#rmPayOverlay .rm-pay-btn {
+  width: 100%;
+  padding: 13px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+#rmPayOverlay .rm-primary {
+  background: #ffca67;
+  color: #172033;
+}
+#rmPayOverlay .rm-secondary {
+  background: #293e5d;
+  color: white;
+}
+#rmPayOverlay .rm-pay-details {
+  display: none;
+  padding-top: 12px;
+}
+#rmPayOverlay .rm-account {
+  padding: 14px;
+  margin: 14px 0;
+  border-radius: 10px;
+  background: #091426;
+  overflow-wrap: anywhere;
+}
+#rmPayOverlay .rm-number {
+  color: #ffca67;
+  font-size: 22px;
+  font-weight: bold;
+}
+</style>
+
+<div id="rmPayOverlay" role="dialog"
+     aria-modal="true" aria-labelledby="rmPayTitle">
+  <div class="rm-pay-card">
+    <h2 id="rmPayTitle">Royal Member Payment</h2>
+
+    <div id="rmPayChoices">
+      <p>سروس استعمال کرنے کے لیے پیمنٹ کا طریقہ منتخب کریں۔</p>
+      <button type="button" class="rm-pay-btn rm-primary"
+              id="rmShowPayment">Add Payment</button>
+      <button type="button" class="rm-pay-btn rm-secondary"
+              id="rmPayLater">Pay Later</button>
+    </div>
+
+    <div id="rmPayDetails" class="rm-pay-details">
+      <h3>OPay Account</h3>
+      <div class="rm-account">
+        <p>Account Name: <strong>Noor Jahan</strong></p>
+        <p>Account Number</p>
+        <div class="rm-number" id="rmOpayNo">03422605178</div>
+      </div>
+      <button type="button" class="rm-pay-btn rm-primary"
+              id="rmCopyNumber">Copy Account Number</button>
+      <p id="rmCopyStatus" role="status"></p>
+      <p>ادائیگی کے بعد ایڈمن کی تصدیق ضروری ہے۔</p>
+      <button type="button" class="rm-pay-btn rm-secondary"
+              id="rmBackChoices">Back</button>
+    </div>
+
+    <div id="rmLaterInfo" class="rm-pay-details">
+      <p>آپ واپس کسٹمر پینل میں جا سکتے ہیں۔</p>
+      <p>پیمنٹ کی تصدیق تک محفوظ سروسز استعمال نہیں کی جا سکیں گی۔</p>
+      <button type="button" class="rm-pay-btn rm-primary"
+              id="rmReturnCustomer">Return to Panel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const overlay = document.getElementById('rmPayOverlay');
+  const choices = document.getElementById('rmPayChoices');
+  const details = document.getElementById('rmPayDetails');
+  const laterInfo = document.getElementById('rmLaterInfo');
+
+  function showPaymentPopup() {
+    choices.style.display = 'block';
+    details.style.display = 'none';
+    laterInfo.style.display = 'none';
+    overlay.style.display = 'flex';
+  }
+
+  function closePaymentPopup() {
+    overlay.style.display = 'none';
+  }
+
+  document.getElementById('rmShowPayment').onclick = function () {
+    choices.style.display = 'none';
+    details.style.display = 'block';
+  };
+
+  document.getElementById('rmPayLater').onclick = function () {
+    choices.style.display = 'none';
+    details.style.display = 'none';
+    laterInfo.style.display = 'block';
+  };
+
+  document.getElementById('rmBackChoices').onclick = function () {
+    details.style.display = 'none';
+    choices.style.display = 'block';
+  };
+
+  document.getElementById('rmReturnCustomer').onclick =
+    closePaymentPopup;
+
+  document.getElementById('rmCopyNumber').onclick = async function () {
+    const number = document.getElementById('rmOpayNo').textContent.trim();
+    const status = document.getElementById('rmCopyStatus');
+
+    try {
+      await navigator.clipboard.writeText(number);
+      status.textContent = 'Account number copied.';
+    } catch (e) {
+      status.textContent = 'یہ نمبر کاپی کریں: ' + number;
+    }
+  };
+
+  // Expose a function for the customer service buttons.
+  window.rmShowPaymentPopup = showPaymentPopup;
+
+  // Open this popup only when the customer selects a paid service.
+  // Connect your existing service buttons to this function.
+})();
+</script>
+</body>
 </script>
