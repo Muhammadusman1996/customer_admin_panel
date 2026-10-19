@@ -893,5 +893,139 @@ function royalServiceDemo(button) {
     }
 }
 </script>
+  <!-- Royal Member Payment Popup -->
+<style>
+#rmPaymentOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0,0,0,.85);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+#rmPaymentBox {
+  width: 100%;
+  max-width: 420px;
+  background: #101827;
+  color: #fff;
+  border: 1px solid #d9a441;
+  border-radius: 16px;
+  padding: 22px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 10px 40px #000;
+}
+#rmPaymentBox h2 {
+  color: #ffca62;
+  margin-top: 0;
+}
+.rm-pay-btn {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+.rm-pay-gold { background: #f2bd59; color: #171717; }
+.rm-pay-dark { background: #263449; color: white; }
+#rmPaymentBox .rm-pay-number {
+  padding: 12px;
+  background: #202c3e;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+</style>
+
+<div id="rmPaymentOverlay">
+  <div id="rmPaymentBox">
+    <h2>Royal Member Payment</h2>
+    <p>Please select an option to continue.</p>
+
+    <div id="rmPayChoices">
+      <button type="button" class="rm-pay-btn rm-pay-gold"
+        id="rmAddPayment">Add Payment</button>
+      <button type="button" class="rm-pay-btn rm-pay-dark"
+        id="rmPayLater">Later</button>
+    </div>
+
+    <div id="rmPayDetails" style="display:none">
+      <p>Payment Method: <strong>OPay</strong></p>
+      <p>Account Title</p>
+      <div class="rm-pay-number">Noor Jahan</div>
+      <p>Account Number</p>
+      <div class="rm-pay-number" id="rmPayNumber">03422605178</div>
+
+      <button type="button" class="rm-pay-btn rm-pay-gold"
+        id="rmCopyNumber">Copy Account Number</button>
+
+      <button type="button" class="rm-pay-btn rm-pay-gold"
+        id="rmSendReceipt">Send Payment Receipt on WhatsApp</button>
+
+      <button type="button" class="rm-pay-btn rm-pay-dark"
+        id="rmBackChoices">Back</button>
+    </div>
+
+    <button type="button" class="rm-pay-btn rm-pay-dark"
+      id="rmClosePayment">Close</button>
+    <p id="rmPayStatus" role="status"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const overlay = document.getElementById("rmPaymentOverlay");
+  const choices = document.getElementById("rmPayChoices");
+  const details = document.getElementById("rmPayDetails");
+  const status = document.getElementById("rmPayStatus");
+
+  if (!overlay || !choices || !details) return;
+
+  window.rmShowPaymentPopup = function () {
+    choices.style.display = "block";
+    details.style.display = "none";
+    status.textContent = "";
+    overlay.style.display = "flex";
+  };
+
+  function closePopup() {
+    overlay.style.display = "none";
+  }
+
+  document.getElementById("rmAddPayment").onclick = function () {
+    choices.style.display = "none";
+    details.style.display = "block";
+  };
+
+  document.getElementById("rmPayLater").onclick = closePopup;
+  document.getElementById("rmClosePayment").onclick = closePopup;
+
+  document.getElementById("rmBackChoices").onclick = function () {
+    details.style.display = "none";
+    choices.style.display = "block";
+  };
+
+  document.getElementById("rmCopyNumber").onclick = async function () {
+    try {
+      await navigator.clipboard.writeText(
+        document.getElementById("rmPayNumber").textContent.trim()
+      );
+      status.textContent = "Account number copied.";
+    } catch (e) {
+      status.textContent = "Please copy the number manually: 03422605178";
+    }
+  };
+
+  document.getElementById("rmSendReceipt").onclick = function () {
+    status.textContent =
+      "WhatsApp number must be confirmed before sending your receipt.";
+    // Add your confirmed WhatsApp number here before enabling receipt sending.
+  };
+})();
+</script>
 </body>
 </html>
