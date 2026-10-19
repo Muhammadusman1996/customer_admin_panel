@@ -178,7 +178,8 @@ async function api(url, options = {}) {
 
 function message(id, text, type = '') {
   const el = $(id);
-  el.textContent = text;
+if (!el) return;
+el.textContent = text;
   el.className = 'notice ' + type;
 }
 
