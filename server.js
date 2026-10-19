@@ -381,6 +381,40 @@ app.get('/api/customers', requireAdmin, async (req, res) => {
     });
   }
 });
+/* ADMIN: DELETE CUSTOMER ACCOUNT */
+app.delete('/api/customers/:id', requireAdmin, async (req, res) => {
+  const customerId = req.params.id;
+
+  if (!/^\d+$/.test(customerId)) {
+    return res.status(400).json({
+      error: 'Invalid customer ID.'
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      'DELETE FROM customers WHERE id = $1 RETURNING id',
+      [customerId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        error: 'Customer account not found.'
+      });
+    }
+
+    return res.json({
+      ok: true,
+      message: 'Customer account deleted successfully.'
+    });
+  } catch (error) {
+    console.error('Delete customer error:', error);
+
+    return res.status(500).json({
+      error: 'Could not delete customer account.'
+    });
+  }
+});
 
 // ADMIN: APPROVE OR REJECT CUSTOMER
 app.post('/api/customers/:id/status', requireAdmin, async (req, res) => {
