@@ -494,8 +494,10 @@ $('packageForm').addEventListener('submit', async event => {
   }
 });
 
-$('refreshBtn').addEventListener('click', loadAll);
-
+const refreshBtn = $('refreshBtn');
+if (refreshBtn) {
+  refreshBtn.addEventListener('click', loadAll);
+}
 checkSession();
 </script>
 </body>
