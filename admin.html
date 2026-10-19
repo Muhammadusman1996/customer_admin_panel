@@ -394,7 +394,47 @@ async function loadPackages() {
   const packages = await api('/api/packages');
   const container = $('packageRows');
   container.replaceChildren();
+// Delete customer account button
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'danger';
+    deleteButton.textContent = 'Delete Account';
 
+    deleteButton.addEventListener('click', async () => {
+      const customerName =
+        customer.name || customer.username || customer.email || customer.id;
+
+      if (!confirm(
+        `Are you sure you want to permanently delete ${customerName}'s account?`
+      )) return;
+
+      if (!confirm('Final confirmation: This deletion cannot be undone.')) {
+        return;
+      }
+
+      deleteButton.disabled = true;
+
+      try {
+        await api(
+          `/api/customers/${encodeURIComponent(customer.id)}`,
+          { method: 'DELETE' }
+        );
+
+        message(
+          'customerMsg',
+          'Customer account deleted successfully.',
+          'success'
+        );
+
+        await loadAll();
+      } catch (error) {
+        handleError(error, 'customerMsg');
+      } finally {
+        deleteButton.disabled = false;
+      }
+    });
+
+    actions.appendChild(deleteButton);
+  
   if (!packages.length) {
     container.textContent = 'No packages added yet.';
     return;
