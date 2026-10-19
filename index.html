@@ -722,6 +722,82 @@ loadMe();
   #rmServices .wallet-grid { gap: 7px; }
   #rmServices .wallet-card { padding: 9px; }
 }
+  .member-info-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 12px;
+  margin: 10px 0 16px;
+  border: 1px solid #ffcc66;
+  border-radius: 8px;
+  background: linear-gradient(
+    100deg,
+    #06152f,
+    #0750a0,
+    #111827,
+    #0750a0,
+    #06152f
+  );
+  background-size: 300% 100%;
+  animation: royalBarGlow 7s linear infinite;
+  box-shadow:
+    0 0 8px #00cfff,
+    inset 0 0 8px #ffbd59;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.member-info-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.member-info-item {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.member-info-item span {
+  color: #9feaff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.member-info-item strong {
+  color: #ffd780;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.member-info-bar #logout {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  margin: 0;
+  white-space: nowrap;
+  font-size: 11px;
+  box-shadow: 0 0 8px #ffbd59;
+}
+
+@keyframes royalBarGlow {
+  0% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 14px #ffbd59, inset 0 0 10px #00cfff;
+  }
+  100% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
+  }
+}
 </style>
 
 <section id="rmServices" hidden>
