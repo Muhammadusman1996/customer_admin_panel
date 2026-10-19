@@ -470,7 +470,8 @@ async function loadPackages() {
   }
 }
 
-$('packageForm').addEventListener('submit', async event => {
+const packageForm = $('packageForm');
+if (packageForm) packageForm.addEventListener('submit', async event => {
   event.preventDefault();
   const button = $('packageForm').querySelector('button');
   button.disabled = true;
