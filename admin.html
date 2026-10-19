@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -280,9 +281,15 @@ async function loadAll() {
 }
 
 async function loadCustomers() {
-  const rows = await api('/api/customers');
-  const tbody = $('customerRows');
-  tbody.replaceChildren();
+const rows = await api('/api/customers');
+const tbody = $('customerRows');
+
+if (!tbody) {
+  console.error('customerRows element not found');
+  return;
+}
+
+tbody.replaceChildren();
 
   if (!rows.length) {
     const tr = document.createElement('tr');
