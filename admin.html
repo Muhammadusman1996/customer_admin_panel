@@ -383,7 +383,41 @@ async function loadCustomers() {
         handleError(error, 'customerMsg');
       }
     });
+// Delete customer account button
+const deleteButton = document.createElement('button');
+deleteButton.className = 'danger';
+deleteButton.textContent = 'Delete Account';
 
+deleteButton.addEventListener('click', async () => {
+  const customerName =
+    customer.name || customer.username || customer.email || customer.id;
+
+  if (!confirm(
+    `کیا آپ واقعی ${customerName} کا اکاؤنٹ مستقل طور پر حذف کرنا چاہتے ہیں؟`
+  )) return;
+
+  if (!confirm('آخری تصدیق: یہ اکاؤنٹ دوبارہ بحال نہیں ہو سکے گا۔')) {
+    return;
+  }
+
+  deleteButton.disabled = true;
+
+  try {
+    await api(`/api/customers/${encodeURIComponent(customer.id)}`, {
+      method: 'DELETE'
+    });
+
+    alert('کسٹمر کا اکاؤنٹ کامیابی سے حذف ہوگیا۔');
+    await loadAll();
+  } catch (error) {
+    handleError(error, 'customerMsg');
+  } finally {
+    deleteButton.disabled = false;
+  }
+});
+
+actions.appendChild(deleteButton);
+    
     actions.appendChild(creditButton);
     tr.append(info, status, credits, actions);
     tbody.appendChild(tr);
@@ -394,18 +428,6 @@ async function loadPackages() {
   const packages = await api('/api/packages');
   const container = $('packageRows');
   container.replaceChildren();
-// Delete customer account button
-    const deleteButton = document.createElement('button');
-    deleteButton.className = 'danger';
-    deleteButton.textContent = 'Delete Account';
-
-    deleteButton.addEventListener('click', async () => {
-      const customerName =
-        customer.name || customer.username || customer.email || customer.id;
-
-      if (!confirm(
-        `Are you sure you want to permanently delete ${customerName}'s account?`
-      )) return;
 
       if (!confirm('Final confirmation: This deletion cannot be undone.')) {
         return;
