@@ -148,26 +148,6 @@ td button { margin:3px; font-size:12px; }
       <button id="refreshBtn" class="secondary">Refresh Data</button>
     </section>
 
-    <section class="panel">
-      <h2>Package Management</h2>
-      <form id="packageForm">
-        <div class="field">
-          <label for="packageName">Package name</label>
-          <input id="packageName" required maxlength="60"
-            placeholder="e.g. Basic Package">
-        </div>
-        <div class="field">
-          <label for="packageAmount">Package amount (PKR)</label>
-          <input id="packageAmount" type="number" min="1"
-            max="100000000" step="1" required placeholder="e.g. 1000">
-        </div>
-        <button class="full" type="submit">ADD PACKAGE</button>
-      </form>
-      <p id="packageMsg" class="notice"></p>
-      <div id="packageRows"></div>
-    </section>
-  </div>
-</section>
 </main>
 
 <script>
