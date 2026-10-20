@@ -24,38 +24,12 @@ body {
   padding: 10px 16px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+align-items: flex-start;
   font-family: Arial, sans-serif;
   color: var(--text);
-
-  background: linear-gradient(
-    -45deg,
-    #080808,
-    #6b0000,
-    #171717,
-    #a66a00,
-    #080808
-  );
-  background-size: 400% 400%;
-  animation: royalBackground 14s ease infinite;
-}
-
-@keyframes royalBackground {
-  0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 50% 100%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  75% {
-    background-position: 50% 0%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  background:
+    radial-gradient(ellipse at top, #30204f 0%, transparent 55%),
+    linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
 }
 
 .wrap {
@@ -436,62 +410,64 @@ a {
   </section>
 
   <!-- MEMBER DASHBOARD -->
-<section id="dashboard" class="hidden">
-  <div class="card">
-    <div class="member-info-bar">
+  <section id="dashboard" class="hidden">
+    <div class="card">
+   <div class="member-info-bar">
+  <div class="member-info-item">
+    <span>USERNAME</span>
+    <strong id="welcome">Member</strong>
+  </div>
 
-      <div class="royal-brand">
-        <div class="royal-logo">✦</div>
-        <div>
-          <h2>ROYAL • MEMBER</h2>
-          <p>VIP MEMBER PORTAL</p>
+  <div class="member-info-item">
+    <span>AVAILABLE BALANCE</span>
+    <strong id="balance">0.00</strong>
+  </div>
+
+  <div class="member-info-item">
+    <span>ACCOUNT STATUS</span>
+    <strong id="memberStatus">Pending</strong>
+  </div>
+
+  <div class="member-info-item">
+    <span>MEMBER ID</span>
+    <strong id="memberId">—</strong>
+  </div>
+
+  <button class="btn secondary" id="logout" type="button">
+    Log out
+  </button>
+</div>
+        <div class="stat">
+          <span>AVAILABLE CREDIT</span>
+          <strong id="balance">0.00</strong>
+        </div>
+
+        <div class="stat">
+          <span>ACCOUNT STATUS</span>
+          <strong id="memberStatus">Approved</strong>
+        </div>
+
+        <div class="stat">
+          <span>MEMBER ID</span>
+          <strong id="memberId">—</strong>
         </div>
       </div>
 
-      <div class="member-info-item">
-        <span>USERNAME</span>
-        <strong id="welcome">Member</strong>
-      </div>
-
-      <div class="member-info-item">
-        <span>AVAILABLE BALANCE</span>
-        <strong id="balance">0.00</strong>
-      </div>
-
-      <div class="member-info-item">
-        <span>ADMIN DETAIL</span>
-        <strong>Admin Panel</strong>
-      </div>
-
-      <button class="btn secondary" id="logout" type="button">
-        Log out
-      </button>
-
+      <h3>Credit History</h3>
+      <p class="sub">آپ کے اکاؤنٹ کی کریڈٹ تفصیلات۔</p>
+      <div id="transactions"></div>
     </div>
-
-    <div class="stat">
-      <span>ACCOUNT STATUS</span>
-      <strong id="memberStatus">Pending</strong>
-    </div>
-
-    <div class="stat">
-      <span>MEMBER ID</span>
-      <strong id="memberId">—</strong>
-    </div>
-  </div>
-</section>
-     
   </section>
 
   <footer class="foot">
-  
+    ROYAL MEMBER PORTAL • VIP ACCESS
     <br>
 <div class="foot">
   <strong style="color:var(--gold);font-size:16px">
     ✦ M. Usman — Admin Contact
   </strong>
 
-  <p>hum ap k ly key kr sakty hai</p>
+  <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
 
   <a href="https://wa.me/on  WHATSAP  923470376449"
      target="_blank"
@@ -507,6 +483,7 @@ a {
     WhatsApp: 0306-0001167
   </a>
 
+  <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
 </div>
   </footer>
 
@@ -912,99 +889,12 @@ grid-template-columns: 1fr;
     max-width: 100%;
     box-sizing: border-box;
   }
-  /* Royal VIP Dashboard */
-#dashboard {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: 12px;
-  border: 1px solid #ffbd59;
-  border-radius: 20px;
-  background: linear-gradient(
-    135deg,
-    #080808,
-    #640000,
-    #17100a,
-    #805000,
-    #080808
-  );
-  background-size: 400% 400%;
-  animation: royalBg 14s ease infinite;
-}
-
-#dashboard > .card {
-  background: rgba(8, 8, 8, 0.82);
-  border: 1px solid #ffbd59;
-  border-radius: 18px;
-  position: relative;
-  z-index: 1;
-}
-
-#dashboard .member-info-bar,
-#dashboard .stat {
-  background: rgba(20, 8, 8, 0.92);
-  border: 1px solid #b98532;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 12px;
-}
-
-#dashboard .member-info-item strong,
-#dashboard .stat strong {
-  color: #ffcc65;
-}
-
-@keyframes royalBg {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-  <section id="dashboard" class="hidden">
-  <div class="card">
-    <div class="member-info-bar">
-
-      <div class="royal-brand">
-        <div class="royal-logo">✦</div>
-        <div>
-          <h2>ROYAL • MEMBER</h2>
-          <p>VIP MEMBER PORTAL</p>
-        </div>
-      </div>
-
-      <div class="member-info-item">
-        <span>USERNAME</span>
-        <strong id="welcome">Member</strong>
-      </div>
-
-      <div class="member-info-item">
-        <span>AVAILABLE BALANCE</span>
-        <strong id="balance">0.00</strong>
-      </div>
-
-      <div class="member-info-item">
-        <span>ADMIN DETAIL</span>
-        <strong>Admin Panel</strong>
-      </div>
-
-      <button class="btn secondary" id="logout" type="button">
-        Log out
-      </button>
-
-    </div>
-
-    <div class="stat">
-      <span>ACCOUNT STATUS</span>
-      <strong id="memberStatus">Pending</strong>
-    </div>
-
-    <div class="stat">
-      <span>MEMBER ID</span>
-      <strong id="memberId">—</strong>
-    </div>
-  </div>
-</section>
 </style>
 
+<section id="rmServices" hidden>
+  <h2 class="service-title">👑 Available Services</h2>
+  <p class="service-note">
+M-usman۔
   </p>
 
   <!-- 1. EASYPAISA -->
