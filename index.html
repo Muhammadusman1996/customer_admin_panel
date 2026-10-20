@@ -826,7 +826,69 @@ loadMe();
     background-position: 0% 50%;
     box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
   }
+}/* Mobile responsive fix */
+@media (max-width: 768px) {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  #memberView,
+  #mainView,
+  #mServices {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .wallet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .wallet-card {
+    min-width: 0;
+    width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .wallet-card input,
+  .wallet-card button {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
 }
+
+/* Wallet grid */
+.wallet-grid {
+    display: grid;
+grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .wallet-card {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .wallet-card h4 {
+    overflow-wrap: anywhere;
+    font-size: 16px;
+  }
+
+  .wallet-card input,
+  .wallet-card button {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 </style>
 
 <section id="rmServices" hidden>
