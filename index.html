@@ -911,6 +911,53 @@ grid-template-columns: 1fr;
     max-width: 100%;
     box-sizing: border-box;
   }
+  /* Royal VIP Dashboard */
+#dashboard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 12px;
+  border: 1px solid #ffbd59;
+  border-radius: 20px;
+  background: linear-gradient(
+    135deg,
+    #080808,
+    #640000,
+    #17100a,
+    #805000,
+    #080808
+  );
+  background-size: 400% 400%;
+  animation: royalBg 14s ease infinite;
+}
+
+#dashboard > .card {
+  background: rgba(8, 8, 8, 0.82);
+  border: 1px solid #ffbd59;
+  border-radius: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+#dashboard .member-info-bar,
+#dashboard .stat {
+  background: rgba(20, 8, 8, 0.92);
+  border: 1px solid #b98532;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+#dashboard .member-info-item strong,
+#dashboard .stat strong {
+  color: #ffcc65;
+}
+
+@keyframes royalBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 </style>
 
 <section id="rmServices" hidden>
