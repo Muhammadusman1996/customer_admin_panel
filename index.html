@@ -24,12 +24,38 @@ body {
   padding: 10px 16px;
   display: flex;
   justify-content: center;
-align-items: flex-start;
+  align-items: flex-start;
   font-family: Arial, sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(ellipse at top, #30204f 0%, transparent 55%),
-    linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
+
+  background: linear-gradient(
+    -45deg,
+    #080808,
+    #6b0000,
+    #171717,
+    #a66a00,
+    #080808
+  );
+  background-size: 400% 400%;
+  animation: royalBackground 14s ease infinite;
+}
+
+@keyframes royalBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 100%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .wrap {
