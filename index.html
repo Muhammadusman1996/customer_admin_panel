@@ -292,21 +292,76 @@ a {
 
 .member-info-bar {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   align-items: center;
   gap: 12px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  padding: 12px;
+  padding: 14px;
   margin: 10px 0 18px;
   border: 1px solid #ffcc66;
-  border-radius: 10px;
-  background: linear-gradient(100deg, #06152f, #0750a0, #111827, #0750a0, #06152f);
+  border-radius: 12px;
+  background: linear-gradient(100deg, #06152f, #0750a0, #063b78, #0750a0, #06152f);
   background-size: 300% 100%;
   animation: royalBarGlow 7s linear infinite;
   box-shadow: 0 0 8px #00cfff, inset 0 0 8px #ffbd59;
   overflow: hidden;
+}
+
+.member-bar-section {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding-top: 10px;
+  border-top: 1px solid #7ddfff66;
+}
+
+.member-bar-section h3 {
+  margin: 0 0 6px;
+  color: #ffd780;
+  font-size: 14px;
+}
+
+.member-bar-section .sub {
+  margin: 0 0 8px;
+  font-size: 11px;
+}
+
+.member-bar-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.member-bar-actions a,
+.member-bar-actions button {
+  display: inline-block;
+  padding: 8px 11px;
+  border: 1px solid #66dfff88;
+  border-radius: 8px;
+  background: #061a3a99;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.member-bar-actions button:hover,
+.member-bar-actions a:hover {
+  background: #0877c9;
+}
+
+#transactions {
+  max-height: 130px;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+#transactions .txn {
+  padding: 8px 0;
+  font-size: 12px;
 }
 
 .member-info-bar::-webkit-scrollbar {
@@ -476,7 +531,7 @@ iframe {
   }
 
   .member-info-bar {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   }
 }
 
@@ -495,54 +550,23 @@ iframe {
   }
 
   .member-info-bar {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .member-info-bar > #logout {
+    grid-column: 1 / -1;
+  }
+
+  .member-bar-actions {
+    align-items: stretch;
+  }
+
+  .member-bar-actions a,
+  .member-bar-actions button {
+    flex: 1 1 130px;
+    text-align: center;
   }
 }
-
-
-/* Blue VIP information panel: keep the existing desktop dimensions/layout scale */
-#dashboard > .card {
-  background: linear-gradient(120deg, #06152f 0%, #0750a0 48%, #11182d 100%);
-  border: 1px solid #61e7ff;
-  box-shadow: 0 0 12px #00cfff55, inset 0 0 12px #ffbd5922;
-}
-#dashboard .member-info-bar {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  background: linear-gradient(100deg, #06152f, #0750a0, #123d78, #06152f);
-  border-color: #ffcf75;
-  padding: 16px;
-}
-#dashboard h3 {
-  color: #ffcf75;
-  margin: 18px 0 8px;
-}
-#dashboard .sub {
-  margin-bottom: 14px;
-}
-#dashboard #transactions {
-  padding: 12px 16px;
-  border: 1px solid #75eaff88;
-  border-radius: 12px;
-  background: linear-gradient(110deg, #06152fbb, #0750a088);
-}
-#dashboard .txn {
-  border-bottom-color: #75eaff44;
-}
-body > main.wrap > footer.foot {
-  padding: 18px 16px;
-  margin-top: 18px;
-  border: 1px solid #61e7ff;
-  border-radius: 14px;
-  background: linear-gradient(110deg, #06152f, #0750a0, #11182d);
-  box-shadow: 0 0 10px #00cfff33, inset 0 0 8px #ffbd5922;
-}
-body > main.wrap > footer.foot .foot {
-  margin-top: 12px;
-}
-@media screen and (max-width: 767px) {
-  #dashboard .member-info-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
 </style>
 </head>
 <body>
@@ -575,7 +599,7 @@ body > main.wrap > footer.foot .foot {
           placeholder="اپنا پاس ورڈ لکھیں">
       </label>
 
-      <button class="btn" type="submit">Secure Login ↗️</button>
+      <button class="btn" type="submit">Secure Login ↗</button>
     </form>
 
     <button class="switch" id="openRegister" type="button">
@@ -647,35 +671,31 @@ body > main.wrap > footer.foot .foot {
         <strong id="memberId">—</strong>
       </div>
 
-      <button class="btn secondary" id="logout" type="button">Log out</button>
-    </div>
+      <button class="btn secondary" id="logout" type="button">Logout</button>
 
-    <h3>Credit History</h3>
-    <p class="sub">کم از کم 1000 روپے ایڈ ہوں گے۔</p>
-    <div id="transactions"></div>
+      <section class="member-bar-section" aria-label="Member actions">
+        <div class="member-bar-actions">
+          <button type="button" onclick="if (window.rmShowPaymentPopup) window.rmShowPaymentPopup(); else alert('Payment option is not available. Please refresh the page.');">＋ Add Payment</button>
+          <a href="https://wa.me/923422605178" target="_blank" rel="noopener noreferrer">Admin Contact</a>
+          <a href="https://wa.me/923422605178" target="_blank" rel="noopener noreferrer">WhatsApp: 0342-2605178</a>
+          <a href="https://wa.me/923060001167" target="_blank" rel="noopener noreferrer">WhatsApp: 0306-0001167</a>
+        </div>
+      </section>
+
+      <section class="member-bar-section" aria-label="Credit history">
+        <h3>Credit History</h3>
+        <p class="sub">ادائیگی اور کریڈٹس کی تفصیل یہاں دیکھیں۔</p>
+        <div id="transactions"></div>
+      </section>
+    </div>
   </div>
 </section>
 
 <footer class="foot">
   ROYAL MEMBER PORTAL • VIP ACCESS
-  <div class="foot">
-    <strong style="color:var(--gold);font-size:16px">
-      ✦ M. Usman — Admin Contact
-    </strong>
-    <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
-    <a href="https://wa.me/923422605178"
-       target="_blank" rel="noopener noreferrer">
-      WhatsApp: 0342-2605178
-    </a>
-    <br><br>
-    <a href="https://wa.me/923060001167"
-       target="_blank" rel="noopener noreferrer">
-      WhatsApp: 0306-0001167
-    </a>
-    <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
-  </div>
 </footer>
 
+</main>
 <script>
 const $ = selector => document.querySelector(selector);
 
