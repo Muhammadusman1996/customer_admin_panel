@@ -626,7 +626,6 @@ document.getElementById('rmServices').hidden = false;
             </strong>
           </div>
         `).join('')
-      : '<p class="sub">ابھی کوئی کریڈٹ ٹرانزیکشن موجود نہیں۔</p>';
 
   } catch (error) {
     console.error('Could not load member dashboard.');
@@ -1287,10 +1286,10 @@ document.getElementById("rmAddPayment").onclick = function () {
 
   if (amount === null) return;
 
-  const MIN_PAYMENT = 2000;
+  const MIN_PAYMENT = 1000;
 
   if (amount.trim() === "" || !Number.isFinite(Number(amount)) || Number(amount) < MIN_PAYMENT) {
-    alert("Minimum payment is Rs. 2000");
+    alert("Minimum payment is Rs. 1000");
     return;
   }
 
