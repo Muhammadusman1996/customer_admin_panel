@@ -592,7 +592,7 @@ async function loadMe() {
     if (!response.ok) return;
 
     const result = await response.json();
-    const user = result.user;
+   const user = result.user || result.customer;
 
     if (!user) return;
 
@@ -606,7 +606,9 @@ document.getElementById('rmServices').hidden = false;
       'VIP-' + String(user.id).padStart(4, '0');
 
     $('#balance').textContent = Number(user.credits ?? user.credit ?? 0).toFixed(2);
-
+const transactions = Array.isArray(result.transactions)
+  ? result.transactions
+  : [];
     $('#transactions').innerHTML = transactions.length
       ? transactions.map(transaction => `
           <div class="txn">
