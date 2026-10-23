@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="ur">
 <head>
 <meta charset="UTF-8">
@@ -499,9 +498,54 @@ iframe {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+/* Blue VIP information panel: keep the existing desktop dimensions/layout scale */
+#dashboard > .card {
+  background: linear-gradient(120deg, #06152f 0%, #0750a0 48%, #11182d 100%);
+  border: 1px solid #61e7ff;
+  box-shadow: 0 0 12px #00cfff55, inset 0 0 12px #ffbd5922;
+}
+#dashboard .member-info-bar {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: linear-gradient(100deg, #06152f, #0750a0, #123d78, #06152f);
+  border-color: #ffcf75;
+  padding: 16px;
+}
+#dashboard h3 {
+  color: #ffcf75;
+  margin: 18px 0 8px;
+}
+#dashboard .sub {
+  margin-bottom: 14px;
+}
+#dashboard #transactions {
+  padding: 12px 16px;
+  border: 1px solid #75eaff88;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #06152fbb, #0750a088);
+}
+#dashboard .txn {
+  border-bottom-color: #75eaff44;
+}
+body > main.wrap > footer.foot {
+  padding: 18px 16px;
+  margin-top: 18px;
+  border: 1px solid #61e7ff;
+  border-radius: 14px;
+  background: linear-gradient(110deg, #06152f, #0750a0, #11182d);
+  box-shadow: 0 0 10px #00cfff33, inset 0 0 8px #ffbd5922;
+}
+body > main.wrap > footer.foot .foot {
+  margin-top: 12px;
+}
+@media screen and (max-width: 767px) {
+  #dashboard .member-info-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 </style>
 </head>
-</html>
+<body>
 <main class="wrap">
 
 <header class="brand">
@@ -531,7 +575,7 @@ iframe {
           placeholder="اپنا پاس ورڈ لکھیں">
       </label>
 
-      <button class="btn" type="submit">Secure Login ↗</button>
+      <button class="btn" type="submit">Secure Login ↗️</button>
     </form>
 
     <button class="switch" id="openRegister" type="button">
@@ -632,7 +676,6 @@ iframe {
   </div>
 </footer>
 
-</main>
 <script>
 const $ = selector => document.querySelector(selector);
 
