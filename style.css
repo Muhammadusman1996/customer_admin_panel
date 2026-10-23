@@ -254,3 +254,35 @@ th {
     flex-direction: column;
   }
 }
+/* Royal Member - Mobile Full Width Fix */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .intro,
+  .card {
+    padding: 12px;
+    min-width: 0;
+  }
+
+  .stats,
+  .dashgrid {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
