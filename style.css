@@ -286,3 +286,70 @@ th {
     flex-direction: column;
   }
 }
+/* Royal Member - Mobile Browser Fix */
+html {
+  width: 100%;
+  min-width: 0;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1100px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    width: 100%;
+    padding: 16px 12px 35px;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card,
+  .intro,
+  .dashboard,
+  #memberDashboard,
+  .member-dashboard {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
