@@ -6,9 +6,7 @@
 <title>Royal VIP Member Portal</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 :root {
   --gold: #ffbd59;
@@ -24,7 +22,7 @@ body {
   padding: 10px 16px;
   display: flex;
   justify-content: center;
-align-items: flex-start;
+  align-items: flex-start;
   font-family: Arial, sans-serif;
   color: var(--text);
   background:
@@ -32,10 +30,7 @@ align-items: flex-start;
     linear-gradient(145deg, #080b19, #101c35 55%, #160e29);
 }
 
-.wrap {
-  width: 100%;
-  max-width: 430px;
-}
+.wrap { width: 100%; max-width: 430px; }
 
 .brand {
   text-align: center;
@@ -130,9 +125,7 @@ h2 {
   box-shadow: 0 0 0 3px #ffbd5918;
 }
 
-.field input::placeholder {
-  color: #7785a5;
-}
+.field input::placeholder { color: #7785a5; }
 
 .btn {
   display: block;
@@ -149,9 +142,7 @@ h2 {
   box-shadow: 0 7px 22px #ffad4930;
 }
 
-.btn:active {
-  transform: scale(.99);
-}
+.btn:active { transform: scale(.99); }
 
 .btn.secondary {
   color: white;
@@ -172,9 +163,7 @@ h2 {
   font-size: 14px;
 }
 
-.switch strong {
-  color: var(--gold);
-}
+.switch strong { color: var(--gold); }
 
 .foot {
   margin-top: 22px;
@@ -194,23 +183,10 @@ h2 {
   overflow-wrap: anywhere;
 }
 
-.message.show {
-  display: block;
-}
-
-.message.error {
-  color: #ffb2b2;
-  background: #7f222233;
-}
-
-.message.success {
-  color: #a9f6cb;
-  background: #17633b33;
-}
-
-.hidden {
-  display: none !important;
-}
+.message.show { display: block; }
+.message.error { color: #ffb2b2; background: #7f222233; }
+.message.success { color: #a9f6cb; background: #17633b33; }
+.hidden { display: none !important; }
 
 .topbar {
   display: flex;
@@ -220,9 +196,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-.topbar h2 {
-  text-align: left;
-}
+.topbar h2 { text-align: left; }
 
 .stats {
   display: grid;
@@ -244,10 +218,7 @@ h2 {
   margin-bottom: 9px;
 }
 
-.stat strong {
-  font-size: 22px;
-  color: var(--gold);
-}
+.stat strong { font-size: 22px; color: var(--gold); }
 
 .txn {
   display: flex;
@@ -263,398 +234,65 @@ h2 {
   margin-top: 6px;
 }
 
-a {
-  color: var(--gold);
+a { color: var(--gold); }
+
+.member-info-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0 18px;
+  border: 1px solid #ffcc66;
+  border-radius: 10px;
+  background: linear-gradient(100deg, #06152f, #0750a0, #111827, #0750a0, #06152f);
+  background-size: 300% 100%;
+  animation: royalBarGlow 7s linear infinite;
+  box-shadow: 0 0 8px #00cfff, inset 0 0 8px #ffbd59;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-@media (max-width: 380px) {
-  .card {
-    padding: 24px 18px;
-  }
+.member-info-bar::-webkit-scrollbar { display: none; }
 
-  .brand h1 {
-    font-size: 23px;
-  }
-}
-  @media (max-width: 480px) {
-  body {
-    padding: 10px 12px 24px;
-    align-items: flex-start;
-  }
-
-  .wrap {
-    width: 100%;
-    max-width: 430px;
-  }
-
-  .brand h1 {
-    font-size: 23px;
-  }
-
-  .brand p {
-    font-size: 12px;
-  }
-
-  .card {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  input,
-  button {
-    max-width: 100%;
-  }
-}
-</style>
-</head>
-
-<body>
-<main class="wrap">
-
-  <header class="brand">
-    <div class="logo">✦</div>
-    <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
-    <p>VIP MEMBER PORTAL</p>
-  </header>
-
-  <section id="authView" class="card">
-
-    <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
-
-    <!-- LOGIN: default screen -->
-    <section id="loginView">
-      <h2>Login Karein</h2>
-      <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
-
-      <form id="loginForm">
-        <label class="field">
-          <span>USERNAME</span>
-          <input
-            name="username"
-            autocomplete="username"
-            minlength="3"
-            required
-            placeholder="اپنا یوزر نیم لکھیں">
-        </label>
-
-        <label class="field">
-          <span>PASSWORD</span>
-          <input
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            placeholder="اپنا پاس ورڈ لکھیں">
-        </label>
-
-        <button class="btn" type="submit">Secure Login　↗</button>
-      </form>
-
-      <button class="switch" id="openRegister" type="button">
-        ♙　نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
-      </button>
-    </section>
-
-    <!-- REGISTRATION: hidden until clicked -->
-    <section id="registerView" class="hidden">
-      <h2>Create Account</h2>
-      <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہے۔</p>
-
-      <form id="registerForm">
-        <label class="field">
-          <span>FULL NAME</span>
-          <input
-            name="name"
-            minlength="2"
-            required
-            autocomplete="name"
-            placeholder="اپنا پورا نام لکھیں">
-        </label>
-
-        <label class="field">
-          <span>USERNAME</span>
-          <input
-            name="username"
-            minlength="3"
-            pattern="[A-Za-z0-9_.-]+"
-            required
-            autocomplete="username"
-            placeholder="مثلاً maan_user">
-        </label>
-
-        <label class="field">
-          <span>PASSWORD (8+ CHARACTERS)</span>
-          <input
-            name="password"
-            type="password"
-            minlength="8"
-            required
-            autocomplete="new-password"
-            placeholder="مضبوط پاس ورڈ بنائیں">
-        </label>
-
-        <button class="btn" type="submit">Create Account　✦</button>
-      </form>
-
-      <button class="switch" id="backToLogin" type="button">
-        ← واپس <strong>Login</strong> پر جائیں
-      </button>
-    </section>
-
-    <div id="msg" class="message" role="status"></div>
-
-    <p class="foot">
-      🔒 Secure Member Access<br>
-      Account approval required
-    </p>
-  </section>
-
-  <!-- MEMBER DASHBOARD -->
-  <section id="dashboard" class="hidden">
-    <div class="card">
-   <div class="member-info-bar">
-  <div class="member-info-item">
-    <span>USERNAME</span>
-    <strong id="welcome">Member</strong>
-  </div>
-
-  <div class="member-info-item">
-    <span>AVAILABLE BALANCE</span>
-    <strong id="balance">0.00</strong>
-  </div>
-
-  <div class="member-info-item">
-    <span>ACCOUNT STATUS</span>
-    <strong id="memberStatus">Pending</strong>
-  </div>
-
-  <div class="member-info-item">
-    <span>MEMBER ID</span>
-    <strong id="memberId">—</strong>
-  </div>
-
-  <button class="btn secondary" id="logout" type="button">
-    Log out
-  </button>
-</div>
-        <div class="stat">
-          <span>AVAILABLE CREDIT</span>
-          <strong id="balance">0.00</strong>
-        </div>
-
-        <div class="stat">
-          <span>ACCOUNT STATUS</span>
-          <strong id="memberStatus">Approved</strong>
-        </div>
-
-        <div class="stat">
-          <span>MEMBER ID</span>
-          <strong id="memberId">—</strong>
-        </div>
-      </div>
-
-      <h3>Credit History</h3>
-      <p class="sub">kam sy kam 2000 add hoga</p>
-      <div id="transactions"></div>
-    </div>
-  </section>
-
-  <footer class="foot">
-    ROYAL MEMBER PORTAL • VIP ACCESS
-    <br>
-<div class="foot">
-  <strong style="color:var(--gold);font-size:16px">
-    ✦ M. Usman — Admin Contact
-  </strong>
-
-  <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
-
-  <a href="https://wa.me/on  WHATSAP  923422605178"
-     target="_blank"
-     rel="noopener noreferrer">
-    WhatsApp: 0342-2605178
-  </a>
-
-  <br><br>
-
-  <a href="https://wa.me/923060001167"
-     target="_blank"
-     rel="noopener noreferrer">
-    WhatsApp: 0306-0001167
-  </a>
-
-  <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
-</div>
-  </footer>
-
-</main>
-
-<script>
-const $ = selector => document.querySelector(selector);
-
-function showMsg(text, type = 'success') {
-  const el = $('#msg');
-  el.textContent = text;
-  el.className = 'message show ' + type;
+.member-info-item {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
 }
 
-function clearMsg() {
-  $('#msg').className = 'message';
-  $('#msg').textContent = '';
+.member-info-item span {
+  color: #9feaff;
+  font-size: 10px;
+  font-weight: 700;
 }
 
-function setMode(mode) {
-  const registering = mode === 'register';
-
-  $('#loginView').classList.toggle('hidden', registering);
-  $('#registerView').classList.toggle('hidden', !registering);
-
-  clearMsg();
+.member-info-item strong {
+  color: #ffd780;
+  font-size: 13px;
 }
 
-$('#openRegister').addEventListener('click', () => {
-  setMode('register');
-});
-
-$('#backToLogin').addEventListener('click', () => {
-  setMode('login');
-});
-
-async function api(url, data) {
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.error || 'درخواست مکمل نہیں ہوئی۔');
+@keyframes royalBarGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
   }
-
-  return result;
-}
-
-// LOGIN
-$('#loginForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const form = new FormData(event.target);
-  const data = Object.fromEntries(form.entries());
-
-  try {
-    await api('/api/member/login', data);
-    await loadMe();
-  } catch (error) {
-    showMsg(error.message, 'error');
-  }
-});
-
-// CREATE ACCOUNT
-$('#registerForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const form = new FormData(event.target);
-  const data = Object.fromEntries(form.entries());
-
-  try {
-    const result = await api('/api/register', data);
-
-    event.target.reset();
-    setMode('login');
-    showMsg(
-      result.message ||
-      'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
-    );
-  } catch (error) {
-    showMsg(error.message, 'error');
-  }
-});
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  })[char]);
-}
-
-// LOAD MEMBER DASHBOARD
-async function loadMe() {
-  try {
-    const response = await fetch('/api/me');
-
-    if (!response.ok) return;
-
-    const result = await response.json();
-   const user = result.user || result.customer;
-
-    if (!user) return;
-
-    $('#authView').classList.add('hidden');
-    $('#dashboard').classList.remove('hidden');
-document.getElementById('rmServices').hidden = false;
-    $('#welcome').textContent = 'Welcome, ' + user.name;
-    $('#balance').textContent = Number(user.credit || 0).toFixed(2);
-    $('#memberStatus').textContent = user.status || 'Approved';
-    $('#memberId').textContent =
-      'VIP-' + String(user.id).padStart(4, '0');
-
-    $('#balance').textContent = Number(user.credits ?? user.credit ?? 0).toFixed(2);
-const transactions = Array.isArray(result.transactions)
-  ? result.transactions
-  : [];
-    $('#transactions').innerHTML = transactions.length
-      ? transactions.map(transaction => `
-          <div class="txn">
-            <div>
-              ${escapeHtml(transaction.note || '')}
-              <small>
-                ${escapeHtml(
-                  transaction.at
-                    ? new Date(transaction.at).toLocaleString()
-                    : ''
-                )}
-              </small>
-            </div>
-            <strong>
-              ${Number(transaction.amount) > 0 ? '+' : ''}
-              ${Number(transaction.amount || 0).toFixed(2)}
-            </strong>
-          </div>
-        `).join('')
-
-  } catch (error) {
-    console.error('Could not load member dashboard.');
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 14px #ffbd59, inset 0 0 10px #00cfff;
   }
 }
 
-// LOGOUT
-$('#logout').addEventListener('click', async () => {
-  try {
-    await fetch('/api/logout', { method: 'POST' });
-  } finally {
-    location.reload();
-  }
-});
-
-// Initial page
-loadMe();
-  </script>
-<!-- Royal Member Services: Compact Wallet Layout -->
-<style>
 #rmServices {
   width: 100%;
   max-width: 1000px;
   margin: 18px auto;
   padding: 12px;
   color: #f5f6ff;
-  font-family: Arial, sans-serif;
 }
 
 #rmServices .service-title {
@@ -692,6 +330,7 @@ loadMe();
 
 #rmServices .wallet-card {
   min-width: 0;
+  width: 100%;
   padding: 12px;
   border: 1px solid #303d59;
   border-radius: 11px;
@@ -746,161 +385,326 @@ loadMe();
   margin: 8px 0 0;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 480px) {
+  body { padding: 10px 12px 24px; }
+  .wrap { width: 100%; max-width: 430px; }
+  .brand h1 { font-size: 23px; }
+  .brand p { font-size: 12px; }
+  .card { width: 100%; }
+  input, button { max-width: 100%; }
+  .member-info-bar { gap: 12px; }
   #rmServices { padding: 5px; }
+  #rmServices .wallet-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 380px) {
+  .card { padding: 24px 18px; }
+  .brand h1 { font-size: 23px; }
   #rmServices .wallet-section { padding: 9px; }
-  #rmServices .wallet-grid { gap: 7px; }
   #rmServices .wallet-card { padding: 9px; }
 }
-  .member-info-bar {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 12px;
-  margin: 10px 0 16px;
-  border: 1px solid #ffcc66;
-  border-radius: 8px;
-  background: linear-gradient(
-    100deg,
-    #06152f,
-    #0750a0,
-    #111827,
-    #0750a0,
-    #06152f
-  );
-  background-size: 300% 100%;
-  animation: royalBarGlow 7s linear infinite;
-  box-shadow:
-    0 0 8px #00cfff,
-    inset 0 0 8px #ffbd59;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.member-info-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.member-info-item {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  gap: 3px;
-  white-space: nowrap;
-}
-
-.member-info-item span {
-  color: #9feaff;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-}
-
-.member-info-item strong {
-  color: #ffd780;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.member-info-bar #logout {
-  flex: 0 0 auto;
-  padding: 6px 10px;
-  margin: 0;
-  white-space: nowrap;
-  font-size: 11px;
-  box-shadow: 0 0 8px #ffbd59;
-}
-
-@keyframes royalBarGlow {
-  0% {
-    background-position: 0% 50%;
-    box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
-  }
-  50% {
-    background-position: 100% 50%;
-    box-shadow: 0 0 14px #ffbd59, inset 0 0 10px #00cfff;
-  }
-  100% {
-    background-position: 0% 50%;
-    box-shadow: 0 0 7px #00cfff, inset 0 0 7px #ffbd59;
-  }
-}/* Mobile responsive fix */
-@media (max-width: 768px) {
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  #memberView,
-  #mainView,
-  #mServices {
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .wallet-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .wallet-card {
-    min-width: 0;
-    width: 100%;
-    overflow-wrap: anywhere;
-  }
-
-  .wallet-card input,
-  .wallet-card button {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-}
-
-/* Wallet grid */
-.wallet-grid {
-    display: grid;
-grid-template-columns: 1fr;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .wallet-card {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .wallet-card h4 {
-    overflow-wrap: anywhere;
-    font-size: 16px;
-  }
-
-  .wallet-card input,
-  .wallet-card button {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
 </style>
+</head>
 
+<body>
+<main class="wrap">
+
+<header class="brand">
+  <div class="logo">✦</div>
+  <h1>ROYAL <span style="color:var(--gold)">•</span> MEMBER</h1>
+  <p>VIP MEMBER PORTAL</p>
+</header>
+
+<section id="authView" class="card">
+  <div class="eyebrow">✧ EXCLUSIVE • SECURE • PREMIUM ✧</div>
+
+  <section id="loginView">
+    <h2>Login Karein</h2>
+    <p class="sub">اپنے اکاؤنٹ میں لاگ اِن کرنے کے لیے تفصیلات درج کریں۔</p>
+
+    <form id="loginForm">
+      <label class="field">
+        <span>USERNAME</span>
+        <input name="username" autocomplete="username" minlength="3"
+          required placeholder="اپنا یوزر نیم لکھیں">
+      </label>
+
+      <label class="field">
+        <span>PASSWORD</span>
+        <input name="password" type="password"
+          autocomplete="current-password" required
+          placeholder="اپنا پاس ورڈ لکھیں">
+      </label>
+
+      <button class="btn" type="submit">Secure Login ↗</button>
+    </form>
+
+    <button class="switch" id="openRegister" type="button">
+      ♙ نیا اکاؤنٹ بنائیں؟ <strong>Create Account</strong>
+    </button>
+  </section>
+
+  <section id="registerView" class="hidden">
+    <h2>Create Account</h2>
+    <p class="sub">نیا اکاؤنٹ بنائیں۔ لاگ اِن سے پہلے ایڈمن کی منظوری ضروری ہے۔</p>
+
+    <form id="registerForm">
+      <label class="field">
+        <span>FULL NAME</span>
+        <input name="name" minlength="2" required autocomplete="name"
+          placeholder="اپنا پورا نام لکھیں">
+      </label>
+
+      <label class="field">
+        <span>USERNAME</span>
+        <input name="username" minlength="3"
+          pattern="[A-Za-z0-9_.-]+" required autocomplete="username"
+          placeholder="مثلاً maan_user">
+      </label>
+
+      <label class="field">
+        <span>PASSWORD (8+ CHARACTERS)</span>
+        <input name="password" type="password" minlength="8"
+          required autocomplete="new-password"
+          placeholder="مضبوط پاس ورڈ بنائیں">
+      </label>
+
+      <button class="btn" type="submit">Create Account ✦</button>
+    </form>
+
+    <button class="switch" id="backToLogin" type="button">
+      ← واپس <strong>Login</strong> پر جائیں
+    </button>
+  </section>
+
+  <div id="msg" class="message" role="status"></div>
+
+  <p class="foot">
+    🔒 Secure Member Access<br>
+    Account approval required
+  </p>
+</section>
+
+<section id="dashboard" class="hidden">
+  <div class="card">
+    <div class="member-info-bar">
+      <div class="member-info-item">
+        <span>USERNAME</span>
+        <strong id="welcome">Member</strong>
+      </div>
+
+      <div class="member-info-item">
+        <span>AVAILABLE BALANCE</span>
+        <strong id="balance">0.00</strong>
+      </div>
+
+      <div class="member-info-item">
+        <span>ACCOUNT STATUS</span>
+        <strong id="memberStatus">Pending</strong>
+      </div>
+
+      <div class="member-info-item">
+        <span>MEMBER ID</span>
+        <strong id="memberId">—</strong>
+      </div>
+
+      <button class="btn secondary" id="logout" type="button">Log out</button>
+    </div>
+
+    <h3>Credit History</h3>
+    <p class="sub">کم از کم 1000 روپے ایڈ ہوں گے۔</p>
+    <div id="transactions"></div>
+  </div>
+</section>
+
+<footer class="foot">
+  ROYAL MEMBER PORTAL • VIP ACCESS
+  <div class="foot">
+    <strong style="color:var(--gold);font-size:16px">
+      ✦ M. Usman — Admin Contact
+    </strong>
+    <p>اکاؤنٹ کی منظوری یا مدد کے لیے رابطہ کریں</p>
+    <a href="https://wa.me/923422605178"
+       target="_blank" rel="noopener noreferrer">
+      WhatsApp: 0342-2605178
+    </a>
+    <br><br>
+    <a href="https://wa.me/923060001167"
+       target="_blank" rel="noopener noreferrer">
+      WhatsApp: 0306-0001167
+    </a>
+    <p>ROYAL MEMBER PORTAL • VIP ACCESS</p>
+  </div>
+</footer>
+
+</main>
+<script>
+const $ = selector => document.querySelector(selector);
+
+function showMsg(text, type = 'success') {
+  const el = $('#msg');
+  el.textContent = text;
+  el.className = 'message show ' + type;
+}
+
+function clearMsg() {
+  $('#msg').className = 'message';
+  $('#msg').textContent = '';
+}
+
+function setMode(mode) {
+  const registering = mode === 'register';
+  $('#loginView').classList.toggle('hidden', registering);
+  $('#registerView').classList.toggle('hidden', !registering);
+  clearMsg();
+}
+
+$('#openRegister').addEventListener('click', () => setMode('register'));
+$('#backToLogin').addEventListener('click', () => setMode('login'));
+
+async function api(url, data) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(result.error || 'درخواست مکمل نہیں ہوئی۔');
+  }
+
+  return result;
+}
+
+// LOGIN
+$('#loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
+
+  try {
+    await api('/api/member/login', data);
+    await loadMe();
+  } catch (error) {
+    showMsg(error.message, 'error');
+  }
+});
+
+// CREATE ACCOUNT
+$('#registerForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const form = new FormData(event.target);
+  const data = Object.fromEntries(form.entries());
+
+  try {
+    const result = await api('/api/register', data);
+    event.target.reset();
+    setMode('login');
+
+    showMsg(
+      result.message ||
+      'اکاؤنٹ کی درخواست موصول ہوگئی۔ ایڈمن کی منظوری کا انتظار کریں۔'
+    );
+  } catch (error) {
+    showMsg(error.message, 'error');
+  }
+});
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+// LOAD MEMBER DASHBOARD
+async function loadMe() {
+  try {
+    const response = await fetch('/api/me');
+
+    if (!response.ok) return;
+
+    const result = await response.json();
+    const user = result.user || result.customer;
+
+    if (!user) return;
+
+    $('#authView').classList.add('hidden');
+    $('#dashboard').classList.remove('hidden');
+
+    const services = document.getElementById('rmServices');
+    if (services) services.hidden = false;
+
+    $('#welcome').textContent =
+      'Welcome, ' + (user.username || user.name || 'Member');
+
+    $('#balance').textContent =
+      Number(user.credits ?? user.credit ?? 0).toFixed(2);
+
+    $('#memberStatus').textContent = user.status || 'Pending';
+
+    $('#memberId').textContent =
+      'VIP-' + String(user.id ?? '—').padStart(4, '0');
+
+    const transactions = Array.isArray(result.transactions)
+      ? result.transactions
+      : [];
+
+    $('#transactions').innerHTML = transactions.length
+      ? transactions.map(transaction => `
+          <div class="txn">
+            <div>
+              ${escapeHtml(transaction.note || '')}
+              <small>
+                ${escapeHtml(
+                  transaction.at
+                    ? new Date(transaction.at).toLocaleString()
+                    : ''
+                )}
+              </small>
+            </div>
+            <strong>
+              ${Number(transaction.amount) > 0 ? '+' : ''}
+              ${Number(transaction.amount || 0).toFixed(2)}
+            </strong>
+          </div>
+        `).join('')
+      : '<p class="sub">ابھی کوئی Credit History موجود نہیں۔</p>';
+
+  } catch (error) {
+    console.error('Could not load member dashboard:', error);
+  }
+}
+
+// LOGOUT
+$('#logout').addEventListener('click', async () => {
+  try {
+    await fetch('/api/logout', { method: 'POST' });
+  } finally {
+    location.reload();
+  }
+});
+
+// Initial page
+loadMe();
+</script>
+
+<!-- Royal Member Services -->
 <section id="rmServices" hidden>
   <h2 class="service-title">👑 Available Services</h2>
+
   <p class="service-note">
-  kam sy kam 1000 payman add ho gi
-      kam sy kam 1000 payman add ho gi 
-    kam sy kam 1000 payman add ho gi۔
+    سروس استعمال کرنے سے پہلے کم از کم 1000 روپے کی ادائیگی درکار ہے۔
   </p>
 
-  <!-- 1. EASYPAISA -->
+  <!-- EASYPAISA -->
   <section class="wallet-section">
     <h3 class="wallet-heading">🟢 Easypaisa Services</h3>
     <div class="wallet-grid">
@@ -908,9 +712,9 @@ grid-template-columns: 1fr;
       <article class="wallet-card">
         <h4>Easypaisa Account Open</h4>
         <div class="wallet-price">Rs. 600</div>
-        <input placeholder="اپنا مجاز موبائل نمبر" type="tel" required>  
+        <input placeholder="اپنا مجاز موبائل نمبر" type="tel" required>
         <input placeholder="CNIC نمبر درج کریں" type="text" maxlength="15" required>
-<input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
         <p class="wallet-result" aria-live="polite"></p>
       </article>
@@ -945,25 +749,25 @@ grid-template-columns: 1fr;
         <div class="wallet-price">Rs. 1200</div>
         <input placeholder="اپنا مجاز مرچنٹ نمبر" type="tel" required>
         <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
-<input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
         <p class="wallet-result" aria-live="polite"></p>
       </article>
 
-  <article class="wallet-card">
-  <h4>EasyPaisa Android ID Create</h4>
-  <div class="wallet-price">Rs. 350</div>
-  <input type="tel" placeholder="موبائل نمبر درج کریں" required>
-  <input type="text" placeholder="Android ID درج کریں" required>
-  <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-  <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
-      
+      <article class="wallet-card">
+        <h4>EasyPaisa Android ID Create</h4>
+        <div class="wallet-price">Rs. 350</div>
+        <input type="tel" placeholder="موبائل نمبر درج کریں" required>
+        <input type="text" placeholder="Android ID درج کریں" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <button type="button" onclick="royalServiceDemo(this)">Send Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
+
     </div>
   </section>
 
-  <!-- 2. JAZZCASH -->
+  <!-- JAZZCASH -->
   <section class="wallet-section">
     <h3 class="wallet-heading">🟠 JazzCash Services</h3>
     <div class="wallet-grid">
@@ -985,42 +789,22 @@ grid-template-columns: 1fr;
       </article>
 
       <article class="wallet-card">
-  <h4>JazzCash Account Limit Update</h4>
-  <div class="wallet-price">RS.250Account Limit Update</div>
+        <h4>JazzCash Account Limit Update</h4>
+        <div class="wallet-price">Rs. 250</div>
+        <input id="jazzLimitMobile" type="tel" placeholder="Mobile Number" maxlength="11" required>
+        <input id="jazzLimitCnic" type="text" placeholder="CNIC Number" maxlength="15" required>
+        <input id="jazzLimitAndroid" type="text" placeholder="Android ID" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <button type="button" onclick="royalServiceDemo(this)">Submit Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
 
-  <input
-    id="jazzLimitMobile"
-    type="tel"
-    placeholder="Mobile Number"
-    maxlength="11"
-    required>
-
-  <input
-    id="jazzLimitCnic"
-    type="text"
-    placeholder="CNIC Number"
-    maxlength="15"
-    required>
-
-  <input
-    id="jazzLimitAndroid"
-    type="text"
-    placeholder="Android ID"
-    required>
- <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-  <button type="button" onclick="royalServiceDemo(this)">
-    Submit Request
-  </button>
-
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
-    
       <article class="wallet-card">
         <h4>JazzCash Account L1</h4>
         <div class="wallet-price">Rs. 600</div>
         <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
         <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
-<input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Request</button>
         <p class="wallet-result" aria-live="polite"></p>
       </article>
@@ -1044,8 +828,7 @@ grid-template-columns: 1fr;
 
     </div>
   </section>
-
-  <!-- 3. OPAY -->
+  <!-- OPAY -->
   <section class="wallet-section">
     <h3 class="wallet-heading">🟢 OPay Services</h3>
     <div class="wallet-grid">
@@ -1054,8 +837,8 @@ grid-template-columns: 1fr;
         <h4>OPay Account Open</h4>
         <div class="wallet-price">Rs. 600</div>
         <input placeholder="اپنا موبائل نمبر" type="tel" required>
-          <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
-<input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Request</button>
         <p class="wallet-result" aria-live="polite"></p>
       </article>
@@ -1064,7 +847,7 @@ grid-template-columns: 1fr;
         <h4>OPay Limit Upgrade</h4>
         <div class="wallet-price">Rs. 200</div>
         <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
-         <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
+        <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
         <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Request</button>
         <p class="wallet-result" aria-live="polite"></p>
@@ -1073,7 +856,7 @@ grid-template-columns: 1fr;
     </div>
   </section>
 
-  <!-- 4. UPAISA -->
+  <!-- UPAISA -->
   <section class="wallet-section">
     <h3 class="wallet-heading">🔵 UPaisa Services</h3>
     <div class="wallet-grid">
@@ -1089,7 +872,7 @@ grid-template-columns: 1fr;
 
       <article class="wallet-card">
         <h4>UPaisa Limit Upgrade</h4>
-       <div class="wallet-price">Rs. 300</div>
+        <div class="wallet-price">Rs. 300</div>
         <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
         <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
         <button type="button" onclick="royalServiceDemo(this)">Request</button>
@@ -1104,82 +887,42 @@ grid-template-columns: 1fr;
         <p class="wallet-result" aria-live="polite"></p>
       </article>
 
-</article>
       <article class="wallet-card">
-  <h4>sadapay account opne</h4>
+        <h4>SadaPay Account Open</h4>
+        <div class="wallet-price">Rs. 2,000</div>
+        <input type="tel" placeholder="Mobile Number" required>
+        <input type="text" placeholder="CNIC Number" maxlength="15" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <button type="button" onclick="royalServiceDemo(this)">Open Account</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
 
-  <div class="wallet-price">Rs. 2,000</div>
+      <article class="wallet-card">
+        <h4>Bank KYC Support</h4>
+        <div class="wallet-price">Rs. 2,500</div>
+        <input type="tel" placeholder="Mobile Number" required>
+        <input type="text" placeholder="CNIC Number" maxlength="15" required>
+        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
+        <p>10 Fingerprint Update</p>
+        <button type="button" onclick="royalServiceDemo(this)">Submit Request</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
 
-  <input
-    type="tel"
-    placeholder="Mobile Number"
-    required
-  >
+    </div>
+  </section>
+</section>
 
-  <input
-    type="text"
-    placeholder="CNIC Number"
-    maxlength="15"
-    required
-  >
-
-  <input
-    type="file"
-    accept=".jpg,.jpeg,image/jpeg"
-    required
-  >
-
-  <button type="button"
-    onclick="royalServiceDemo(this)">
-    Open Account
-  </button>
-
-        <article class="wallet-card">
-  <h4>aik Bank KYC</h4>
-
-  <div class="wallet-price">Rs. 2500</div>
-
-  <input
-    type="tel"
-    placeholder="Mobile Number"
-    required
-  >
-
-  <input
-    type="text"
-    placeholder="CNIC Number"
-    maxlength="15"
-    required
-  >
-           <input
-    type="file"
-    accept=".jpg,.jpeg,image/jpeg"
-    required
-  >
-
-
-  <p>10 Fingerprint Update</p>
-
-  <button type="button"
-    onclick="royalServiceDemo(this)">
-    Open Account
-  </button>
-
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
 <script>
-
 function royalServiceDemo(button) {
-    if (typeof window.rmShowPaymentPopup === "function") {
-        window.rmShowPaymentPopup();
-    } else {
-        alert("Payment page is not available. Please refresh.");
-    }
+  if (typeof window.rmShowPaymentPopup === "function") {
+    window.rmShowPaymentPopup();
+  } else {
+    alert("Payment page is not available. Please refresh.");
+  }
 }
 </script>
-  <!-- Royal Member Payment Popup -->
+
+<!-- Royal Member Payment Popup -->
 <style>
 #rmPaymentOverlay {
   display: none;
@@ -1191,6 +934,7 @@ function royalServiceDemo(button) {
   justify-content: center;
   padding: 16px;
 }
+
 #rmPaymentBox {
   width: 100%;
   max-width: 420px;
@@ -1202,10 +946,12 @@ function royalServiceDemo(button) {
   font-family: Arial, sans-serif;
   box-shadow: 0 10px 40px #000;
 }
+
 #rmPaymentBox h2 {
   color: #ffca62;
   margin-top: 0;
 }
+
 .rm-pay-btn {
   display: block;
   width: 100%;
@@ -1217,8 +963,17 @@ function royalServiceDemo(button) {
   font-weight: bold;
   font-size: 15px;
 }
-.rm-pay-gold { background: #f2bd59; color: #171717; }
-.rm-pay-dark { background: #263449; color: white; }
+
+.rm-pay-gold {
+  background: #f2bd59;
+  color: #171717;
+}
+
+.rm-pay-dark {
+  background: #263449;
+  color: white;
+}
+
 #rmPaymentBox .rm-pay-number {
   padding: 12px;
   background: #202c3e;
@@ -1235,18 +990,23 @@ function royalServiceDemo(button) {
     <div id="rmPayChoices">
       <button type="button" class="rm-pay-btn rm-pay-gold"
         id="rmAddPayment">Add Payment</button>
+
       <button type="button" class="rm-pay-btn rm-pay-dark"
         id="rmPayLater">Later</button>
     </div>
 
     <div id="rmPayDetails" style="display:none">
       <p>Payment Method: <strong>OPay</strong></p>
+
       <p>Account Title</p>
       <div class="rm-pay-number">Noor Jahan</div>
+
       <p>Account Number</p>
       <div class="rm-pay-number" id="rmPayNumber">03422605178</div>
-<p>WhatsApp Number for Payment Receipt</p>
-<div class="rm-pay-number">03422605178</div>
+
+      <p>WhatsApp Number for Payment Receipt</p>
+      <div class="rm-pay-number">03422605178</div>
+
       <button type="button" class="rm-pay-btn rm-pay-gold"
         id="rmCopyNumber">Copy Account Number</button>
 
@@ -1259,6 +1019,7 @@ function royalServiceDemo(button) {
 
     <button type="button" class="rm-pay-btn rm-pay-dark"
       id="rmClosePayment">Close</button>
+
     <p id="rmPayStatus" role="status"></p>
   </div>
 </div>
@@ -1283,22 +1044,26 @@ function royalServiceDemo(button) {
     overlay.style.display = "none";
   }
 
-document.getElementById("rmAddPayment").onclick = function () {
-  const amount = prompt("Enter Payment Amount (PKR):");
+  document.getElementById("rmAddPayment").onclick = function () {
+    const amount = prompt("Enter Payment Amount (PKR):");
 
-  if (amount === null) return;
+    if (amount === null) return;
 
-  const MIN_PAYMENT = 1000;
+    const MIN_PAYMENT = 1000;
 
-  if (amount.trim() === "" || !Number.isFinite(Number(amount)) || Number(amount) < MIN_PAYMENT) {
-    alert("Minimum payment is Rs. 1000");
-    return;
-  }
+    if (
+      amount.trim() === "" ||
+      !Number.isFinite(Number(amount)) ||
+      Number(amount) < MIN_PAYMENT
+    ) {
+      alert("Minimum payment is Rs. 1000");
+      return;
+    }
 
-  choices.style.display = "none";
-  details.style.display = "block";
-};
-  
+    choices.style.display = "none";
+    details.style.display = "block";
+  };
+
   document.getElementById("rmPayLater").onclick = closePopup;
   document.getElementById("rmClosePayment").onclick = closePopup;
 
@@ -1312,18 +1077,20 @@ document.getElementById("rmAddPayment").onclick = function () {
       await navigator.clipboard.writeText(
         document.getElementById("rmPayNumber").textContent.trim()
       );
+
       status.textContent = "Account number copied.";
     } catch (e) {
-      status.textContent = "Please copy the number manually: 03422605178";
+      status.textContent =
+        "Please copy the number manually: 03422605178";
     }
   };
 
   document.getElementById("rmSendReceipt").onclick = function () {
     status.textContent =
       "WhatsApp number must be confirmed before sending your receipt.";
-    // Add your confirmed WhatsApp number here before enabling receipt sending.
   };
 })();
 </script>
+
 </body>
 </html>
