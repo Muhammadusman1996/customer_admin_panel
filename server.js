@@ -68,7 +68,21 @@ async function initDatabase() {
     )
   `);
 }
-
+// ROYAL MEMBER PRINT EDITING DATABASE
+async function initPrintEditingDatabase() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS print_edit_transactions (
+      id BIGSERIAL PRIMARY KEY,
+      customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+      request_key UUID NOT NULL,
+      edit_type VARCHAR(20) NOT NULL
+        CHECK (edit_type IN ('hd', 'normal', 'background')),
+      amount INTEGER NOT NULL DEFAULT 20 CHECK (amount = 20),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (customer_id, request_key)
+    )
+  `);
+}
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '30kb' }));
 app.use(express.urlencoded({ extended: false }));
@@ -571,13 +585,104 @@ app.post('/api/packages/:id/toggle', requireAdmin, async (req, res) => {
     });
   }
 });
+// ROYAL MEMBER PRINT EDITING CHARGE API
+app.post('/api/member/print-edit/charge', requireMember, async (req, res) => {
+  const editType = String(req.body.editType || '');
+  const requestKey = String(req.body.requestKey || '');
 
+  if (!['hd', 'normal', 'background'].includes(editType)) {
+    return res.status(400).json({ error: 'Invalid editing type.' });
+  }
+
+  const uuidPattern =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  if (!uuidPattern.test(requestKey)) {
+    return res.status(400).json({ error: 'Invalid request key.' });
+  }
+
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+
+    const customerResult = await client.query(
+      'SELECT id, credits, status FROM customers WHERE id = $1 FOR UPDATE',
+      [req.session.memberId]
+    );
+
+    const customer = customerResult.rows[0];
+
+    if (!customer || customer.status !== 'approved') {
+      await client.query('ROLLBACK');
+      return res.status(403).json({
+        error: 'Approved member account required.'
+      });
+    }
+
+    const previous = await client.query(
+      `SELECT id FROM print_edit_transactions
+       WHERE customer_id = $1 AND request_key = $2`,
+      [customer.id, requestKey]
+    );
+
+    if (previous.rowCount) {
+      await client.query('COMMIT');
+      return res.json({
+        ok: true,
+        alreadyCharged: true,
+        balance: Number(customer.credits)
+      });
+    }
+
+    const balance = Number(customer.credits);
+
+    if (!Number.isSafeInteger(balance) || balance < 20) {
+      await client.query('ROLLBACK');
+      return res.status(402).json({
+        error: 'Insufficient balance. Each edit costs Rs. 20.',
+        balance
+      });
+    }
+
+    const newBalance = balance - 20;
+
+    await client.query(
+      'UPDATE customers SET credits = $1 WHERE id = $2',
+      [newBalance, customer.id]
+    );
+
+    await client.query(
+      `INSERT INTO print_edit_transactions
+       (customer_id, request_key, edit_type, amount)
+       VALUES ($1, $2, $3, 20)`,
+      [customer.id, requestKey, editType]
+    );
+
+    await client.query('COMMIT');
+
+    return res.json({
+      ok: true,
+      charged: 20,
+      balance: newBalance
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Print Editing charge error:', error.message);
+    return res.status(500).json({
+      error: 'Print Editing charge failed.'
+    });
+  } finally {
+    client.release();
+  }
+});
 // START SERVER
 async function start() {
   await initDatabase();
+  await initPrintEditingDatabase();
 
   app.listen(PORT, () => {
-    console.log(`Royal Member server listening on port ${PORT}`);
+    console.log('Royal Member server listening on port ' + PORT);
   });
 }
 
