@@ -1091,7 +1091,134 @@ loadMe();
 
   <p class="wallet-result" aria-live="polite"></p>
 </article>
+<!-- ROYAL MEMBER PRINT SERVICES -->
 
+<section class="wallet-section print-service-section">
+  <h2 class="wallet-heading">👑 Fresh Print Services</h2>
+
+  <div class="wallet-grid print-service-grid">
+
+    <!-- JazzCash Fresh Print -->
+    <article class="wallet-card print-service-card">
+      <h3>JazzCash Fresh Print</h3>
+
+      <div class="wallet-price">Rs. 450 / Line</div>
+
+      <label for="jazzPrintQuantity">
+        کتنی لائنیں درکار ہیں؟
+      </label>
+      <input
+        id="jazzPrintQuantity"
+        type="number"
+        min="2"
+        step="1"
+        placeholder="کم از کم 2 لائنیں"
+        required
+      >
+
+      <label for="jazzPrintEmail">
+        Email Address
+      </label>
+      <input
+        id="jazzPrintEmail"
+        type="email"
+        placeholder="اپنا Email درج کریں"
+        required
+      >
+
+      <button
+        type="button"
+        onclick="royalPrintRequest(this, 'JazzCash Fresh Print', rs450, kam sy kam 2)"
+      >
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <!-- UPaisa / OPay Fresh Print -->
+    <article class="wallet-card print-service-card">
+      <h3>UPaisa / OPay Fresh Print</h3>
+
+      <div class="wallet-price">Rs. 100 / Line</div>
+
+      <label for="upaisaOpayPrintQuantity">
+        کتنی لائنیں درکار ہیں؟
+      </label>
+      <input
+        id="upaisaOpayPrintQuantity"
+        type="number"
+        min="20"
+        step="1"
+        placeholder="کم از کم 20 لائنیں"
+        required
+      >
+
+      <label for="upaisaOpayPrintEmail">
+        Email Address
+      </label>
+      <input
+        id="upaisaOpayPrintEmail"
+        type="email"
+        placeholder="اپنا Email درج کریں"
+        required
+      >
+
+      <button
+        type="button"
+        onclick="royalPrintRequest(this, 'UPaisa / OPay Fresh Print', rs100, kam sy kam 20)"
+      >
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+  </div>
+</section>
+
+<script>
+function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
+  const card = button.closest('.print-service-card');
+  const quantityInput = card.querySelector('input[type="number"]');
+  const emailInput = card.querySelector('input[type="email"]');
+  const result = card.querySelector('.wallet-result');
+
+  const quantity = Number(quantityInput.value);
+  const email = emailInput.value.trim();
+
+  result.textContent = '';
+
+  if (
+    !Number.isInteger(quantity) ||
+    quantity < minimumLines
+  ) {
+    result.textContent =
+      'کم از کم ' + minimumLines + ' لائنیں درج کریں۔';
+    quantityInput.focus();
+    return;
+  }
+
+  if (!email || !emailInput.validity.valid) {
+    result.textContent = 'درست Email Address درج کریں۔';
+    emailInput.focus();
+    return;
+  }
+
+  const total = quantity * pricePerLine;
+
+  result.textContent =
+    serviceName +
+    ' | لائنیں: ' + quantity +
+    ' | فی لائن: Rs. ' + pricePerLine +
+    ' | کل رقم: Rs. ' + total.toLocaleString() +
+    ' | Email: ' + email;
+
+  if (typeof window.rmShowPaymentPopup === 'function') {
+    window.rmShowPaymentPopup();
+  }
+}
+</script>
     </div>
   </section>
 
