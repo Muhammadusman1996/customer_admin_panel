@@ -676,6 +676,38 @@ app.post('/api/member/print-edit/charge', requireMember, async (req, res) => {
     client.release();
   }
 });
+// FRESH PRINT API DATABASE TABLES
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS fresh_print_orders (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+    request_key UUID NOT NULL,
+    service_code VARCHAR(30) NOT NULL,
+    service_name VARCHAR(80) NOT NULL,
+    lines INTEGER NOT NULL,
+    rate_per_line INTEGER NOT NULL,
+    total_amount BIGINT NOT NULL,
+    customer_email TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (customer_id, request_key)
+  )
+`);
+
+await pool.query(`
+  CREATE TABLE IF NOT EXISTS wallet_transactions (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+    order_id BIGINT REFERENCES fresh_print_orders(id) ON DELETE SET NULL,
+    transaction_key UUID NOT NULL,
+    transaction_type VARCHAR(20) NOT NULL,
+    amount BIGINT NOT NULL,
+    description TEXT NOT NULL,
+    balance_after BIGINT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (customer_id, transaction_key)
+  )
+`);
 // START SERVER
 async function start() {
   await initDatabase();
