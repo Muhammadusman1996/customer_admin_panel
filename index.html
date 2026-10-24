@@ -1031,76 +1031,161 @@ loadMe();
 
     </div>
   </section>
-  <!-- OPAY -->
-  <section class="wallet-section">
-    <h3 class="wallet-heading">🟢 OPay Services</h3>
-    <div class="wallet-grid">
+<!-- WALLET SERVICES -->
+<style>
+/* Separate cards, orderly layout, minimal empty spaces */
+.wallet-section {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 20px 0;
+}
 
-      <article class="wallet-card">
-        <h4>OPay Account Open</h4>
-        <div class="wallet-price">Rs. 500</div>
-        <input placeholder="اپنا موبائل نمبر" type="tel" required>
-        <input type="text" placeholder="CNIC نمبر درج کریں" maxlength="15" required>
-        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-        <button type="button" onclick="royalServiceDemo(this)">Request</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  grid-auto-flow: row dense;
+  gap: 14px;
+  width: 100%;
+  align-items: stretch;
+  box-sizing: border-box;
+}
 
-      <article class="wallet-card">
-       <!-- OPay Limit Upgrade -->
-<article class="wallet-card">
-  <h4>OPay Limit Upgrade</h4>
-  <div class="wallet-price">Rs. 200</div>
+.wallet-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
 
-  <input type="tel" placeholder="اپنا رجسٹرڈ نمبر" required>
+.wallet-card input,
+.wallet-card button {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
-  <input type="text"
-         placeholder="CNIC نمبر درج کریں"
-         maxlength="15" required>
+.wallet-card input {
+  margin-bottom: 10px;
+}
 
-  <input type="file"
-         accept=".jpg,.jpeg,image/jpeg" required>
+.wallet-card button {
+  margin-top: auto;
+}
 
-  <button type="button" onclick="royalServiceDemo(this)">
-    Request
-  </button>
+.wallet-card .wallet-result {
+  overflow-wrap: anywhere;
+}
 
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
+.print-service-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
 
-         <article class="wallet-card">
-<!-- Naya-Pay Account Opening -->
-<article class="wallet-card">
-  <h4>Naya-Pay Account Opening</h4>
-  <div class="wallet-price">Rs. 3000</div>
+.print-service-card {
+  min-width: 0;
+  height: 100%;
+}
 
-  <input type="tel" placeholder="اپنا رجسٹرڈ نمبر" required>
+@media (max-width: 520px) {
+  .wallet-grid,
+  .print-service-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+</style>
 
-  <input type="text"
-         placeholder="CNIC نمبر درج کریں"
-         maxlength="15" required>
+<!-- OPAY SERVICES -->
+<section class="wallet-section">
+  <h3 class="wallet-heading">🟢 OPay Services</h3>
 
-  <label>Upload Print (10×10)</label>
+  <div class="wallet-grid">
 
-  <input type="file"
-         accept=".jpg,.jpeg,image/jpeg" required>
+    <article class="wallet-card">
+      <h4>OPay Account Open</h4>
+      <div class="wallet-price">Rs. 500</div>
 
-  <button type="button" onclick="royalServiceDemo(this)">
-    Request
-  </button>
+      <input type="tel" placeholder="اپنا موبائل نمبر" required>
 
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
+      <input type="text"
+             placeholder="CNIC نمبر درج کریں"
+             maxlength="15" required>
 
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg" required>
 
-           <!-- ROYAL MEMBER PRINT SERVICES -->
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
 
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <article class="wallet-card">
+      <h4>OPay Limit Upgrade</h4>
+      <div class="wallet-price">Rs. 200</div>
+
+      <input type="tel" placeholder="اپنا رجسٹرڈ نمبر" required>
+
+      <input type="text"
+             placeholder="CNIC نمبر درج کریں"
+             maxlength="15" required>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg" required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+  </div>
+</section>
+
+<!-- NAYA-PAY SERVICES -->
+<section class="wallet-section">
+  <h3 class="wallet-heading">🔷 Naya-Pay Services</h3>
+
+  <div class="wallet-grid">
+
+    <article class="wallet-card">
+      <h4>Naya-Pay Account Opening</h4>
+      <div class="wallet-price">Rs. 3000</div>
+
+      <input type="tel"
+             placeholder="اپنا رجسٹرڈ نمبر"
+             required>
+
+      <input type="text"
+             placeholder="CNIC نمبر درج کریں"
+             maxlength="15" required>
+
+      <label>Upload Print (10×10)</label>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg" required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ROYAL MEMBER FRESH PRINT SERVICES -->
 <section class="wallet-section print-service-section">
   <h2 class="wallet-heading">👑 Fresh Print Services</h2>
 
   <div class="wallet-grid print-service-grid">
 
-    <!-- JazzCash Fresh Print -->
+    <!-- JAZZCASH FRESH PRINT -->
     <article class="wallet-card print-service-card">
       <h3>JazzCash Fresh Print</h3>
 
@@ -1109,6 +1194,7 @@ loadMe();
       <label for="jazzPrintQuantity">
         کتنی لائنیں درکار ہیں؟
       </label>
+
       <input
         id="jazzPrintQuantity"
         type="number"
@@ -1118,9 +1204,8 @@ loadMe();
         required
       >
 
-      <label for="jazzPrintEmail">
-        Email Address
-      </label>
+      <label for="jazzPrintEmail">Email Address</label>
+
       <input
         id="jazzPrintEmail"
         type="email"
@@ -1130,17 +1215,15 @@ loadMe();
 
       <button
         type="button"
-        onclick="royalPrintRequest(this, 'JazzCash Fresh Print', rs450, kam sy kam 2)"
+        onclick="royalPrintRequest(this, 'JazzCash Fresh Print', 450, 2)"
       >
         Request
       </button>
 
-
-      
       <p class="wallet-result" aria-live="polite"></p>
     </article>
 
-    <!-- UPaisa / OPay Fresh Print -->
+    <!-- UPAISA / OPAY FRESH PRINT -->
     <article class="wallet-card print-service-card">
       <h3>UPaisa / OPay Fresh Print</h3>
 
@@ -1149,6 +1232,7 @@ loadMe();
       <label for="upaisaOpayPrintQuantity">
         کتنی لائنیں درکار ہیں؟
       </label>
+
       <input
         id="upaisaOpayPrintQuantity"
         type="number"
@@ -1158,9 +1242,8 @@ loadMe();
         required
       >
 
-      <label for="upaisaOpayPrintEmail">
-        Email Address
-      </label>
+      <label for="upaisaOpayPrintEmail">Email Address</label>
+
       <input
         id="upaisaOpayPrintEmail"
         type="email"
@@ -1170,7 +1253,7 @@ loadMe();
 
       <button
         type="button"
-        onclick="royalPrintRequest(this, 'UPaisa / OPay Fresh Print', rs100, kam sy kam 20)"
+        onclick="royalPrintRequest(this, 'UPaisa / OPay Fresh Print', 100, 20)"
       >
         Request
       </button>
@@ -1181,9 +1264,150 @@ loadMe();
   </div>
 </section>
 
+<!-- UPAISA SERVICES -->
+<section class="wallet-section">
+  <h3 class="wallet-heading">🔵 UPaisa Services</h3>
+
+  <div class="wallet-grid">
+
+    <article class="wallet-card">
+      <h4>UPaisa Account Open</h4>
+      <div class="wallet-price">Rs. 200</div>
+
+      <input type="tel"
+             placeholder="اپنا موبائل نمبر"
+             required>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg"
+             required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <article class="wallet-card">
+      <h4>UPaisa Limit Upgrade</h4>
+      <div class="wallet-price">Rs. 150</div>
+
+      <input type="tel"
+             placeholder="اپنا رجسٹرڈ نمبر"
+             required>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg"
+             required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <article class="wallet-card">
+      <h4>UPaisa Account Support</h4>
+      <div class="wallet-price">Rs. 250</div>
+
+      <input type="tel"
+             placeholder="اپنا رجسٹرڈ نمبر"
+             required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <article class="wallet-card">
+      <h4>SadaPay Account Open</h4>
+      <div class="wallet-price">Rs. 2,000</div>
+
+      <input type="tel"
+             placeholder="Mobile Number"
+             required>
+
+      <input type="text"
+             placeholder="CNIC Number"
+             maxlength="15" required>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg"
+             required>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Open Account
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+    <article class="wallet-card">
+      <h4>Bank KYC Support</h4>
+      <div class="wallet-price">Rs. 2,500</div>
+
+      <input type="tel"
+             placeholder="Mobile Number"
+             required>
+
+      <input type="text"
+             placeholder="CNIC Number"
+             maxlength="15" required>
+
+      <input type="file"
+             accept=".jpg,.jpeg,image/jpeg"
+             required>
+
+      <p>10 Fingerprint Update</p>
+
+      <button type="button" onclick="royalServiceDemo(this)">
+        Submit Request
+      </button>
+
+      <p class="wallet-result" aria-live="polite"></p>
+    </article>
+
+  </div>
+</section>
+
+<!-- SERVICE REQUEST FUNCTIONS -->
 <script>
-function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
+function royalServiceDemo(button) {
+  const card = button.closest('.wallet-card');
+  const result = card.querySelector('.wallet-result');
+
+  if (!card) return;
+
+  const requiredFields = card.querySelectorAll('[required]');
+
+  for (const field of requiredFields) {
+    if (!field.checkValidity()) {
+      field.reportValidity();
+      return;
+    }
+  }
+
+  if (typeof window.rmShowPaymentPopup === 'function') {
+    window.rmShowPaymentPopup();
+  } else {
+    alert('Payment page is not available. Please refresh.');
+  }
+}
+
+function royalPrintRequest(
+  button,
+  serviceName,
+  pricePerLine,
+  minimumLines
+) {
   const card = button.closest('.print-service-card');
+
+  if (!card) return;
+
   const quantityInput = card.querySelector('input[type="number"]');
   const emailInput = card.querySelector('input[type="email"]');
   const result = card.querySelector('.wallet-result');
@@ -1199,11 +1423,12 @@ function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
   ) {
     result.textContent =
       'کم از کم ' + minimumLines + ' لائنیں درج کریں۔';
+
     quantityInput.focus();
     return;
   }
 
-  if (!email || !emailInput.validity.valid) {
+  if (!email || !emailInput.checkValidity()) {
     result.textContent = 'درست Email Address درج کریں۔';
     emailInput.focus();
     return;
@@ -1220,79 +1445,13 @@ function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
 
   if (typeof window.rmShowPaymentPopup === 'function') {
     window.rmShowPaymentPopup();
-  }
-}
-</script>
-    </div>
-  </section>
-
-  <!-- UPAISA -->
-  <section class="wallet-section">
-    <h3 class="wallet-heading">🔵 UPaisa Services</h3>
-    <div class="wallet-grid">
-
-      <article class="wallet-card">
-        <h4>UPaisa Account Open</h4>
-        <div class="wallet-price">Rs. 200</div>
-        <input placeholder="اپنا موبائل نمبر" type="tel" required>
-        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-        <button type="button" onclick="royalServiceDemo(this)">Request</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
-
-      <article class="wallet-card">
-        <h4>UPaisa Limit Upgrade</h4>
-        <div class="wallet-price">Rs. 150</div>
-        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
-        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-        <button type="button" onclick="royalServiceDemo(this)">Request</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
-
-      <article class="wallet-card">
-        <h4>UPaisa Account Support</h4>
-        <div class="wallet-price">Rs. 250</div>
-        <input placeholder="اپنا رجسٹرڈ نمبر" type="tel" required>
-        <button type="button" onclick="royalServiceDemo(this)">Request</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
-
-      <article class="wallet-card">
-        <h4>SadaPay Account Open</h4>
-        <div class="wallet-price">Rs. 2,000</div>
-        <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="CNIC Number" maxlength="15" required>
-        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-        <button type="button" onclick="royalServiceDemo(this)">Open Account</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
-
-      <article class="wallet-card">
-        <h4>Bank KYC Support</h4>
-        <div class="wallet-price">Rs. 2,500</div>
-        <input type="tel" placeholder="Mobile Number" required>
-        <input type="text" placeholder="CNIC Number" maxlength="15" required>
-        <input type="file" accept=".jpg,.jpeg,image/jpeg" required>
-        <p>10 Fingerprint Update</p>
-        <button type="button" onclick="royalServiceDemo(this)">Submit Request</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
-
-    </div>
-  </section>
-</section>
-
-<script>
-function royalServiceDemo(button) {
-  if (typeof window.rmShowPaymentPopup === "function") {
-    window.rmShowPaymentPopup();
   } else {
-    alert("Payment page is not available. Please refresh.");
+    alert('Payment page is not available. Please refresh.');
   }
 }
 </script>
 
-<!-- Royal Member Payment Popup -->
+<!-- ROYAL MEMBER PAYMENT POPUP -->
 <style>
 #rmPaymentOverlay {
   display: none;
@@ -1303,11 +1462,14 @@ function royalServiceDemo(button) {
   align-items: center;
   justify-content: center;
   padding: 16px;
+  box-sizing: border-box;
 }
 
 #rmPaymentBox {
   width: 100%;
   max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: #101827;
   color: #fff;
   border: 1px solid #d9a441;
@@ -1315,6 +1477,7 @@ function royalServiceDemo(button) {
   padding: 22px;
   font-family: Arial, sans-serif;
   box-shadow: 0 10px 40px #000;
+  box-sizing: border-box;
 }
 
 #rmPaymentBox h2 {
@@ -1355,14 +1518,21 @@ function royalServiceDemo(button) {
 <div id="rmPaymentOverlay">
   <div id="rmPaymentBox">
     <h2>Royal Member Payment</h2>
+
     <p>Please select an option to continue.</p>
 
     <div id="rmPayChoices">
-      <button type="button" class="rm-pay-btn rm-pay-gold"
-        id="rmAddPayment">Add Payment</button>
+      <button type="button"
+              class="rm-pay-btn rm-pay-gold"
+              id="rmAddPayment">
+        Add Payment
+      </button>
 
-      <button type="button" class="rm-pay-btn rm-pay-dark"
-        id="rmPayLater">Later</button>
+      <button type="button"
+              class="rm-pay-btn rm-pay-dark"
+              id="rmPayLater">
+        Later
+      </button>
     </div>
 
     <div id="rmPayDetails" style="display:none">
@@ -1372,23 +1542,37 @@ function royalServiceDemo(button) {
       <div class="rm-pay-number">Noor Jahan</div>
 
       <p>Account Number</p>
-      <div class="rm-pay-number" id="rmPayNumber">03422605178</div>
+      <div class="rm-pay-number" id="rmPayNumber">
+        03422605178
+      </div>
 
       <p>WhatsApp Number for Payment Receipt</p>
       <div class="rm-pay-number">03422605178</div>
 
-      <button type="button" class="rm-pay-btn rm-pay-gold"
-        id="rmCopyNumber">Copy Account Number</button>
+      <button type="button"
+              class="rm-pay-btn rm-pay-gold"
+              id="rmCopyNumber">
+        Copy Account Number
+      </button>
 
-      <button type="button" class="rm-pay-btn rm-pay-gold"
-        id="rmSendReceipt">Send Payment Receipt on WhatsApp</button>
+      <button type="button"
+              class="rm-pay-btn rm-pay-gold"
+              id="rmSendReceipt">
+        Send Payment Receipt on WhatsApp
+      </button>
 
-      <button type="button" class="rm-pay-btn rm-pay-dark"
-        id="rmBackChoices">Back</button>
+      <button type="button"
+              class="rm-pay-btn rm-pay-dark"
+              id="rmBackChoices">
+        Back
+      </button>
     </div>
 
-    <button type="button" class="rm-pay-btn rm-pay-dark"
-      id="rmClosePayment">Close</button>
+    <button type="button"
+            class="rm-pay-btn rm-pay-dark"
+            id="rmClosePayment">
+      Close
+    </button>
 
     <p id="rmPayStatus" role="status"></p>
   </div>
@@ -1396,68 +1580,71 @@ function royalServiceDemo(button) {
 
 <script>
 (function () {
-  const overlay = document.getElementById("rmPaymentOverlay");
-  const choices = document.getElementById("rmPayChoices");
-  const details = document.getElementById("rmPayDetails");
-  const status = document.getElementById("rmPayStatus");
+  const overlay = document.getElementById('rmPaymentOverlay');
+  const choices = document.getElementById('rmPayChoices');
+  const details = document.getElementById('rmPayDetails');
+  const status = document.getElementById('rmPayStatus');
 
-  if (!overlay || !choices || !details) return;
+  if (!overlay || !choices || !details || !status) return;
 
   window.rmShowPaymentPopup = function () {
-    choices.style.display = "block";
-    details.style.display = "none";
-    status.textContent = "";
-    overlay.style.display = "flex";
+    choices.style.display = 'block';
+    details.style.display = 'none';
+    status.textContent = '';
+    overlay.style.display = 'flex';
   };
 
   function closePopup() {
-    overlay.style.display = "none";
+    overlay.style.display = 'none';
   }
 
-  document.getElementById("rmAddPayment").onclick = function () {
-    const amount = prompt("Enter Payment Amount (PKR):");
+  document.getElementById('rmAddPayment').onclick = function () {
+    const amount = prompt('Enter Payment Amount (PKR):');
 
     if (amount === null) return;
 
+    const paymentAmount = Number(amount);
     const MIN_PAYMENT = 1000;
 
     if (
-      amount.trim() === "" ||
-      !Number.isFinite(Number(amount)) ||
-      Number(amount) < MIN_PAYMENT
+      amount.trim() === '' ||
+      !Number.isFinite(paymentAmount) ||
+      paymentAmount < MIN_PAYMENT
     ) {
-      alert("Minimum payment is Rs. 1000");
+      alert('Minimum payment is Rs. 1000');
       return;
     }
 
-    choices.style.display = "none";
-    details.style.display = "block";
+    choices.style.display = 'none';
+    details.style.display = 'block';
+    status.textContent = '';
   };
 
-  document.getElementById("rmPayLater").onclick = closePopup;
-  document.getElementById("rmClosePayment").onclick = closePopup;
+  document.getElementById('rmPayLater').onclick = closePopup;
+  document.getElementById('rmClosePayment').onclick = closePopup;
 
-  document.getElementById("rmBackChoices").onclick = function () {
-    details.style.display = "none";
-    choices.style.display = "block";
+  document.getElementById('rmBackChoices').onclick = function () {
+    details.style.display = 'none';
+    choices.style.display = 'block';
+    status.textContent = '';
   };
 
-  document.getElementById("rmCopyNumber").onclick = async function () {
+  document.getElementById('rmCopyNumber').onclick = async function () {
+    const number = document.getElementById('rmPayNumber')
+      .textContent.trim();
+
     try {
-      await navigator.clipboard.writeText(
-        document.getElementById("rmPayNumber").textContent.trim()
-      );
-
-      status.textContent = "Account number copied.";
-    } catch (e) {
+      await navigator.clipboard.writeText(number);
+      status.textContent = 'Account number copied.';
+    } catch (error) {
       status.textContent =
-        "Please copy the number manually: 03422605178";
+        'Please copy the number manually: ' + number;
     }
   };
 
-  document.getElementById("rmSendReceipt").onclick = function () {
+  document.getElementById('rmSendReceipt').onclick = function () {
     status.textContent =
-      "WhatsApp number must be confirmed before sending your receipt.";
+      'WhatsApp number must be confirmed before sending your receipt.';
   };
 })();
 </script>
