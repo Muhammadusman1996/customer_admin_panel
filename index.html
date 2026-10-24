@@ -1398,14 +1398,8 @@ function royalServiceDemo(button) {
   }
 }
 
-function royalPrintRequest(
-  button,
-  serviceName,
-  pricePerLine,
-  minimumLines
-) {
+function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
   const card = button.closest('.print-service-card');
-
   if (!card) return;
 
   const quantityInput = card.querySelector('input[type="number"]');
@@ -1417,13 +1411,9 @@ function royalPrintRequest(
 
   result.textContent = '';
 
-  if (
-    !Number.isInteger(quantity) ||
-    quantity < minimumLines
-  ) {
+  if (!Number.isInteger(quantity) || quantity < minimumLines) {
     result.textContent =
       'کم از کم ' + minimumLines + ' لائنیں درج کریں۔';
-
     quantityInput.focus();
     return;
   }
@@ -1436,18 +1426,22 @@ function royalPrintRequest(
 
   const total = quantity * pricePerLine;
 
-  result.textContent =
-    serviceName +
-    ' | لائنیں: ' + quantity +
-    ' | فی لائن: Rs. ' + pricePerLine +
-    ' | کل رقم: Rs. ' + total.toLocaleString() +
-    ' | Email: ' + email;
+  const message =
+    'Royal Member Panel - Fresh Print Request\n' +
+    'Service: ' + serviceName + '\n' +
+    'Lines: ' + quantity + '\n' +
+    'Rate per line: Rs. ' + pricePerLine + '\n' +
+    'Total: Rs. ' + total + '\n' +
+    'Customer Email: ' + email;
 
-  if (typeof window.rmShowPaymentPopup === 'function') {
-    window.rmShowPaymentPopup();
-  } else {
-    alert('Payment page is not available. Please refresh.');
-  }
+  const whatsappURL =
+    'https://wa.me/923422605178?text=' +
+    encodeURIComponent(message);
+
+  result.textContent =
+    'درخواست تیار ہے۔ WhatsApp کھول کر Send دبائیں۔';
+
+  window.open(whatsappURL, '_blank');
 }
 </script>
 
