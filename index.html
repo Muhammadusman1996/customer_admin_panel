@@ -1610,19 +1610,19 @@ document.querySelectorAll(
         const mode = button.dataset.mode;
 
         if (mode === 'background') {
-          ctx.fillStyle =
-            card.querySelector('.print-background').value;
+  ctx.fillStyle =
+    card.querySelector('.print-background').value;
 
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(image, 0, 0);
-        } else {
-          ctx.filter = mode === 'hd'
-            ? 'contrast(1.12) brightness(1.03)'
-            : 'contrast(1.06) brightness(1.02)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(image, 0, 0);
+} else {
+  ctx.filter = mode === 'hd'
+    ? 'contrast(1.35) brightness(1.08) saturate(1.08)'
+    : 'contrast(1.15) brightness(1.04) saturate(1.03)';
 
-          ctx.drawImage(image, 0, 0);
-          ctx.filter = 'none';
-        }
+  ctx.drawImage(image, 0, 0);
+  ctx.filter = 'none';
+}
 
         const blob = await new Promise(resolve => {
           canvas.toBlob(resolve, 'image/png');
