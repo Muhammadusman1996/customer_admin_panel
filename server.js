@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const session = require('express-session');
 const helmet = require('helmet');
@@ -9,36 +7,18 @@ const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 app.set('trust proxy', 1);
+const ADMIN_EMAIL = 'ms6033291@gmail.com';
+const ADMIN_PASSWORD_HASH =
+  '$2a$10$9NsG5FweXTTzKSqS0vsyFOsH5sFeBO71oiyUsInsiGE2.t/JDd5gi';
 
-const ADMIN_EMAIL = (
-  process.env.ADMIN_EMAIL || 'ms6033291@gmail.com'
-).toLowerCase();
-
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || '';
 const SESSION_SECRET = process.env.SESSION_SECRET;
 const DATABASE_URL = process.env.DATABASE_URL;
 
-if (!SESSION_SECRET || !DATABASE_URL || !ADMIN_PASSWORD_HASH) {
-  console.error(
-    'Missing SESSION_SECRET, DATABASE_URL, or ADMIN_PASSWORD_HASH.'
-  );
+if (!SESSION_SECRET || !DATABASE_URL) {
+  console.error('Missing SESSION_SECRET or DATABASE_URL.');
   process.exit(1);
 }
-
-const pool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: process.env.DATABASE_SSL === 'disable'
-    ? false
-    : { rejectUnauthorized: false }
-});
-
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json({ limit: '30kb' }));
-app.use(express.urlencoded({ extended: false }));
-
-// مشترکہ Session Middleware
 app.use(session({
   name: 'royal_member_sid',
   secret: SESSION_SECRET,
@@ -46,43 +26,16 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: 'auto',
+sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
-
-app.use(express.static(__dirname));
-
-function requireAdmin(req, res, next) {
-  if (req.session && req.session.isAdmin) {
-    return next();
-  }
-
-  return res.status(401).json({
-    error: 'Please log in as admin.'
-  });
-}
-
-function requireMember(req, res, next) {
-  if (req.session && req.session.memberId) {
-    return next();
-  }
-
-  return res.status(401).json({
-    error: 'Please log in first.'
-  });
-}
-
-// سروس کی قیمتیں صرف سرور سے کنٹرول ہوں گی
-const SERVICE_PRICES = Object.freeze({
-  'Easypaisa Account Open': 400,
-  'Easypaisa PIN Reset': 50,
-  'Easypaisa Account Check': 30,
-  'Easypaisa Transaction History': 500
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
-// ڈیٹا بیس کی تیاری
 async function initDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS customers (
@@ -98,6 +51,8 @@ async function initDatabase() {
     )
   `);
 
+  // Allow registration without an email address.
+  // This also updates an existing customers table safely.
   await pool.query(`
     ALTER TABLE customers
     ALTER COLUMN email DROP NOT NULL
@@ -112,42 +67,58 @@ async function initDatabase() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   `);
-
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS customer_activities (
-      id BIGSERIAL PRIMARY KEY,
-      customer_id BIGINT REFERENCES customers(id)
-        ON DELETE SET NULL,
-      activity_name VARCHAR(100) NOT NULL,
-      request_id UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(),
-      status VARCHAR(20) NOT NULL
-        CHECK (status IN (
-          'SUCCESS', 'NOT FOUND', 'FAILED', 'PENDING'
-        )),
-      amount BIGINT NOT NULL DEFAULT 0 CHECK (amount >= 0),
-      balance_before BIGINT NOT NULL DEFAULT 0
-        CHECK (balance_before >= 0),
-      balance_after BIGINT NOT NULL DEFAULT 0
-        CHECK (balance_after >= 0),
-      details JSONB NOT NULL DEFAULT '{}'::jsonb,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  await pool.query(`
-    CREATE INDEX IF NOT EXISTS idx_customer_activities_member_date
-    ON customer_activities(customer_id, created_at DESC)
-  `);
 }
 
-// سیشن کی حالت
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(express.json({ limit: '30kb' }));
+app.use(express.urlencoded({ extended: false }));
+
+app.use(session({
+  name: 'royal_admin_session',
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 2 * 60 * 60 * 1000
+  }
+}));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+function requireAdmin(req, res, next) {
+  if (req.session?.isAdmin) return next();
+  return res.status(401).json({
+    error: 'Please log in as admin.'
+  });
+}
+
+function requireMember(req, res, next) {
+  if (req.session?.memberId) return next();
+  return res.status(401).json({
+    error: 'Please log in first.'
+  });
+}
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// Session status
 app.get('/api/session', (req, res) => {
   res.json({
     authenticated: !!req.session?.isAdmin
   });
 });
 
-// کسٹمر رجسٹریشن
+// CUSTOMER REGISTRATION
+// Requires only: name, username, password
 app.post('/api/register', async (req, res) => {
   const name = String(req.body.name || '').trim();
   const username = String(req.body.username || '')
@@ -163,7 +134,8 @@ app.post('/api/register', async (req, res) => {
 
   if (!/^[a-z0-9_]{3,30}$/.test(username)) {
     return res.status(400).json({
-      error: 'Username must be 3-30 characters: letters, numbers or underscore.'
+      error:
+        'Username must be 3-30 characters: letters, numbers or underscore.'
     });
   }
 
@@ -174,36 +146,47 @@ app.post('/api/register', async (req, res) => {
   }
 
   try {
-    const hash = await bcrypt.hash(password, 10);
+    const existing = await pool.query(
+      'SELECT id FROM customers WHERE username = $1',
+      [username]
+    );
+
+    if (existing.rowCount > 0) {
+      return res.status(409).json({
+        error: 'Username already exists.'
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const result = await pool.query(`
       INSERT INTO customers
         (name, username, password_hash, status, credits)
       VALUES ($1, $2, $3, 'pending', 0)
       RETURNING id
-    `, [name, username, hash]);
+    `, [name, username, passwordHash]);
 
-    res.status(201).json({
+    return res.status(201).json({
       ok: true,
       message: 'Account created. Please wait for admin approval.',
       customerId: result.rows[0].id
     });
   } catch (error) {
+    console.error('Registration error:', error.message);
+
     if (error.code === '23505') {
       return res.status(409).json({
         error: 'Username already exists.'
       });
     }
 
-    console.error('Registration error:', error.message);
-
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Could not create account.'
     });
   }
 });
 
-// کسٹمر لاگ اِن
+// CUSTOMER LOGIN
 app.post('/api/member/login', async (req, res) => {
   const username = String(req.body.username || '')
     .trim()
@@ -244,7 +227,7 @@ app.post('/api/member/login', async (req, res) => {
         });
       }
 
-      req.session.memberId = String(customer.id);
+      req.session.memberId = customer.id;
 
       res.json({
         ok: true,
@@ -265,36 +248,22 @@ app.post('/api/member/login', async (req, res) => {
   }
 });
 
-// موجودہ کسٹمر اور اس کی حالیہ سرگرمیاں
+// CURRENT CUSTOMER
 app.get('/api/me', requireMember, async (req, res) => {
   try {
-    const customerResult = await pool.query(`
+    const result = await pool.query(`
       SELECT id, name, username, status, credits
       FROM customers
       WHERE id = $1
     `, [req.session.memberId]);
 
-    const customer = customerResult.rows[0];
-
-    if (!customer) {
+    if (!result.rows[0]) {
       return res.status(404).json({
         error: 'Customer not found.'
       });
     }
 
-    const activitiesResult = await pool.query(`
-      SELECT request_id, activity_name, status, amount,
-             balance_before, balance_after, details, created_at
-      FROM customer_activities
-      WHERE customer_id = $1
-      ORDER BY created_at DESC
-      LIMIT 20
-    `, [req.session.memberId]);
-
-    res.json({
-      user: customer,
-      transactions: activitiesResult.rows
-    });
+    res.json({ user: result.rows[0] });
   } catch (error) {
     console.error('Customer lookup error:', error.message);
 
@@ -304,128 +273,7 @@ app.get('/api/me', requireMember, async (req, res) => {
   }
 });
 
-// سروس کی درخواست، بیلنس کی کٹوتی اور رسید
-// بیرونی سروس API منسلک ہونے تک اسٹیٹس PENDING رہے گا۔
-app.post('/api/member/activities', requireMember, async (req, res) => {
-  const activityName = String(
-    req.body.activityName || ''
-  ).trim();
-
-  const price = SERVICE_PRICES[activityName];
-
-  if (!price) {
-    return res.status(400).json({
-      error: 'Unknown service. Please choose an available service.'
-    });
-  }
-
-  const client = await pool.connect();
-
-  try {
-    await client.query('BEGIN');
-
-    const customerResult = await client.query(`
-      SELECT id, username, credits, status
-      FROM customers
-      WHERE id = $1
-      FOR UPDATE
-    `, [req.session.memberId]);
-
-    const customer = customerResult.rows[0];
-
-    if (!customer || customer.status !== 'approved') {
-      await client.query('ROLLBACK');
-
-      return res.status(403).json({
-        error: 'Approved member account required.'
-      });
-    }
-
-    const before = Number(customer.credits);
-
-    if (!Number.isSafeInteger(before) || before < price) {
-      await client.query('ROLLBACK');
-
-      return res.status(402).json({
-        error: `Insufficient balance. This service costs Rs. ${price}.`,
-        required: price,
-        balance: before
-      });
-    }
-
-    const after = before - price;
-
-    await client.query(
-      'UPDATE customers SET credits = $1 WHERE id = $2',
-      [after, customer.id]
-    );
-
-    const receiptResult = await client.query(`
-      INSERT INTO customer_activities
-        (customer_id, activity_name, status, amount,
-         balance_before, balance_after, details)
-      VALUES ($1, $2, 'PENDING', $3, $4, $5, $6::jsonb)
-      RETURNING request_id, activity_name, status, amount,
-                balance_before, balance_after, details, created_at
-    `, [
-      customer.id,
-      activityName,
-      price,
-      before,
-      after,
-      JSON.stringify({
-        message: 'Request received. Provider result is pending.',
-        username: customer.username
-      })
-    ]);
-
-    await client.query('COMMIT');
-
-    res.status(201).json({
-      ok: true,
-      receipt: receiptResult.rows[0],
-      user: {
-        credits: after
-      }
-    });
-  } catch (error) {
-    await client.query('ROLLBACK');
-
-    console.error('Activity request error:', error.message);
-
-    res.status(500).json({
-      error: 'Could not process service request.'
-    });
-  } finally {
-    client.release();
-  }
-});
-
-// کسٹمر کی اپنی ایکٹیویٹی ہسٹری
-app.get('/api/member/activities', requireMember, async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT request_id, activity_name, status, amount,
-             balance_before, balance_after, details, created_at
-      FROM customer_activities
-      WHERE customer_id = $1
-      ORDER BY created_at DESC
-      LIMIT 100
-    `, [req.session.memberId]);
-
-    res.json({
-      activities: result.rows
-    });
-  } catch (error) {
-    console.error('Activity history error:', error.message);
-
-    res.status(500).json({
-      error: 'Could not load activity history.'
-    });
-  }
-});
-
-// کسٹمر لاگ آؤٹ
+// CUSTOMER LOGOUT
 app.post('/api/member/logout', requireMember, (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -434,29 +282,22 @@ app.post('/api/member/logout', requireMember, (req, res) => {
       });
     }
 
-    res.clearCookie('royal_member_sid');
+    res.clearCookie('royal_admin_session');
     res.json({ ok: true });
   });
 });
 
-// ایڈمن لاگ اِن
-app.post('/api/login', async (req, res) => {
+// ADMIN LOGIN
+app.post('/api/login', (req, res) => {
   const email = String(req.body.email || '')
     .trim()
     .toLowerCase();
   const password = String(req.body.password || '');
 
-  let valid = false;
-
-  try {
-    valid =
-      email === ADMIN_EMAIL &&
-      await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
-  } catch (_) {
-    valid = false;
-  }
-
-  if (!valid) {
+  if (
+    email !== ADMIN_EMAIL.toLowerCase() ||
+    !bcrypt.compareSync(password, ADMIN_PASSWORD_HASH)
+  ) {
     return res.status(401).json({
       error: 'Email or password is incorrect.'
     });
@@ -470,11 +311,12 @@ app.post('/api/login', async (req, res) => {
     }
 
     req.session.isAdmin = true;
+
     res.json({ ok: true });
   });
 });
 
-// ایڈمن لاگ آؤٹ
+// ADMIN LOGOUT
 app.post('/api/logout', requireAdmin, (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -483,12 +325,12 @@ app.post('/api/logout', requireAdmin, (req, res) => {
       });
     }
 
-    res.clearCookie('royal_member_sid');
+    res.clearCookie('royal_admin_session');
     res.json({ ok: true });
   });
 });
 
-// ایڈمن ڈیش بورڈ سمری
+// ADMIN DASHBOARD SUMMARY
 app.get('/api/summary', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -519,11 +361,12 @@ app.get('/api/summary', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: کسٹمر لسٹ
+// ADMIN: CUSTOMER LIST
 app.get('/api/customers', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, name, email, username, status, credits, created_at
+      SELECT
+        id, name, email, username, status, credits, created_at
       FROM customers
       ORDER BY id DESC
       LIMIT 500
@@ -538,10 +381,11 @@ app.get('/api/customers', requireAdmin, async (req, res) => {
     });
   }
 });
-
-// ایڈمن: کسٹمر ڈیلیٹ
+/* ADMIN: DELETE CUSTOMER ACCOUNT */
 app.delete('/api/customers/:id', requireAdmin, async (req, res) => {
-  if (!/^\d+$/.test(req.params.id)) {
+  const customerId = req.params.id;
+
+  if (!/^\d+$/.test(customerId)) {
     return res.status(400).json({
       error: 'Invalid customer ID.'
     });
@@ -550,29 +394,29 @@ app.delete('/api/customers/:id', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(
       'DELETE FROM customers WHERE id = $1 RETURNING id',
-      [req.params.id]
+      [customerId]
     );
 
-    if (!result.rowCount) {
+    if (result.rowCount === 0) {
       return res.status(404).json({
         error: 'Customer account not found.'
       });
     }
 
-    res.json({
+    return res.json({
       ok: true,
       message: 'Customer account deleted successfully.'
     });
   } catch (error) {
-    console.error('Delete customer error:', error.message);
+    console.error('Delete customer error:', error);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Could not delete customer account.'
     });
   }
 });
 
-// ایڈمن: کسٹمر کی منظوری یا مسترد کرنا
+// ADMIN: APPROVE OR REJECT CUSTOMER
 app.post('/api/customers/:id/status', requireAdmin, async (req, res) => {
   const status = String(req.body.status || '');
 
@@ -607,7 +451,7 @@ app.post('/api/customers/:id/status', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: کسٹمر کریڈٹس اپڈیٹ
+// ADMIN: UPDATE CUSTOMER CREDITS
 app.post('/api/customers/:id/credits', requireAdmin, async (req, res) => {
   const amount = Number(req.body.amount);
 
@@ -646,7 +490,7 @@ app.post('/api/customers/:id/credits', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: پیکیجز کی فہرست
+// ADMIN: LIST PACKAGES
 app.get('/api/packages', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -665,7 +509,7 @@ app.get('/api/packages', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: نیا پیکیج
+// ADMIN: CREATE PACKAGE
 app.post('/api/packages', requireAdmin, async (req, res) => {
   const name = String(req.body.name || '').trim().slice(0, 60);
   const amount = Number(req.body.amount);
@@ -702,7 +546,7 @@ app.post('/api/packages', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: پیکیج فعال یا غیر فعال
+// ADMIN: ENABLE OR DISABLE PACKAGE
 app.post('/api/packages/:id/toggle', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -728,93 +572,16 @@ app.post('/api/packages/:id/toggle', requireAdmin, async (req, res) => {
   }
 });
 
-// ایڈمن: حقیقی نتیجے کی تصدیق کے بعد اسٹیٹس اپڈیٹ
-app.post(
-  '/api/admin/activities/:requestId/status',
-  requireAdmin,
-  async (req, res) => {
-    const status = String(req.body.status || '');
-    const message = String(req.body.message || '').slice(0, 500);
+// START SERVER
+async function start() {
+  await initDatabase();
 
-    if (!['SUCCESS', 'NOT FOUND', 'FAILED', 'PENDING'].includes(status)) {
-      return res.status(400).json({
-        error: 'Invalid status.'
-      });
-    }
+  app.listen(PORT, () => {
+    console.log(`Royal Member server listening on port ${PORT}`);
+  });
+}
 
-    const client = await pool.connect();
-
-    try {
-      await client.query('BEGIN');
-
-      const result = await client.query(`
-        SELECT *
-        FROM customer_activities
-        WHERE request_id = $1
-        FOR UPDATE
-      `, [req.params.requestId]);
-
-      const activity = result.rows[0];
-
-      if (!activity) {
-        await client.query('ROLLBACK');
-
-        return res.status(404).json({
-          error: 'Activity not found.'
-        });
-      }
-
-      const wasRefunded = activity.details?.refunded === true;
-      const needsRefund =
-        ['FAILED', 'NOT FOUND'].includes(status) &&
-        !wasRefunded &&
-        activity.customer_id &&
-        Number(activity.amount) > 0;
-
-      let balanceAfter = Number(activity.balance_after);
-
-      if (needsRefund) {
-        const refund = await client.query(`
-          UPDATE customers
-          SET credits = credits + $1
-          WHERE id = $2
-          RETURNING credits
-        `, [activity.amount, activity.customer_id]);
-
-        if (refund.rowCount) {
-          balanceAfter = Number(refund.rows[0].credits);
-        }
-      }
-
-      const detailsUpdate = {
-        message,
-        ...(needsRefund ? { refunded: true } : {})
-      };
-
-      const updated = await client.query(`
-        UPDATE customer_activities
-        SET status = $1,
-            balance_after = $2,
-            details = details || $3::jsonb
-        WHERE request_id = $4
-        RETURNING request_id, activity_name, status, amount,
-                  balance_before, balance_after, details, created_at
-      `, [
-        status,
-        balanceAfter,
-        JSON.stringify(detailsUpdate),
-        req.params.requestId
-      ]);
-
-      await client.query('COMMIT');
-
-      res.json({
-        ok: true,
-        receipt: updated.rows[0]
-      });
-    } catch (error) {
-      await client.query('ROLLBACK');
-
-      console.error('Activity status update error:', error.message);
-
-      res.status(500).json({
+start().catch(error => {
+  console.error('Database initialization failed:', error);
+  process.exit(1);
+});
