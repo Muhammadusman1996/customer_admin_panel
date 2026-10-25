@@ -19,18 +19,6 @@ if (!SESSION_SECRET || !DATABASE_URL) {
   console.error('Missing SESSION_SECRET or DATABASE_URL.');
   process.exit(1);
 }
-app.use(session({
-  name: 'royal_member_sid',
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: 'auto',
-sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000
-  }
-}));
 const pool = new Pool({
   connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -82,13 +70,57 @@ async function initPrintEditingDatabase() {
       UNIQUE (customer_id, request_key)
     )
   `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS fresh_print_orders (
+      id BIGSERIAL PRIMARY KEY,
+      customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+      request_key UUID NOT NULL,
+      service_code VARCHAR(30) NOT NULL,
+      service_name VARCHAR(80) NOT NULL,
+      lines INTEGER NOT NULL,
+      rate_per_line INTEGER NOT NULL,
+      total_amount BIGINT NOT NULL,
+      customer_email TEXT NOT NULL,
+      status VARCHAR(20) NOT NULL DEFAULT 'pending',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (customer_id, request_key)
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS wallet_transactions (
+      id BIGSERIAL PRIMARY KEY,
+      customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+      order_id BIGINT REFERENCES fresh_print_orders(id) ON DELETE SET NULL,
+      transaction_key UUID NOT NULL,
+      transaction_type VARCHAR(20) NOT NULL,
+      amount BIGINT NOT NULL,
+      description TEXT NOT NULL,
+      balance_after BIGINT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (customer_id, transaction_key)
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS license_verification_transactions (
+      id BIGSERIAL PRIMARY KEY,
+      customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+      request_key UUID NOT NULL,
+      region VARCHAR(30) NOT NULL,
+      license_last4 VARCHAR(4) NOT NULL,
+      amount INTEGER NOT NULL DEFAULT 20 CHECK (amount = 20),
+      result_json JSONB NOT NULL,
+      balance_after BIGINT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (customer_id, request_key)
+    )
+  `);
 }
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '30kb' }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(session({
-  name: 'royal_admin_session',
+  name: 'royal_member_sid',
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
@@ -277,7 +309,14 @@ app.get('/api/me', requireMember, async (req, res) => {
       });
     }
 
-    res.json({ user: result.rows[0] });
+    const txResult = await pool.query(`
+      SELECT description AS note, amount, created_at AS at
+      FROM wallet_transactions
+      WHERE customer_id = $1
+      ORDER BY id DESC
+      LIMIT 100
+    `, [req.session.memberId]);
+    res.json({ user: result.rows[0], transactions: txResult.rows });
   } catch (error) {
     console.error('Customer lookup error:', error.message);
 
@@ -296,7 +335,7 @@ app.post('/api/member/logout', requireMember, (req, res) => {
       });
     }
 
-    res.clearCookie('royal_admin_session');
+    res.clearCookie('royal_member_sid');
     res.json({ ok: true });
   });
 });
@@ -339,7 +378,7 @@ app.post('/api/logout', requireAdmin, (req, res) => {
       });
     }
 
-    res.clearCookie('royal_admin_session');
+    res.clearCookie('royal_member_sid');
     res.json({ ok: true });
   });
 });
@@ -676,38 +715,106 @@ app.post('/api/member/print-edit/charge', requireMember, async (req, res) => {
     client.release();
   }
 });
-// FRESH PRINT API DATABASE TABLES
-await pool.query(`
-  CREATE TABLE IF NOT EXISTS fresh_print_orders (
-    id BIGSERIAL PRIMARY KEY,
-    customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
-    request_key UUID NOT NULL,
-    service_code VARCHAR(30) NOT NULL,
-    service_name VARCHAR(80) NOT NULL,
-    lines INTEGER NOT NULL,
-    rate_per_line INTEGER NOT NULL,
-    total_amount BIGINT NOT NULL,
-    customer_email TEXT NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (customer_id, request_key)
-  )
-`);
+// DRIVING LICENSE VERIFICATION: charge only when the configured authorized provider confirms verified=true.
+app.post('/api/member/license-verification', requireMember, async (req, res) => {
+  const region = String(req.body.region || '').trim().toLowerCase();
+  const licenseNumber = String(req.body.licenseNumber || '').trim();
+  const cnic = String(req.body.cnic || '').replace(/\D/g, '');
+  const requestKey = String(req.body.requestKey || '');
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const allowedRegions = ['punjab', 'sindh', 'kpk', 'balochistan', 'islamabad', 'gb', 'ajk'];
 
-await pool.query(`
-  CREATE TABLE IF NOT EXISTS wallet_transactions (
-    id BIGSERIAL PRIMARY KEY,
-    customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
-    order_id BIGINT REFERENCES fresh_print_orders(id) ON DELETE SET NULL,
-    transaction_key UUID NOT NULL,
-    transaction_type VARCHAR(20) NOT NULL,
-    amount BIGINT NOT NULL,
-    description TEXT NOT NULL,
-    balance_after BIGINT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (customer_id, transaction_key)
-  )
-`);
+  if (!allowedRegions.includes(region)) return res.status(400).json({ error: 'Select a valid province or region.' });
+  if (licenseNumber.length < 4 || licenseNumber.length > 40 || !/^[a-zA-Z0-9\-/ ]+$/.test(licenseNumber)) {
+    return res.status(400).json({ error: 'Enter a valid driving licence number.' });
+  }
+  if (!/^\d{13}$/.test(cnic)) return res.status(400).json({ error: 'Enter the 13-digit CNIC without dashes.' });
+  if (!uuidPattern.test(requestKey)) return res.status(400).json({ error: 'Invalid request key. Please try again.' });
+
+  const providerUrl = process.env.LICENSE_VERIFY_API_URL;
+  const providerToken = process.env.LICENSE_VERIFY_API_TOKEN;
+  if (!providerUrl || !providerToken || !providerUrl.startsWith('https://')) {
+    return res.status(503).json({ error: 'Driving licence verification is not configured with an authorized HTTPS provider yet. No amount has been deducted.' });
+  }
+
+  let providerResult;
+  try {
+    const providerResponse = await fetch(providerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${providerToken}` },
+      body: JSON.stringify({ region, licenseNumber, cnic }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!providerResponse.ok) {
+      console.error('License provider returned HTTP', providerResponse.status);
+      return res.status(502).json({ error: 'Verification provider could not complete the request. No amount has been deducted.' });
+    }
+    providerResult = await providerResponse.json();
+  } catch (error) {
+    console.error('License provider error:', error.message);
+    return res.status(502).json({ error: 'Verification provider is unavailable. No amount has been deducted.' });
+  }
+
+  // Provider adapter contract: only literal boolean verified:true is billable.
+  if (providerResult?.verified !== true) {
+    return res.status(200).json({ ok: true, verified: false, charged: 0, message: 'Licence was not verified. No amount has been deducted.' });
+  }
+
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const existing = await client.query(
+      'SELECT result_json, balance_after FROM license_verification_transactions WHERE customer_id = $1 AND request_key = $2',
+      [req.session.memberId, requestKey]
+    );
+    if (existing.rowCount) {
+      await client.query('COMMIT');
+      return res.json({ ok: true, verified: true, charged: 20, alreadyCharged: true, balance: Number(existing.rows[0].balance_after), result: existing.rows[0].result_json });
+    }
+
+    const customerResult = await client.query(
+      'SELECT id, credits, status FROM customers WHERE id = $1 FOR UPDATE',
+      [req.session.memberId]
+    );
+    const customer = customerResult.rows[0];
+    if (!customer || customer.status !== 'approved') {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ error: 'Approved member account required. No amount has been deducted.' });
+    }
+    const balance = Number(customer.credits);
+    if (!Number.isSafeInteger(balance) || balance < 20) {
+      await client.query('ROLLBACK');
+      return res.status(402).json({ error: 'Balance must be at least Rs. 20. No amount has been deducted.', balance });
+    }
+
+    // Keep only a masked identifier in the database; do not persist CNIC or full licence number.
+    const safeResult = providerResult.data && typeof providerResult.data === 'object' ? providerResult.data : {};
+    const newBalance = balance - 20;
+    await client.query('UPDATE customers SET credits = $1 WHERE id = $2', [newBalance, customer.id]);
+    await client.query(
+      `INSERT INTO license_verification_transactions
+       (customer_id, request_key, region, license_last4, amount, result_json, balance_after)
+       VALUES ($1, $2, $3, $4, 20, $5::jsonb, $6)`,
+      [customer.id, requestKey, region, licenseNumber.slice(-4), JSON.stringify(safeResult), newBalance]
+    );
+    await client.query(
+      `INSERT INTO wallet_transactions
+       (customer_id, transaction_key, transaction_type, amount, description, balance_after)
+       VALUES ($1, $2, 'debit', -20, 'Driving licence verified', $3)
+       ON CONFLICT (customer_id, transaction_key) DO NOTHING`,
+      [customer.id, requestKey, newBalance]
+    );
+    await client.query('COMMIT');
+    return res.json({ ok: true, verified: true, charged: 20, balance: newBalance, result: safeResult });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('License verification billing error:', error.message);
+    return res.status(500).json({ error: 'Could not complete verification billing. Please contact admin before retrying.' });
+  } finally {
+    client.release();
+  }
+});
+
 // START SERVER
 async function start() {
   await initDatabase();
