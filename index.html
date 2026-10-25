@@ -899,6 +899,92 @@ $('#logout').addEventListener('click', async () => {
 
 // Initial page
 loadMe();
+  async function verifyDrivingLicense(button) {
+  const resultEl = document.getElementById(
+    'licenseVerificationResult'
+  );
+
+  const regionEl = document.getElementById('licenseRegion');
+  const numberEl = document.getElementById('licenseNumber');
+  const cnicEl = document.getElementById('licenseCnic');
+
+  if (!resultEl || !regionEl || !numberEl || !cnicEl) {
+    alert('لائسنس فارم نہیں ملا۔ صفحہ دوبارہ چیک کریں۔');
+    return;
+  }
+
+  const region = regionEl.value;
+  const licenseNumber = numberEl.value.trim();
+  const cnic = cnicEl.value.replace(/\D/g, '');
+
+  if (!region || !licenseNumber || !/^\d{13}$/.test(cnic)) {
+    resultEl.textContent =
+      'صوبہ، لائسنس نمبر اور 13 ہندسوں والا CNIC درج کریں۔';
+    return;
+  }
+
+  if (!button) return;
+
+  button.disabled = true;
+  resultEl.textContent = 'تصدیق کی درخواست بھیجی جا رہی ہے۔۔۔';
+
+  try {
+    if (!window.crypto || !crypto.randomUUID) {
+      throw new Error(
+        'آپ کا براؤزر محفوظ درخواست کی سہولت نہیں دیتا۔'
+      );
+    }
+
+    const response = await fetch(
+      '/api/member/license-verification',
+      {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          region,
+          licenseNumber,
+          cnic,
+          requestKey: crypto.randomUUID()
+        })
+      }
+    );
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || 'سرور سے تصدیق نہیں ہو سکی۔'
+      );
+    }
+
+    if (data.verified !== true) {
+      resultEl.textContent =
+        data.message ||
+        data.error ||
+        'تصدیق کامیاب نہیں ہوئی۔';
+      return;
+    }
+
+    resultEl.textContent =
+      'تصدیق کامیاب۔ کٹوتی: ' +
+      (data.charged ?? 20) +
+      ' روپے۔ باقی بیلنس: ' +
+      Number(data.balance).toFixed(2);
+
+    if (typeof loadMe === 'function') {
+      await loadMe();
+    }
+  } catch (error) {
+    resultEl.textContent =
+      error.message ||
+      'تصدیق کے دوران خرابی پیش آئی۔';
+  } finally {
+    button.disabled = false;
+  }
+}
 </script>
     سروس استعمال کرنے سے پہلے کم از کم 1000 روپے کی ادائیگی درکار ہے۔
 <!-- Royal Member Services -->
@@ -907,6 +993,76 @@ loadMe();
 
   <p class="service-note">
   </p>
+  <!-- DRIVING LICENCE VERIFICATION -->
+<section class="wallet-section" id="licenseSection">
+  <h3 class="wallet-heading">
+    🪪 Driving Licence Verification
+  </h3>
+
+  <p class="service-note">
+    تصدیق شدہ نتیجے پر 20 روپے کٹیں گے۔
+    ناکام درخواست پر کوئی رقم نہیں کٹے گی۔
+  </p>
+
+  <div class="wallet-grid">
+    <article class="wallet-card">
+      <h4>Pakistan Driving Licence Check</h4>
+
+      <div class="wallet-price">
+        Rs. 20 — صرف تصدیق شدہ نتیجے پر
+      </div>
+
+      <label for="licenseRegion">صوبہ منتخب کریں</label>
+      <select id="licenseRegion" required>
+        <option value="">صوبہ منتخب کریں</option>
+        <option value="punjab">پنجاب</option>
+        <option value="sindh">سندھ</option>
+        <option value="kpk">خیبر پختونخوا</option>
+        <option value="balochistan">بلوچستان</option>
+        <option value="islamabad">اسلام آباد</option>
+        <option value="gb">گلگت بلتستان</option>
+        <option value="ajk">آزاد جموں و کشمیر</option>
+      </select>
+
+      <label for="licenseNumber">ڈرائیونگ لائسنس نمبر</label>
+      <input
+        id="licenseNumber"
+        type="text"
+        maxlength="40"
+        autocomplete="off"
+        placeholder="لائسنس نمبر درج کریں"
+        required
+      >
+
+      <label for="licenseCnic">شناختی کارڈ نمبر</label>
+      <input
+        id="licenseCnic"
+        type="text"
+        inputmode="numeric"
+        maxlength="15"
+        autocomplete="off"
+        placeholder="13 ہندسے، ڈیش کے بغیر"
+        required
+      >
+
+      <button
+        type="button"
+        id="licenseVerifyButton"
+        onclick="verifyDrivingLicense(this)"
+      >
+        لائسنس کی تصدیق کریں
+      </button>
+
+      <p
+        class="wallet-result"
+        id="licenseVerificationResult"
+        role="status"
+        aria-live="polite"
+      ></p>
+    </article>
+  </div>
+</section>
+<!-- END DRIVING LICENCE VERIFICATION -->
   <!-- EASYPAISA -->
   <section class="wallet-section">
     <h3 class="wallet-heading">🟢 Easypaisa Services</h3>
