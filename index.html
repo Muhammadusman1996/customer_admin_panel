@@ -1560,13 +1560,55 @@ function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
   display: none;
 }
 </style>
+  
+  <!-- PRINT EDITING IMAGE PROCESSING -->
+<script type="module">
+import { pipeline, RawImage } from
+  'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
 
-<!-- PRINT EDITING IMAGE PROCESSING -->
-<script>
+let backgroundRemover = null;
+let modelPromise = null;
+
+async function getBackgroundRemover() {
+  if (!modelPromise) {
+    modelPromise = pipeline(
+      'background-removal',
+      'Xenova/modnet'
+    );
+  }
+
+  try {
+    backgroundRemover = await modelPromise;
+    return backgroundRemover;
+  } catch (error) {
+    modelPromise = null;
+    throw error;
+  }
+}
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Image load failed'));
+    };
+
+    image.src = url;
+  });
+}
+
 document.querySelectorAll(
   '#printEditingSection .print-start'
 ).forEach(button => {
-  button.addEventListener('click', () => {
+  button.addEventListener('click', async () => {
     const card = button.closest('.wallet-card');
     const fileInput = card.querySelector('.print-file');
     const result = card.querySelector('.wallet-result');
@@ -1577,87 +1619,108 @@ document.querySelectorAll(
     result.textContent = '';
     download.hidden = true;
 
-    if (!file) {
-      result.textContent = 'پہلے تصویر منتخب کریں۔';
-      fileInput.reportValidity();
+    if (!file || !file.type.startsWith('image/')) {
+      result.textContent = 'پہلے درست تصویر منتخب کریں۔';
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      result.textContent = 'درست تصویر منتخب کریں۔';
-      return;
-    }
-
-    button.disabled = true;
+    const mode = button.dataset.mode;
     const oldText = button.textContent;
-    button.textContent = 'Processing...';
+    button.disabled = true;
 
-    const sourceUrl = URL.createObjectURL(file);
-    const image = new Image();
+    try {
+      button.textContent = 'تصویر تیار ہو رہی ہے...';
 
-    image.onload = async () => {
-      try {
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
+      const image = await loadImage(file);
 
-        const ctx = canvas.getContext('2d');
-        const mode = button.dataset.mode;
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
 
-        if (mode === 'background') {
-  ctx.fillStyle =
-    card.querySelector('.print-background').value;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas unavailable');
 
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, 0, 0);
-} else {
-  ctx.filter = mode === 'hd'
-    ? 'contrast(1.35) brightness(1.08) saturate(1.08)'
-    : 'contrast(1.15) brightness(1.04) saturate(1.03)';
+      if (mode === 'background') {
+        button.textContent = 'AI ماڈل لوڈ ہو رہا ہے...';
 
-  ctx.drawImage(image, 0, 0);
-  ctx.filter = 'none';
-}
+        const remover = await getBackgroundRemover();
 
-        const blob = await new Promise(resolve => {
-          canvas.toBlob(resolve, 'image/png');
-        });
+        button.textContent = 'بیک گراؤنڈ ہٹ رہا ہے...';
 
-        if (!blob) {
-          throw new Error('Image export failed');
-        }
+        const output = await remover(image);
+        const cutoutCanvas = document.createElement('canvas');
 
-        if (download.dataset.objectUrl) {
-          URL.revokeObjectURL(download.dataset.objectUrl);
-        }
+        cutoutCanvas.width = output.width;
+        cutoutCanvas.height = output.height;
 
-        const outputUrl = URL.createObjectURL(blob);
+        const cutoutCtx = cutoutCanvas.getContext('2d');
+        if (!cutoutCtx) throw new Error('Canvas unavailable');
 
-        download.dataset.objectUrl = outputUrl;
-        download.href = outputUrl;
+        const rgba = await output.toRGBA();
 
-        canvas.hidden = false;
-        download.hidden = false;
+        const pixels = new ImageData(
+          new Uint8ClampedArray(rgba.data),
+          output.width,
+          output.height
+        );
 
-        result.textContent =
-          'تصویر تیار ہے۔ ڈاؤن لوڈ کے لیے بٹن دبائیں۔';
-      } catch (error) {
-        result.textContent =
-          'تصویر تیار نہیں ہو سکی۔ دوبارہ کوشش کریں۔';
-      } finally {
-        URL.revokeObjectURL(sourceUrl);
-        button.disabled = false;
-        button.textContent = oldText;
+        cutoutCtx.putImageData(pixels, 0, 0);
+
+        ctx.fillStyle =
+          card.querySelector('.print-background').value;
+
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.drawImage(
+          cutoutCanvas,
+          0, 0, canvas.width, canvas.height
+        );
+
+      } else {
+        ctx.filter = mode === 'hd'
+          ? 'contrast(1.20) brightness(1.06) saturate(1.05)'
+          : 'contrast(1.10) brightness(1.03) saturate(1.02)';
+
+        ctx.drawImage(image, 0, 0);
+        ctx.filter = 'none';
       }
-    };
 
-    image.onerror = () => {
-      URL.revokeObjectURL(sourceUrl);
+      const blob = await new Promise(resolve => {
+        canvas.toBlob(resolve, 'image/png');
+      });
+
+      if (!blob) throw new Error('Image export failed');
+
+      if (download.dataset.objectUrl) {
+        URL.revokeObjectURL(download.dataset.objectUrl);
+      }
+
+      const outputUrl = URL.createObjectURL(blob);
+      download.dataset.objectUrl = outputUrl;
+      download.href = outputUrl;
+
+      download.download = mode === 'background'
+        ? 'royal-background.png'
+        : mode === 'hd'
+          ? 'royal-hd-print.png'
+          : 'royal-normal-print.png';
+
+      canvas.hidden = false;
+      download.hidden = false;
+
+      result.textContent =
+        'تصویر تیار ہے۔ ڈاؤن لوڈ کے لیے بٹن دبائیں۔';
+
+    } catch (error) {
+      console.error('Print editing error:', error);
+
+      result.textContent = mode === 'background'
+        ? 'AI ماڈل لوڈ نہیں ہوا یا تصویر تیار نہیں ہوئی۔ انٹرنیٹ چیک کرکے دوبارہ کوشش کریں۔'
+        : 'تصویر تیار نہیں ہو سکی۔ دوبارہ کوشش کریں۔';
+
+    } finally {
       button.disabled = false;
       button.textContent = oldText;
-      result.textContent = 'تصویر کھولی نہیں جا سکی۔';
-    };
-
-    image.src = sourceUrl;
+    }
   });
 });
 </script>
