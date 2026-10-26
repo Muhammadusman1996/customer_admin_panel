@@ -743,6 +743,19 @@ iframe {
 </footer>
 
 </main>
+
+<style>
+#smmPanelSection .smm-toolbar { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin:12px 0; }
+#smmPanelSection .smm-toolbar input { min-width:0; width:100%; padding:11px; border:1px solid #35415d; border-radius:9px; background:#090f20; color:#fff; }
+#smmPanelSection .smm-toolbar button, #smmPanelSection .smm-category-buttons button { border:1px solid #8d713d; border-radius:9px; padding:10px 12px; background:#202b45; color:#fff; font-weight:700; cursor:pointer; }
+#smmPanelSection .smm-category-buttons { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+#smmPanelSection .smm-category-buttons button.active { background:linear-gradient(110deg,#ffad49,#ffe19a); color:#21152b; }
+#smmPanelSection .smm-service-meta { color:#aebbd5; font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+#smmPanelSection .smm-service-id { color:#ffbd59; font-size:12px; }
+#smmPanelSection .smm-service-card .wallet-price { overflow-wrap:anywhere; }
+@media(max-width:520px) { #smmPanelSection .smm-toolbar { grid-template-columns:minmax(0,1fr); } }
+</style>
+
 <script>
 const $ = selector => document.querySelector(selector);
 
@@ -990,8 +1003,21 @@ loadMe();
 <section id="rmServices" hidden>
   <h2 class="service-title">👑 Available Services</h2>
 
-  <p class="service-note">
-  </p>
+  <p class="service-note">SMM PK PANEL کی دستیاب سروسز دیکھنے کے لیے کیٹیگری منتخب کریں۔ سروس آرڈر کرنے کی سہولت ابھی فعال نہیں ہے۔</p>
+
+  <!-- SMM PK PANEL live service catalogue -->
+  <section class="wallet-section" id="smmPanelSection">
+    <h3 class="wallet-heading">📱 Social Media Services</h3>
+    <div class="smm-toolbar">
+      <input id="smmSearch" type="search" placeholder="Service name یا ID تلاش کریں" aria-label="Search services">
+      <button type="button" id="smmRefresh">Refresh Services</button>
+    </div>
+    <div id="smmCategoryButtons" class="smm-category-buttons" aria-label="Service categories"></div>
+    <p id="smmStatus" class="wallet-result" role="status" aria-live="polite">Services لوڈ ہو رہی ہیں...</p>
+    <div id="smmServiceList" class="wallet-grid"></div>
+  </section>
+  <!-- END SMM PK PANEL catalogue -->
+
   <!-- DRIVING LICENCE VERIFICATION -->
 <section class="wallet-section" id="licenseSection">
   <h3 class="wallet-heading">
@@ -2073,6 +2099,125 @@ document.querySelectorAll(
     status.textContent =
       'WhatsApp number must be confirmed before sending your receipt.';
   };
+})();
+</script>
+
+
+<script>
+(() => {
+  const root = document.getElementById('smmPanelSection');
+  if (!root) return;
+  const categoryBox = document.getElementById('smmCategoryButtons');
+  const listBox = document.getElementById('smmServiceList');
+  const statusBox = document.getElementById('smmStatus');
+  const searchBox = document.getElementById('smmSearch');
+  const refreshButton = document.getElementById('smmRefresh');
+  let allServices = [];
+  let activeCategory = 'All Services';
+
+  // Friendly buttons collect provider categories and keyword-matched services.
+  const groups = [
+    {name:'All Services', test:() => true},
+    {name:'TikTok Followers', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /follower/i.test(s.name+' '+s.category)},
+    {name:'TikTok Likes', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /like/i.test(s.name+' '+s.category)},
+    {name:'TikTok Views', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /view/i.test(s.name+' '+s.category)},
+    {name:'TikTok Comments', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /comment/i.test(s.name+' '+s.category)},
+    {name:'TikTok Shares & Saves', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /share|save|favorite|repost/i.test(s.name+' '+s.category)},
+    {name:'YouTube Subscribers', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /subscriber/i.test(s.name+' '+s.category)},
+    {name:'YouTube Likes', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /like/i.test(s.name+' '+s.category)},
+    {name:'YouTube Views', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /view/i.test(s.name+' '+s.category)},
+    {name:'YouTube Comments', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /comment/i.test(s.name+' '+s.category)},
+    {name:'Other Services', test:s => !(/tiktok|tik tok|youtube|you tube/i.test(s.name+' '+s.category))}
+  ];
+
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function money(value) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n.toFixed(4) : '—';
+  }
+  function renderButtons() {
+    categoryBox.innerHTML = groups.map(g => {
+      const count = allServices.filter(g.test).length;
+      if (g.name !== 'All Services' && count === 0) return '';
+      return `<button type="button" data-smm-category="${esc(g.name)}" class="${activeCategory===g.name?'active':''}">${esc(g.name)} (${count})</button>`;
+    }).join('');
+    // Provider categories not covered by the friendly buttons remain available too.
+    const existing = new Set(groups.map(g => g.name));
+    const providerCategories = [...new Set(allServices.map(s => s.category || 'Other'))].sort();
+    providerCategories.forEach(category => {
+      if (existing.has(category)) return;
+      const count = allServices.filter(s => (s.category || 'Other') === category).length;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.smmCategory = 'provider:' + category;
+      btn.className = activeCategory === 'provider:' + category ? 'active' : '';
+      btn.textContent = `${category} (${count})`;
+      categoryBox.appendChild(btn);
+    });
+  }
+  function selectedServices() {
+    let items = allServices;
+    const group = groups.find(g => g.name === activeCategory);
+    if (group) items = items.filter(group.test);
+    else if (activeCategory.startsWith('provider:')) {
+      const category = activeCategory.slice(9);
+      items = items.filter(s => (s.category || 'Other') === category);
+    }
+    const q = searchBox.value.trim().toLowerCase();
+    if (q) items = items.filter(s => `${s.service} ${s.name} ${s.category}`.toLowerCase().includes(q));
+    return items;
+  }
+  function renderServices() {
+    const items = selectedServices();
+    listBox.innerHTML = items.map(s => `
+      <article class="wallet-card smm-service-card">
+        <div class="smm-service-id">Service ID: ${esc(s.service)}</div>
+        <h4>${esc(s.name)}</h4>
+        <div class="wallet-price">Rate / 1000: $${money(s.rate)}</div>
+        <div class="smm-service-meta">Category: ${esc(s.category || 'Other')}<br>Minimum: ${esc(s.min)}<br>Maximum: ${esc(s.max)}${s.type ? '<br>Type: '+esc(s.type) : ''}</div>
+      </article>`).join('');
+    statusBox.textContent = items.length ? `${items.length} services shown. Service catalogue only — ordering is not enabled yet.` : 'اس کیٹیگری میں کوئی سروس نہیں ملی۔';
+  }
+  async function loadServices() {
+    refreshButton.disabled = true;
+    statusBox.textContent = 'SMM PK PANEL سے services لوڈ ہو رہی ہیں...';
+    try {
+      const response = await fetch('/api/smm/services', {credentials:'same-origin', cache:'no-store'});
+      const data = await response.json().catch(() => ({}));
+      if (response.status === 401 || response.status === 403) throw new Error('Services دیکھنے کے لیے پہلے لاگ اِن کریں۔');
+      if (!response.ok || data.ok !== true || !Array.isArray(data.services)) throw new Error(data.error || 'Services لوڈ نہیں ہو سکیں۔ Render میں SMM_API_KEY اور SMM_API_URL چیک کریں۔');
+      allServices = data.services;
+      if (!groups.some(g => g.name === activeCategory) && !activeCategory.startsWith('provider:')) activeCategory = 'All Services';
+      renderButtons();
+      renderServices();
+    } catch (error) {
+      statusBox.textContent = error.message || 'Services لوڈ کرنے میں مسئلہ آیا۔';
+      listBox.innerHTML = '';
+    } finally {
+      refreshButton.disabled = false;
+    }
+  }
+  categoryBox.addEventListener('click', event => {
+    const button = event.target.closest('button[data-smm-category]');
+    if (!button) return;
+    activeCategory = button.dataset.smmCategory;
+    renderButtons();
+    renderServices();
+  });
+  searchBox.addEventListener('input', renderServices);
+  refreshButton.addEventListener('click', loadServices);
+  // The section is revealed by the existing login flow; load on login and also on first reveal.
+  const originalLoadMe = window.loadMe;
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !root.hidden && allServices.length === 0) loadServices();
+  });
+  const observer = new MutationObserver(() => {
+    if (!root.hidden && allServices.length === 0) loadServices();
+  });
+  observer.observe(root, {attributes:true, attributeFilter:['hidden']});
+  if (!root.hidden) loadServices();
 })();
 </script>
 
