@@ -815,6 +815,118 @@ app.post('/api/member/license-verification', requireMember, async (req, res) => 
   }
 });
 
+
+// SMM PK PANEL integration (service catalogue only; orders/billing are added
+// after the frontend's pricing and wallet rules are confirmed).
+const SMM_API_URL = (process.env.SMM_API_URL || 'https://smmpkpanel.com/api/v2').trim();
+const SMM_API_KEY = process.env.SMM_API_KEY || '';
+let smmServicesCache = { expiresAt: 0, services: [] };
+let smmServicesRefreshPromise = null;
+const SMM_CACHE_TTL_MS = 60 * 1000;
+
+function safeSmmService(item) {
+  const serviceId = Number(item?.service ?? item?.service_id ?? item?.id);
+  if (!Number.isSafeInteger(serviceId) || serviceId <= 0) return null;
+  const name = String(item?.name || '').trim().slice(0, 240);
+  const category = String(item?.category || 'Other').trim().slice(0, 120) || 'Other';
+  const rate = Number(item?.rate);
+  const min = Number(item?.min);
+  const max = Number(item?.max);
+  if (!name || !Number.isFinite(rate) || rate < 0 || !Number.isFinite(min) || min < 0 || !Number.isFinite(max) || max < min) return null;
+  return {
+    service: serviceId,
+    name,
+    category,
+    type: String(item?.type || 'default').slice(0, 80),
+    rate,
+    min,
+    max,
+    refill: item?.refill === true || item?.refill === 'true' || item?.refill === 1,
+    dripfeed: item?.dripfeed === true || item?.dripfeed === 'true' || item?.dripfeed === 1
+  };
+}
+
+async function fetchSmmServices() {
+  if (!SMM_API_KEY) {
+    const error = new Error('SMM_API_KEY is not configured in Render Environment.');
+    error.statusCode = 503;
+    throw error;
+  }
+  if (!SMM_API_URL.startsWith('https://')) {
+    const error = new Error('SMM_API_URL must use HTTPS.');
+    error.statusCode = 503;
+    throw error;
+  }
+  if (smmServicesCache.expiresAt > Date.now() && smmServicesCache.services.length) {
+    return smmServicesCache.services;
+  }
+  if (smmServicesRefreshPromise) return smmServicesRefreshPromise;
+
+  smmServicesRefreshPromise = (async () => {
+    const response = await fetch(SMM_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ key: SMM_API_KEY, action: 'services' }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!response.ok) throw new Error(`SMM provider returned HTTP ${response.status}`);
+    const payload = await response.json();
+    if (!Array.isArray(payload)) {
+      throw new Error(payload?.error || payload?.message || 'Unexpected SMM services response.');
+    }
+    const services = payload.map(safeSmmService).filter(Boolean);
+    if (!services.length) throw new Error('SMM provider returned no valid services.');
+    smmServicesCache = { services, expiresAt: Date.now() + SMM_CACHE_TTL_MS };
+    return services;
+  })();
+  try {
+    return await smmServicesRefreshPromise;
+  } finally {
+    smmServicesRefreshPromise = null;
+  }
+}
+
+// Return live provider services to a signed-in member. Supports optional category filtering.
+app.get('/api/smm/services', requireMember, async (req, res) => {
+  try {
+    const services = await fetchSmmServices();
+    const requestedCategory = String(req.query.category || '').trim().toLowerCase();
+    const filtered = requestedCategory
+      ? services.filter(item => item.category.toLowerCase() === requestedCategory)
+      : services;
+    const categories = [...new Set(services.map(item => item.category))].sort((a, b) => a.localeCompare(b));
+    res.set('Cache-Control', 'private, max-age=30');
+    return res.json({ ok: true, count: filtered.length, categories, services: filtered });
+  } catch (error) {
+    console.error('SMM services fetch failed:', error.message);
+    return res.status(error.statusCode || 502).json({
+      ok: false,
+      error: error.statusCode === 503 ? error.message : 'Could not load SMM services. Check the provider API settings and try again.'
+    });
+  }
+});
+
+// Convenience endpoint for frontends that want categories and service counts only.
+app.get('/api/smm/categories', requireMember, async (req, res) => {
+  try {
+    const services = await fetchSmmServices();
+    const counts = new Map();
+    for (const service of services) counts.set(service.category, (counts.get(service.category) || 0) + 1);
+    return res.json({
+      ok: true,
+      categories: [...counts.entries()]
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => a.name.localeCompare(b.name))
+    });
+  } catch (error) {
+    console.error('SMM categories fetch failed:', error.message);
+    return res.status(error.statusCode || 502).json({
+      ok: false,
+      error: error.statusCode === 503 ? error.message : 'Could not load SMM categories.'
+    });
+  }
+});
+
 // START SERVER
 async function start() {
   await initDatabase();
