@@ -864,7 +864,7 @@ async function loadMe() {
       'Welcome, ' + (user.username || user.name || 'Member');
 
     $('#balance').textContent =
-      Number(user.credits ?? user.credit ?? 0).toFixed(2);
+      'Rs. ' + Number(user.credits ?? user.credit ?? 0).toLocaleString('en-PK');
 
     $('#memberStatus').textContent = user.status || 'Pending';
 
@@ -904,7 +904,7 @@ async function loadMe() {
 // LOGOUT
 $('#logout').addEventListener('click', async () => {
   try {
-    await fetch('/api/logout', { method: 'POST' });
+    await fetch('/api/member/logout', { method: 'POST' });
   } finally {
     location.reload();
   }
@@ -1003,7 +1003,7 @@ loadMe();
 <section id="rmServices" hidden>
   <h2 class="service-title">👑 Available Services</h2>
 
-  <p class="service-note">SMM PK PANEL کی دستیاب سروسز دیکھنے کے لیے کیٹیگری منتخب کریں۔ سروس آرڈر کرنے کی سہولت ابھی فعال نہیں ہے۔</p>
+  <p class="service-note">سروس منتخب کریں، لنک اور مقدار درج کریں۔ قیمت پاکستانی روپے میں ہے؛ 30٪ منافع شامل ہے۔</p>
 
   <!-- SMM PK PANEL live service catalogue -->
   <section class="wallet-section" id="smmPanelSection">
@@ -2175,10 +2175,36 @@ document.querySelectorAll(
       <article class="wallet-card smm-service-card">
         <div class="smm-service-id">Service ID: ${esc(s.service)}</div>
         <h4>${esc(s.name)}</h4>
-        <div class="wallet-price">Rate / 1000: $${money(s.rate)}</div>
-        <div class="smm-service-meta">Category: ${esc(s.category || 'Other')}<br>Minimum: ${esc(s.min)}<br>Maximum: ${esc(s.max)}${s.type ? '<br>Type: '+esc(s.type) : ''}</div>
+        <div class="wallet-price">Rate / 1000: Rs. ${money(s.customerRate)}</div>
+        <div class="smm-service-meta">Category: ${esc(s.category || 'Other')}<br>Minimum: ${esc(s.min)}<br>Maximum: ${esc(s.max)}</div>
+        <label class="field"><span>POST / PROFILE LINK</span><input class="smm-link" type="url" placeholder="https://..." required></label>
+        <label class="field"><span>QUANTITY</span><input class="smm-quantity" type="number" min="${esc(s.min)}" max="${esc(s.max)}" value="${esc(s.min)}" required></label>
+        <div class="wallet-price smm-total">Estimated total: Rs. ${money(Math.ceil(s.customerRate * s.min / 1000))}</div>
+        <button type="button" class="smm-order-button" data-service="${esc(s.service)}">Place Order</button>
+        <p class="wallet-result smm-order-result" role="status"></p>
       </article>`).join('');
-    statusBox.textContent = items.length ? `${items.length} services shown. Service catalogue only — ordering is not enabled yet.` : 'اس کیٹیگری میں کوئی سروس نہیں ملی۔';
+    listBox.querySelectorAll('.smm-service-card').forEach(card => {
+      const service = items.find(item => String(item.service) === card.querySelector('[data-service]')?.dataset.service);
+      const qty = card.querySelector('.smm-quantity'), total = card.querySelector('.smm-total');
+      const result = card.querySelector('.smm-order-result');
+      qty.addEventListener('input', () => total.textContent = 'Estimated total: Rs. ' + money(Math.ceil(service.customerRate * Number(qty.value || 0) / 1000)));
+      card.querySelector('.smm-order-button').addEventListener('click', async event => {
+        const button = event.currentTarget, link = card.querySelector('.smm-link').value.trim(), quantity = Number(qty.value);
+        if (!link || !Number.isSafeInteger(quantity) || quantity < service.min || quantity > service.max) { result.textContent = 'Valid link اور quantity درج کریں۔'; return; }
+        const estimate = Math.ceil(service.customerRate * quantity / 1000);
+        if (!confirm(`یہ آرڈر Rs. ${estimate} کا ہے۔ کیا آرڈر دینا ہے؟`)) return;
+        button.disabled = true; result.textContent = 'آرڈر بھیجا جا رہا ہے...';
+        try {
+          const response = await fetch('/api/smm/order',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({service:service.service,link,quantity})});
+          const data = await response.json().catch(()=>({}));
+          if (!response.ok || !data.ok) throw new Error(data.error || 'Order failed.');
+          result.textContent = `Order #${data.order} submitted. Charged Rs. ${data.charge}. Balance Rs. ${data.balance}.`;
+          if (typeof loadMe === 'function') await loadMe();
+        } catch(error) { result.textContent = error.message || 'Order failed.'; }
+        finally { button.disabled = false; }
+      });
+    });
+    statusBox.textContent = items.length ? `${items.length} services shown. PKR prices include 30% margin.` : 'اس کیٹیگری میں کوئی سروس نہیں ملی۔';
   }
   async function loadServices() {
     refreshButton.disabled = true;
