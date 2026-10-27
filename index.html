@@ -1165,12 +1165,40 @@ loadMe();
       </article>
 
       <article class="wallet-card">
-        <h4>Jazz Number Fresh / Used Check</h4>
-        <div class="wallet-price">Rs. 5</div>
-        <input placeholder="اپنا نمبر" type="tel" required>
-        <button type="button" onclick="royalServiceDemo(this)">Check</button>
-        <p class="wallet-result" aria-live="polite"></p>
-      </article>
+  <h4>Jazz Care as Merchant Account Open</h4>
+
+  <div class="wallet-price">Rs. 700</div>
+
+  <label for="jazzMerchantMobile">Mobile Number</label>
+  <input
+    id="jazzMerchantMobile"
+    type="tel"
+    placeholder="Mobile Number"
+    required
+  >
+
+  <label for="jazzMerchantCMC">CMC Number</label>
+  <input
+    id="jazzMerchantCMC"
+    type="text"
+    placeholder="CMC Number"
+    required
+  >
+
+  <label for="jazzMerchantFile">Choose File</label>
+  <input
+    id="jazzMerchantFile"
+    type="file"
+    required
+  >
+
+  <button
+    type="button"
+    onclick="royalServiceDemo(this)"
+  >Submit Request</button>
+
+  <p class="wallet-result" aria-live="polite"></p>
+</article>
 
       <article class="wallet-card">
         <h4>JazzCash Account Limit Update</h4>
