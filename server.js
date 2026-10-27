@@ -816,10 +816,14 @@ app.post('/api/member/license-verification', requireMember, async (req, res) => 
 });
 
 
-// SMM PK PANEL integration (service catalogue only; orders/billing are added
-// after the frontend's pricing and wallet rules are confirmed).
+// SMM PK PANEL integration: catalogue, PKR pricing, orders and wallet billing.
 const SMM_API_URL = (process.env.SMM_API_URL || 'https://smmpkpanel.com/api/v2').trim();
 const SMM_API_KEY = process.env.SMM_API_KEY || '';
+const SMM_USD_TO_PKR = Number(process.env.SMM_USD_TO_PKR || 280);
+const SMM_PROFIT_MULTIPLIER = 1.30;
+function smmCustomerRate(rate) {
+  return Math.ceil(Number(rate) * SMM_USD_TO_PKR * SMM_PROFIT_MULTIPLIER * 100) / 100;
+}
 let smmServicesCache = { expiresAt: 0, services: [] };
 let smmServicesRefreshPromise = null;
 const SMM_CACHE_TTL_MS = 60 * 1000;
@@ -839,6 +843,7 @@ function safeSmmService(item) {
     category,
     type: String(item?.type || 'default').slice(0, 80),
     rate,
+    customerRate: smmCustomerRate(rate),
     min,
     max,
     refill: item?.refill === true || item?.refill === 'true' || item?.refill === 1,
@@ -906,6 +911,48 @@ app.get('/api/smm/services', requireMember, async (req, res) => {
   }
 });
 
+
+// SMM order submission; prices are converted to PKR with 30% margin.
+app.post('/api/smm/order', requireMember, async (req, res) => {
+  const serviceId = Number(req.body.service);
+  const link = String(req.body.link || '').trim();
+  const quantity = Number(req.body.quantity);
+  if (!Number.isSafeInteger(serviceId) || serviceId <= 0 || !Number.isSafeInteger(quantity) ||
+      link.length < 5 || link.length > 2000 || !/^https?:\/\/\S+$/i.test(link)) {
+    return res.status(400).json({ok:false,error:'Valid service, link and quantity are required.'});
+  }
+  let service;
+  try { service = (await fetchSmmServices()).find(s => s.service === serviceId); }
+  catch (_) { return res.status(502).json({ok:false,error:'Provider services unavailable; no amount deducted.'}); }
+  if (!service) return res.status(400).json({ok:false,error:'Service unavailable. Refresh the list.'});
+  if (quantity < service.min || quantity > service.max)
+    return res.status(400).json({ok:false,error:`Quantity must be between ${service.min} and ${service.max}.`});
+  const charge = Math.ceil(service.customerRate * quantity / 1000);
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const r = await client.query('SELECT id,credits,status FROM customers WHERE id=$1 FOR UPDATE',[req.session.memberId]);
+    const customer = r.rows[0];
+    if (!customer || customer.status !== 'approved') { await client.query('ROLLBACK'); return res.status(403).json({ok:false,error:'Approved member account required.'}); }
+    const balance = Number(customer.credits);
+    if (!Number.isSafeInteger(balance) || balance < charge) { await client.query('ROLLBACK'); return res.status(402).json({ok:false,error:`Insufficient balance. Cost Rs. ${charge}.`,charge,balance}); }
+    const providerResponse = await fetch(SMM_API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({key:SMM_API_KEY,action:'add',service:String(serviceId),link,quantity:String(quantity)}),signal:AbortSignal.timeout(20000)});
+    const providerData = await providerResponse.json().catch(()=>({}));
+    if (!providerResponse.ok || providerData.error || providerData.order == null) { await client.query('ROLLBACK'); return res.status(502).json({ok:false,error:'Provider rejected order; no wallet amount deducted.'}); }
+    const newBalance = balance - charge;
+    await client.query('UPDATE customers SET credits=$1 WHERE id=$2',[newBalance,customer.id]);
+    await client.query(`INSERT INTO smm_orders(customer_id,provider_order_id,service_id,service_name,target_link,quantity,charge) VALUES($1,$2,$3,$4,$5,$6,$7)`,[customer.id,String(providerData.order),serviceId,service.name,link,quantity,charge]);
+    const txKey = require('crypto').randomUUID();
+    await client.query(`INSERT INTO wallet_transactions(customer_id,transaction_key,transaction_type,amount,description,balance_after) VALUES($1,$2,'debit',$3,$4,$5)`,[customer.id,txKey,-charge,`SMM order #${providerData.order}: ${service.name}`,newBalance]);
+    await client.query('COMMIT');
+    return res.json({ok:true,order:String(providerData.order),charge,balance:newBalance});
+  } catch (e) {
+    try { await client.query('ROLLBACK'); } catch (_) {}
+    console.error('SMM order failed:',e.message);
+    return res.status(502).json({ok:false,error:'Order could not be safely completed. Check order history before retrying.'});
+  } finally { client.release(); }
+});
+
 // Convenience endpoint for frontends that want categories and service counts only.
 app.get('/api/smm/categories', requireMember, async (req, res) => {
   try {
@@ -931,6 +978,17 @@ app.get('/api/smm/categories', requireMember, async (req, res) => {
 async function start() {
   await initDatabase();
   await initPrintEditingDatabase();
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS smm_orders (
+      id BIGSERIAL PRIMARY KEY,
+      customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+      provider_order_id TEXT, service_id BIGINT NOT NULL,
+      service_name TEXT NOT NULL, target_link TEXT NOT NULL,
+      quantity INTEGER NOT NULL, charge BIGINT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'submitted',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 
   app.listen(PORT, () => {
     console.log('Royal Member server listening on port ' + PORT);
