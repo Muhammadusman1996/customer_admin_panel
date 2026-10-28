@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,218 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Royal Member Admin</title>
 <style>
-:root {
-  --gold:#f2d27b;
-  --panel:#0c1428;
-  --line:#35415d;
-  --muted:#a9b4cc;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0; min-height:100vh; font-family:Arial,sans-serif;
-  color:#f6f7fb;
-  background:linear-gradient(135deg,#070b17,#201132,#0b303a);
-}
-button,input {
-  font:inherit;
-}
-button {
-  cursor:pointer; border:0; border-radius:9px;
-  padding:10px 13px; font-weight:bold;
-  background:linear-gradient(100deg,#a87922,#ffe7a0,#b68b35);
-  color:#171208;
-}
-button:disabled { opacity:.6; cursor:wait; }
-.secondary {
-  background:#1b2740; border:1px solid var(--line); color:white;
-}
-.danger { background:#6e2833; color:white; }
-.hidden { display:none!important; }
-.wrap { width:min(1100px,100%); margin:auto; padding:20px; }
-.panel {
-  background:#0b1225ed; border:1px solid #c5a24f80;
-  border-radius:18px; padding:20px; margin-bottom:16px;
-}
-.login { max-width:430px; margin:6vh auto; text-align:center; }
-h1,h2 { color:var(--gold); }
-h1 { font-size:27px; letter-spacing:1px; }
-h2 { font-size:19px; margin-top:0; }
-.muted { color:var(--muted); font-size:13px; }
-.field { text-align:left; margin:15px 0; }
-label { display:block; margin-bottom:7px; color:#e9d79d; font-size:13px; }
-input {
-  width:100%; padding:12px; border-radius:9px;
-  border:1px solid var(--line); background:#101a31; color:white;
-}
-.full { width:100%; }
-.notice { color:var(--gold); font-size:13px; overflow-wrap:anywhere; }
-.error { color:#ff9a9a; }
-.success { color:#7df0bb; }
-.top {
-  display:flex; justify-content:space-between;
-  align-items:center; gap:12px; flex-wrap:wrap;
-}
-.stats {
-  display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px; margin:18px 0;
-}
-.stat {
-  padding:16px; background:#111b32;
-  border:1px solid var(--line); border-radius:13px;
-}
-.stat b { display:block; font-size:25px; color:var(--gold); margin-top:8px; }
-.grid { display:grid; grid-template-columns:1.3fr 1fr; gap:16px; }
-.table-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; min-width:480px; }
-th,td {
-  text-align:left; padding:10px 7px;
-  border-bottom:1px solid #293650; font-size:13px;
-}
-th { color:var(--gold); }
-td button { margin:3px; font-size:12px; }
-.status { color:var(--gold); }
-@media(max-width:760px) {
-  .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .grid { grid-template-columns:1fr; }
-  .wrap { padding:12px; }
-  .panel { padding:15px; }
-}
+:root{--gold:#f2d27b;--panel:#0c1428;--line:#35415d;--muted:#a9b4cc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#f6f7fb;background:linear-gradient(135deg,#070b17,#201132,#0b303a)}
+button,input{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:10px 13px;font-weight:bold;background:linear-gradient(100deg,#a87922,#ffe7a0,#b68b35);color:#171208}
+button:disabled{opacity:.6;cursor:wait}
+.secondary{background:#1b2740;border:1px solid var(--line);color:white}
+.danger{background:#6e2833;color:white}
+.hidden{display:none!important}
+.wrap{width:min(1200px,100%);margin:auto;padding:20px}
+.panel{background:#0b1225ed;border:1px solid #c5a24f80;border-radius:18px;padding:20px;margin-bottom:16px}
+.login{max-width:430px;margin:6vh auto;text-align:center}
+h1,h2{color:var(--gold)} h1{font-size:27px;letter-spacing:1px} h2{font-size:19px;margin-top:0}
+.muted{color:var(--muted);font-size:13px}
+.field{text-align:left;margin:15px 0}
+label{display:block;margin-bottom:7px;color:#e9d79d;font-size:13px}
+input{width:100%;padding:12px;border-radius:9px;border:1px solid var(--line);background:#101a31;color:white}
+.full{width:100%}.notice{color:var(--gold);font-size:13px;overflow-wrap:anywhere}.error{color:#ff9a9a}.success{color:#7df0bb}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.stat{padding:16px;background:#111b32;border:1px solid var(--line);border-radius:13px}
+.stat b{display:block;font-size:25px;color:var(--gold);margin-top:8px}
+.grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{text-align:left;padding:10px 7px;border-bottom:1px solid #293650;font-size:13px;vertical-align:top}
+th{color:var(--gold)} td button{margin:3px;font-size:12px}.status{color:var(--gold);font-weight:bold}
+.status-blocked{color:#ff9a9a}.status-active{color:#7df0bb}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:15px}}
 </style>
 </head>
 <body>
 <main class="wrap">
+  <section id="loginView" class="panel login">
+    <div style="font-size:55px">👑</div>
+    <h1>ROYAL MEMBER</h1>
+    <p class="muted">Secure Administrator Login</p>
+    <form id="loginForm">
+      <div class="field"><label for="email">Admin Email</label><input id="email" type="email" autocomplete="username" required placeholder="Admin email"></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Password"></div>
+      <button class="full" type="submit">LOGIN TO ADMIN PANEL</button>
+    </form>
+    <p id="loginMsg" class="notice" aria-live="polite"></p>
+    <p class="muted">Royal Member • Secure Access</p>
+  </section>
 
-<section id="loginView" class="panel login">
-  <div style="font-size:55px">👑</div>
-  <h1>ROYAL MEMBER</h1>
-  <p class="muted">Secure Administrator Login</p>
-
-  <form id="loginForm">
-    <div class="field">
-      <label for="email">Admin Email</label>
-      <input id="email" type="email" autocomplete="username"
-        required placeholder="Admin email">
+  <section id="dashboard" class="hidden">
+    <header class="top">
+      <div><h1>👑 ROYAL MEMBER</h1><p class="muted">Administrator Dashboard</p></div>
+      <button id="logoutBtn" class="secondary">Log out</button>
+    </header>
+    <p id="globalMsg" class="notice" aria-live="polite"></p>
+    <div class="stats">
+      <div class="stat">Total Customers<b id="totalCustomers">0</b></div>
+      <div class="stat">Pending Approval<b id="pendingCustomers">0</b></div>
+      <div class="stat">Approved<b id="approvedCustomers">0</b></div>
+      <div class="stat">Active Packages<b id="activePackages">0</b></div>
     </div>
-    <div class="field">
-      <label for="password">Password</label>
-      <input id="password" type="password"
-        autocomplete="current-password" required placeholder="Password">
+
+    <div class="grid">
+      <section class="panel">
+        <h2>Customer Accounts</h2>
+        <div class="field">
+          <label for="customerSearch">Search customer by username</label>
+          <input id="customerSearch" type="search" autocomplete="off" placeholder="Type username, name, or email...">
+        </div>
+        <p id="searchMsg" class="muted" aria-live="polite"></p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name / Username</th><th>Status</th><th>Credits / Balance</th><th>Actions</th></tr></thead>
+            <tbody id="customerRows"><tr><td colspan="4">Loading customers...</td></tr></tbody>
+          </table>
+        </div>
+        <p id="customerMsg" class="notice" aria-live="polite"></p>
+        <button id="refreshBtn" class="secondary" type="button">Refresh Data</button>
+      </section>
+
+      <section class="panel">
+        <h2>Packages</h2>
+        <form id="packageForm">
+          <div class="field"><label for="packageName">Package name</label><input id="packageName" required maxlength="100" placeholder="Package name"></div>
+          <div class="field"><label for="packageAmount">Amount (PKR)</label><input id="packageAmount" type="number" min="0" step="1" required placeholder="Amount"></div>
+          <button type="submit">Add Package</button>
+        </form>
+        <p id="packageMsg" class="notice" aria-live="polite"></p>
+        <div id="packageRows" class="muted">Loading packages...</div>
+      </section>
     </div>
-    <button class="full" type="submit">LOGIN TO ADMIN PANEL</button>
-  </form>
-  <p id="loginMsg" class="notice"></p>
-  <p class="muted">Royal Member • Secure Access</p>
-</section>
-
-<section id="dashboard" class="hidden">
-  <header class="top">
-    <div>
-      <h1>👑 ROYAL MEMBER</h1>
-      <p class="muted">Administrator Dashboard</p>
-    </div>
-    <button id="logoutBtn" class="secondary">Log out</button>
-  </header>
-
-  <p id="globalMsg" class="notice"></p>
-
-  <div class="stats">
-    <div class="stat">Total Customers<b id="totalCustomers">0</b></div>
-    <div class="stat">Pending Approval<b id="pendingCustomers">0</b></div>
-    <div class="stat">Approved<b id="approvedCustomers">0</b></div>
-    <div class="stat">Active Packages<b id="activePackages">0</b></div>
-  </div>
-
-  <div class="grid">
-    <section class="panel">
-      <h2>Customer Accounts</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Name / Username</th>
-              <th>Status</th>
-              <th>Credits</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="customerRows">
-            <tr><td colspan="4">Loading customers...</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p id="customerMsg" class="notice"></p>
-      <button id="refreshBtn" class="secondary">Refresh Data</button>
-    </section>
-
+  </section>
 </main>
 
 <script>
+'use strict';
 const $ = id => document.getElementById(id);
 
 async function api(url, options = {}) {
   const response = await fetch(url, {
     ...options,
     credentials: 'same-origin',
-    headers: {
-      ...(options.body ? {'Content-Type':'application/json'} : {}),
-      ...(options.headers || {})
-    }
+    headers: {...(options.body ? {'Content-Type':'application/json'} : {}), ...(options.headers || {})}
   });
-
-  const data = await response.json().catch(() => ({
-    error: 'Server returned an invalid response.'
-  }));
-
+  const data = await response.json().catch(() => ({error:'Server returned an invalid response.'}));
   if (!response.ok) {
     const error = new Error(data.error || `Request failed (${response.status})`);
     error.status = response.status;
     throw error;
   }
-
   return data;
 }
-
 function message(id, text, type = '') {
   const el = $(id);
-if (!el) return;
-el.textContent = text;
+  if (!el) return;
+  el.textContent = text;
   el.className = 'notice ' + type;
 }
-
 function showLogin() {
   $('dashboard').classList.add('hidden');
   $('loginView').classList.remove('hidden');
 }
-
 function showDashboard() {
   $('loginView').classList.add('hidden');
   $('dashboard').classList.remove('hidden');
 }
-
 function handleError(error, target = 'globalMsg') {
-  message(target, error.message, 'error');
-
+  message(target, error.message || 'Something went wrong.', 'error');
   if (error.status === 401) {
     showLogin();
-    message('loginMsg',
-      'Admin session expired. Please log in again.', 'error');
+    message('loginMsg', 'Admin session expired. Please log in again.', 'error');
   }
+}
+function customerIsBlocked(customer) {
+  return customer.blocked === true || customer.isBlocked === true ||
+    String(customer.accountStatus || '').toLowerCase() === 'blocked';
+}
+function customerDisplayStatus(customer) {
+  if (customerIsBlocked(customer)) return 'BLOCKED';
+  return customer.status || customer.accountStatus || 'unknown';
 }
 
 async function checkSession() {
   try {
     const session = await api('/api/session');
-
     if (session.authenticated) {
       showDashboard();
       await loadAll();
-    } else {
-      showLogin();
-    }
+    } else showLogin();
   } catch (error) {
     showLogin();
-    message('loginMsg',
-      'Cannot verify admin session: ' + error.message, 'error');
+    message('loginMsg', 'Cannot verify admin session: ' + error.message, 'error');
   }
 }
 
@@ -226,16 +162,11 @@ $('loginForm').addEventListener('submit', async event => {
   const button = $('loginForm').querySelector('button');
   button.disabled = true;
   message('loginMsg', 'Signing in...');
-
   try {
     await api('/api/login', {
       method:'POST',
-      body:JSON.stringify({
-        email:$('email').value.trim(),
-        password:$('password').value
-      })
+      body:JSON.stringify({email:$('email').value.trim(), password:$('password').value})
     });
-
     $('password').value = '';
     message('loginMsg', '');
     showDashboard();
@@ -249,14 +180,10 @@ $('loginForm').addEventListener('submit', async event => {
 
 $('logoutBtn').addEventListener('click', async () => {
   try {
-    await api('/api/logout', {
-      method:'POST',
-      body:JSON.stringify({})
-    });
+    await api('/api/logout', {method:'POST', body:JSON.stringify({})});
   } catch (error) {
     message('globalMsg', error.message, 'error');
   }
-
   showLogin();
 });
 
@@ -264,15 +191,12 @@ async function loadAll() {
   message('globalMsg', 'Loading dashboard...');
   message('customerMsg', '');
   message('packageMsg', '');
-
   try {
     const summary = await api('/api/summary');
-
-    $('totalCustomers').textContent = summary.customers;
-    $('pendingCustomers').textContent = summary.pending;
-    $('approvedCustomers').textContent = summary.approved;
-    $('activePackages').textContent = summary.packages;
-
+    $('totalCustomers').textContent = summary.customers ?? 0;
+    $('pendingCustomers').textContent = summary.pending ?? 0;
+    $('approvedCustomers').textContent = summary.approved ?? 0;
+    $('activePackages').textContent = summary.packages ?? 0;
     await Promise.all([loadCustomers(), loadPackages()]);
     message('globalMsg', 'Dashboard data loaded.', 'success');
   } catch (error) {
@@ -281,56 +205,51 @@ async function loadAll() {
 }
 
 async function loadCustomers() {
-const rows = await api('/api/customers');
-const tbody = $('customerRows');
+  const customers = await api('/api/customers');
+  const tbody = $('customerRows');
+  tbody.replaceChildren();
 
-if (!tbody) {
-  console.error('customerRows element not found');
-  return;
-}
-
-tbody.replaceChildren();
-
-  if (!rows.length) {
+  if (!Array.isArray(customers) || customers.length === 0) {
     const tr = document.createElement('tr');
     const td = document.createElement('td');
     td.colSpan = 4;
-    td.textContent = 'No customer records found in this database.';
+    td.textContent = 'No customer records found.';
     tr.appendChild(td);
     tbody.appendChild(tr);
+    message('searchMsg', '');
     return;
   }
 
-  for (const customer of rows) {
+  for (const customer of customers) {
     const tr = document.createElement('tr');
+    const blocked = customerIsBlocked(customer);
+    tr.dataset.search = [
+      customer.username, customer.email, customer.name, customer.status,
+      customer.accountStatus, blocked ? 'blocked' : 'unblocked'
+    ].filter(Boolean).join(' ').toLowerCase();
 
     const info = document.createElement('td');
-    info.textContent =
-      `${customer.name || ''} / ${customer.username || customer.email || 'No username'}`;
+    info.textContent = `${customer.name || ''}${customer.name ? ' / ' : ''}${customer.username || customer.email || 'No username'}`;
 
     const status = document.createElement('td');
-    status.textContent = customer.status || 'unknown';
-    status.className = 'status';
+    status.textContent = customerDisplayStatus(customer);
+    status.className = 'status ' + (blocked ? 'status-blocked' : 'status-active');
 
     const credits = document.createElement('td');
-    credits.textContent = customer.credits ?? 0;
+    credits.textContent = customer.credits ?? customer.balance ?? 0;
 
     const actions = document.createElement('td');
 
-    for (const [label, state] of [
-      ['Approve', 'approved'],
-      ['Reject', 'rejected']
-    ]) {
+    for (const [label, state] of [['Approve','approved'], ['Reject','rejected']]) {
       const button = document.createElement('button');
       button.textContent = label;
       if (state === 'rejected') button.className = 'danger';
-
       button.addEventListener('click', async () => {
+        if (!confirm(`${label} ${customer.username || customer.name || customer.email || 'this customer'}?`)) return;
         button.disabled = true;
         try {
           await api(`/api/customers/${encodeURIComponent(customer.id)}/status`, {
-            method:'POST',
-            body:JSON.stringify({status:state})
+            method:'POST', body:JSON.stringify({status:state})
           });
           await loadAll();
         } catch (error) {
@@ -339,160 +258,144 @@ tbody.replaceChildren();
           button.disabled = false;
         }
       });
-
       actions.appendChild(button);
     }
+
+    const blockButton = document.createElement('button');
+    blockButton.className = blocked ? 'secondary' : 'danger';
+    blockButton.textContent = blocked ? 'Unblock Account' : 'Block Account';
+    blockButton.addEventListener('click', async () => {
+      const who = customer.username || customer.name || customer.email || customer.id;
+      const shouldBlock = !customerIsBlocked(customer);
+      if (!confirm(`${shouldBlock ? 'Block' : 'Unblock'} account for ${who}?`)) return;
+      blockButton.disabled = true;
+      try {
+        await api(`/api/customers/${encodeURIComponent(customer.id)}/block`, {
+          method:'POST', body:JSON.stringify({blocked:shouldBlock})
+        });
+        await loadAll();
+        message('customerMsg', shouldBlock ? 'Customer account blocked.' : 'Customer account unblocked.', 'success');
+      } catch (error) {
+        handleError(error, 'customerMsg');
+      } finally {
+        blockButton.disabled = false;
+      }
+    });
+    actions.appendChild(blockButton);
 
     const creditButton = document.createElement('button');
     creditButton.className = 'secondary';
     creditButton.textContent = 'Set credits';
-
     creditButton.addEventListener('click', async () => {
-      const value = prompt(
-        'New credit balance for ' + customer.name,
-        customer.credits ?? 0
-      );
+      const current = customer.credits ?? customer.balance ?? 0;
+      const value = prompt(`New credit balance for ${customer.username || customer.name || 'customer'}`, current);
       if (value === null) return;
-
       const amount = Number(value);
       if (!Number.isSafeInteger(amount) || amount < 0) {
-        message('customerMsg',
-          'Enter a valid non-negative whole number.', 'error');
+        message('customerMsg', 'Enter a valid non-negative whole number.', 'error');
         return;
       }
-
+      creditButton.disabled = true;
       try {
         await api(`/api/customers/${encodeURIComponent(customer.id)}/credits`, {
-          method:'POST',
-          body:JSON.stringify({amount})
+          method:'POST', body:JSON.stringify({amount})
         });
         await loadAll();
+        message('customerMsg', 'Customer balance updated.', 'success');
       } catch (error) {
         handleError(error, 'customerMsg');
+      } finally {
+        creditButton.disabled = false;
       }
     });
-// Delete customer account button
-const deleteButton = document.createElement('button');
-deleteButton.className = 'danger';
-deleteButton.textContent = 'Delete Account';
-
-deleteButton.addEventListener('click', async () => {
-  const customerName =
-    customer.name || customer.username || customer.email || customer.id;
-
-  if (!confirm(
-    `کیا آپ واقعی ${customerName} کا اکاؤنٹ مستقل طور پر حذف کرنا چاہتے ہیں؟`
-  )) return;
-
-  if (!confirm('آخری تصدیق: یہ اکاؤنٹ دوبارہ بحال نہیں ہو سکے گا۔')) {
-    return;
-  }
-
-  deleteButton.disabled = true;
-
-  try {
-    await api(`/api/customers/${encodeURIComponent(customer.id)}`, {
-      method: 'DELETE'
-    });
-
-    alert('کسٹمر کا اکاؤنٹ کامیابی سے حذف ہوگیا۔');
-    await loadAll();
-  } catch (error) {
-    handleError(error, 'customerMsg');
-  } finally {
-    deleteButton.disabled = false;
-  }
-});
-
-actions.appendChild(deleteButton);
-    
     actions.appendChild(creditButton);
-    tr.append(info, status, credits, actions);
-    tbody.appendChild(tr);
-  }
-}
 
-async function loadPackages() {
-  const packages = await api('/api/packages');
-  const container = $('packageRows');
-  container.replaceChildren();
-
-      if (!confirm('Final confirmation: This deletion cannot be undone.')) {
-        return;
-      }
-
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'danger';
+    deleteButton.textContent = 'Delete Account';
+    deleteButton.addEventListener('click', async () => {
+      const who = customer.username || customer.name || customer.email || customer.id;
+      if (!confirm(`Permanently delete customer account "${who}"?`)) return;
+      if (!confirm('Final confirmation: this cannot be undone.')) return;
       deleteButton.disabled = true;
-
       try {
-        await api(
-          `/api/customers/${encodeURIComponent(customer.id)}`,
-          { method: 'DELETE' }
-        );
-
-        message(
-          'customerMsg',
-          'Customer account deleted successfully.',
-          'success'
-        );
-
+        await api(`/api/customers/${encodeURIComponent(customer.id)}`, {method:'DELETE'});
         await loadAll();
+        message('customerMsg', 'Customer account deleted.', 'success');
       } catch (error) {
         handleError(error, 'customerMsg');
       } finally {
         deleteButton.disabled = false;
       }
+    });
+    actions.appendChild(deleteButton);
 
-  
-  if (!packages.length) {
+    tr.append(info, status, credits, actions);
+    tbody.appendChild(tr);
+  }
+  filterCustomers();
+}
+
+function filterCustomers() {
+  const query = ($('customerSearch').value || '').trim().toLowerCase();
+  const rows = [...$('customerRows').querySelectorAll('tr')];
+  let visibleCount = 0;
+  for (const row of rows) {
+    if (!row.dataset.search) {
+      row.hidden = Boolean(query);
+      continue;
+    }
+    const matches = row.dataset.search.includes(query);
+    row.hidden = !matches;
+    if (matches) visibleCount++;
+  }
+  message('searchMsg', query && visibleCount === 0 ? 'No customer found for that search.' :
+    query ? `${visibleCount} customer(s) found.` : '');
+}
+$('customerSearch').addEventListener('input', filterCustomers);
+$('refreshBtn').addEventListener('click', loadAll);
+
+async function loadPackages() {
+  const packages = await api('/api/packages');
+  const container = $('packageRows');
+  container.replaceChildren();
+  if (!Array.isArray(packages) || packages.length === 0) {
     container.textContent = 'No packages added yet.';
     return;
   }
-
   for (const pkg of packages) {
     const div = document.createElement('div');
-    div.style.cssText =
-      'display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #293650';
-
+    div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #293650;flex-wrap:wrap';
     const label = document.createElement('span');
-    label.textContent =
-      `${pkg.name} — PKR ${pkg.amount} (${Number(pkg.active) ? 'Active' : 'Inactive'})`;
-
+    label.textContent = `${pkg.name} — PKR ${pkg.amount} (${Number(pkg.active) ? 'Active' : 'Inactive'})`;
     const button = document.createElement('button');
     button.className = 'secondary';
     button.textContent = Number(pkg.active) ? 'Deactivate' : 'Activate';
-
     button.addEventListener('click', async () => {
+      button.disabled = true;
       try {
-        await api(`/api/packages/${encodeURIComponent(pkg.id)}/toggle`, {
-          method:'POST',
-          body:JSON.stringify({})
-        });
+        await api(`/api/packages/${encodeURIComponent(pkg.id)}/toggle`, {method:'POST', body:JSON.stringify({})});
         await loadAll();
       } catch (error) {
         handleError(error, 'packageMsg');
+      } finally {
+        button.disabled = false;
       }
     });
-
     div.append(label, button);
     container.appendChild(div);
   }
 }
 
-const packageForm = $('packageForm');
-if (packageForm) packageForm.addEventListener('submit', async event => {
+$('packageForm').addEventListener('submit', async event => {
   event.preventDefault();
   const button = $('packageForm').querySelector('button');
   button.disabled = true;
-
   try {
     await api('/api/packages', {
       method:'POST',
-      body:JSON.stringify({
-        name:$('packageName').value.trim(),
-        amount:Number($('packageAmount').value)
-      })
+      body:JSON.stringify({name:$('packageName').value.trim(), amount:Number($('packageAmount').value)})
     });
-
     $('packageForm').reset();
     message('packageMsg', 'Package added successfully.', 'success');
     await loadAll();
@@ -503,10 +406,6 @@ if (packageForm) packageForm.addEventListener('submit', async event => {
   }
 });
 
-const refreshBtn = $('refreshBtn');
-if (refreshBtn) {
-  refreshBtn.addEventListener('click', loadAll);
-}
 checkSession();
 </script>
 </body>
