@@ -35,15 +35,19 @@ async function initDatabase() {
       status TEXT NOT NULL DEFAULT 'pending'
         CHECK (status IN ('pending', 'approved', 'rejected')),
       credits BIGINT NOT NULL DEFAULT 0 CHECK (credits >= 0),
+      blocked BOOLEAN NOT NULL DEFAULT FALSE,
       created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   `);
 
-  // Allow registration without an email address.
-  // This also updates an existing customers table safely.
+  // Safe migrations for databases created by an earlier version.
   await pool.query(`
     ALTER TABLE customers
     ALTER COLUMN email DROP NOT NULL
+  `);
+  await pool.query(`
+    ALTER TABLE customers
+    ADD COLUMN IF NOT EXISTS blocked BOOLEAN NOT NULL DEFAULT FALSE
   `);
 
   await pool.query(`
@@ -141,11 +145,43 @@ function requireAdmin(req, res, next) {
   });
 }
 
-function requireMember(req, res, next) {
-  if (req.session?.memberId) return next();
-  return res.status(401).json({
-    error: 'Please log in first.'
-  });
+async function requireMember(req, res, next) {
+  if (!req.session?.memberId) {
+    return res.status(401).json({ error: 'Please log in first.' });
+  }
+
+  try {
+    // Re-check account state on every member API request so an admin block
+    // immediately prevents continued use of an existing session.
+    const result = await pool.query(
+      'SELECT status, blocked FROM customers WHERE id = $1',
+      [req.session.memberId]
+    );
+    const member = result.rows[0];
+
+    if (!member) {
+      return req.session.destroy(() => {
+        res.clearCookie('royal_member_sid');
+        return res.status(401).json({ error: 'Customer account not found. Please log in again.' });
+      });
+    }
+    if (member.blocked) {
+      return req.session.destroy(() => {
+        res.clearCookie('royal_member_sid');
+        return res.status(403).json({ error: 'Your account is blocked. Please contact admin.' });
+      });
+    }
+    if (member.status !== 'approved') {
+      return req.session.destroy(() => {
+        res.clearCookie('royal_member_sid');
+        return res.status(403).json({ error: 'Your account is not approved.' });
+      });
+    }
+    return next();
+  } catch (error) {
+    console.error('Member session validation error:', error.message);
+    return res.status(500).json({ error: 'Could not verify customer account.' });
+  }
 }
 
 app.get('/', (req, res) => {
@@ -241,7 +277,7 @@ app.post('/api/member/login', async (req, res) => {
 
   try {
     const result = await pool.query(`
-      SELECT id, name, username, password_hash, status, credits
+      SELECT id, name, username, password_hash, status, credits, blocked
       FROM customers
       WHERE username = $1
     `, [username]);
@@ -255,6 +291,12 @@ app.post('/api/member/login', async (req, res) => {
     ) {
       return res.status(401).json({
         error: 'Invalid username or password.'
+      });
+    }
+
+    if (customer.blocked) {
+      return res.status(403).json({
+        error: 'Your account is blocked. Please contact admin.'
       });
     }
 
@@ -419,7 +461,7 @@ app.get('/api/customers', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
-        id, name, email, username, status, credits, created_at
+        id, name, email, username, status, credits, blocked, created_at
       FROM customers
       ORDER BY id DESC
       LIMIT 500
@@ -434,6 +476,37 @@ app.get('/api/customers', requireAdmin, async (req, res) => {
     });
   }
 });
+// ADMIN: BLOCK OR UNBLOCK CUSTOMER ACCOUNT
+app.post('/api/customers/:id/block', requireAdmin, async (req, res) => {
+  const customerId = String(req.params.id || '');
+  const blocked = req.body?.blocked;
+
+  if (!/^\\d+$/.test(customerId)) {
+    return res.status(400).json({ error: 'Invalid customer ID.' });
+  }
+  if (typeof blocked !== 'boolean') {
+    return res.status(400).json({ error: 'blocked must be true or false.' });
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE customers
+       SET blocked = $1
+       WHERE id = $2
+       RETURNING id, username, blocked`,
+      [blocked, customerId]
+    );
+
+    if (!result.rowCount) {
+      return res.status(404).json({ error: 'Customer not found.' });
+    }
+    return res.json({ ok: true, customer: result.rows[0] });
+  } catch (error) {
+    console.error('Customer block update error:', error.message);
+    return res.status(500).json({ error: 'Could not update customer block status.' });
+  }
+});
+
 /* ADMIN: DELETE CUSTOMER ACCOUNT */
 app.delete('/api/customers/:id', requireAdmin, async (req, res) => {
   const customerId = req.params.id;
