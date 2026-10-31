@@ -723,7 +723,8 @@ iframe {
         <div class="member-bar-actions">
           <button type="button" onclick="if (window.rmShowPaymentPopup) window.rmShowPaymentPopup(); else alert('Payment option is not available. Please refresh the page.');">＋ Add Payment</button>
           <a href="https://wa.me/923422605178" target="_blank" rel="noopener noreferrer">Admin Contact</a>
-          <a href="https://wa.me/923111810070"</a>
+          <a href="https://wa.me/923422605178" target="_blank" rel="noopener noreferrer">WhatsApp: 0311-1810070</a>
+          <a href="https://wa.me/923111810070" target="_blank" rel="noopener noreferrer">WhatsApp: 0311-1810070</a>
         </div>
       </section>
 
@@ -747,7 +748,12 @@ iframe {
 #smmPanelSection .smm-toolbar { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin:12px 0; }
 #smmPanelSection .smm-toolbar input { min-width:0; width:100%; padding:11px; border:1px solid #35415d; border-radius:9px; background:#090f20; color:#fff; }
 #smmPanelSection .smm-toolbar button, #smmPanelSection .smm-category-buttons button { border:1px solid #8d713d; border-radius:9px; padding:10px 12px; background:#202b45; color:#fff; font-weight:700; cursor:pointer; }
-#smmPanelSection .smm-category-buttons { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+#smmPanelSection .smm-platform-buttons { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:12px 0; }
+#smmPanelSection .smm-platform-buttons button { min-width:0; text-align:left; border:1px solid #8d713d; border-radius:10px; padding:12px; background:#202b45; color:#fff; font-weight:700; cursor:pointer; }
+#smmPanelSection .smm-platform-buttons button.active { background:linear-gradient(110deg,#ffad49,#ffe19a); color:#21152b; }
+#smmPanelSection .smm-category-buttons { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+#smmPanelSection .smm-category-buttons[hidden] { display:none !important; }
+#smmPanelSection .smm-category-buttons button { font-size:12px; padding:8px 10px; }
 #smmPanelSection .smm-category-buttons button.active { background:linear-gradient(110deg,#ffad49,#ffe19a); color:#21152b; }
 #smmPanelSection .smm-service-meta { color:#aebbd5; font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
 #smmPanelSection .smm-service-id { color:#ffbd59; font-size:12px; }
@@ -863,7 +869,7 @@ async function loadMe() {
       'Welcome, ' + (user.username || user.name || 'Member');
 
     $('#balance').textContent =
-      'Rs. ' + Number(user.credits ?? user.credit ?? 0).toLocaleString('en-PK');
+      Number(user.credits ?? user.credit ?? 0).toFixed(2);
 
     $('#memberStatus').textContent = user.status || 'Pending';
 
@@ -903,7 +909,7 @@ async function loadMe() {
 // LOGOUT
 $('#logout').addEventListener('click', async () => {
   try {
-    await fetch('/api/member/logout', { method: 'POST' });
+    await fetch('/api/logout', { method: 'POST' });
   } finally {
     location.reload();
   }
@@ -1002,7 +1008,7 @@ loadMe();
 <section id="rmServices" hidden>
   <h2 class="service-title">👑 Available Services</h2>
 
-  <p class="service-note">سروس منتخب کریں، لنک اور مقدار درج کریں۔ قیمت پاکستانی روپے میں ہے؛ 30٪ منافع شامل ہے۔</p>
+  <p class="service-note">SMM PK PANEL کی دستیاب سروسز دیکھنے کے لیے کیٹیگری منتخب کریں۔ سروس آرڈر کرنے کی سہولت ابھی فعال نہیں ہے۔</p>
 
   <!-- SMM PK PANEL live service catalogue -->
   <section class="wallet-section" id="smmPanelSection">
@@ -1011,7 +1017,8 @@ loadMe();
       <input id="smmSearch" type="search" placeholder="Service name یا ID تلاش کریں" aria-label="Search services">
       <button type="button" id="smmRefresh">Refresh Services</button>
     </div>
-    <div id="smmCategoryButtons" class="smm-category-buttons" aria-label="Service categories"></div>
+    <div id="smmPlatformButtons" class="smm-platform-buttons" aria-label="Social media platforms"></div>
+    <div id="smmCategoryButtons" class="smm-category-buttons" aria-label="Service categories" hidden></div>
     <p id="smmStatus" class="wallet-result" role="status" aria-live="polite">Services لوڈ ہو رہی ہیں...</p>
     <div id="smmServiceList" class="wallet-grid"></div>
   </section>
@@ -1164,40 +1171,12 @@ loadMe();
       </article>
 
       <article class="wallet-card">
-  <h4>Jazz Care as Merchant Account Open</h4>
-
-  <div class="wallet-price">Rs. 700</div>
-
-  <label for="jazzMerchantMobile">Mobile Number</label>
-  <input
-    id="jazzMerchantMobile"
-    type="tel"
-    placeholder="Mobile Number"
-    required
-  >
-
-  <label for="jazzMerchantCMC">CMC Number</label>
-  <input
-    id="jazzMerchantCMC"
-    type="text"
-    placeholder="CMC Number"
-    required
-  >
-
-  <label for="jazzMerchantFile">Choose File</label>
-  <input
-    id="jazzMerchantFile"
-    type="file"
-    required
-  >
-
-  <button
-    type="button"
-    onclick="royalServiceDemo(this)"
-  >Submit Request</button>
-
-  <p class="wallet-result" aria-live="polite"></p>
-</article>
+        <h4>Jazz Number Fresh / Used Check</h4>
+        <div class="wallet-price">Rs. 5</div>
+        <input placeholder="اپنا نمبر" type="tel" required>
+        <button type="button" onclick="royalServiceDemo(this)">Check</button>
+        <p class="wallet-result" aria-live="polite"></p>
+      </article>
 
       <article class="wallet-card">
         <h4>JazzCash Account Limit Update</h4>
@@ -1313,7 +1292,7 @@ loadMe();
 
     <article class="wallet-card">
       <h4>OPay Account Open</h4>
-      <div class="wallet-price">Rs. 300</div>
+      <div class="wallet-price">Rs. 500</div>
 
       <input type="tel" placeholder="اپنا موبائل نمبر" required>
 
@@ -1362,7 +1341,7 @@ loadMe();
 
     <article class="wallet-card">
       <h4>Naya-Pay Account Opening</h4>
-      <div class="wallet-price">Rs. 2000</div>
+      <div class="wallet-price">Rs. 3000</div>
 
       <input type="tel"
              placeholder="اپنا رجسٹرڈ نمبر"
@@ -1397,7 +1376,7 @@ loadMe();
     <article class="wallet-card print-service-card">
       <h3>JazzCash Fresh Print</h3>
 
-      <div class="wallet-price">Rs. 350 / Line</div>
+      <div class="wallet-price">Rs. 450 / Line</div>
 
       <label for="jazzPrintQuantity">
         کتنی لائنیں درکار ہیں؟
@@ -1435,7 +1414,7 @@ loadMe();
     <article class="wallet-card print-service-card">
       <h3>UPaisa / OPay Fresh Print</h3>
 
-      <div class="wallet-price">Rs. 70 / Line</div>
+      <div class="wallet-price">Rs. 100 / Line</div>
 
       <label for="upaisaOpayPrintQuantity">
         کتنی لائنیں درکار ہیں؟
@@ -1480,7 +1459,7 @@ loadMe();
 
     <article class="wallet-card">
       <h4>UPaisa Account Open</h4>
-      <div class="wallet-price">Rs. 40</div>
+      <div class="wallet-price">Rs. 200</div>
 
       <input type="tel"
              placeholder="اپنا موبائل نمبر"
@@ -1533,7 +1512,7 @@ loadMe();
 
     <article class="wallet-card">
       <h4>SadaPay Account Open</h4>
-      <div class="wallet-price">Rs. 1,000</div>
+      <div class="wallet-price">Rs. 2,000</div>
 
       <input type="tel"
              placeholder="Mobile Number"
@@ -1556,7 +1535,7 @@ loadMe();
 
     <article class="wallet-card">
       <h4>Bank KYC Support</h4>
-      <div class="wallet-price">Rs. 1,500</div>
+      <div class="wallet-price">Rs. 2,500</div>
 
       <input type="tel"
              placeholder="Mobile Number"
@@ -1648,6 +1627,7 @@ function royalPrintRequest(button, serviceName, pricePerLine, minimumLines) {
 
   result.textContent =
     'درخواست تیار ہے۔ WhatsApp کھول کر Send دبائیں۔';
+
   window.open(whatsappURL, '_blank');
 }
 </script>
@@ -2037,7 +2017,7 @@ document.querySelectorAll(
       <button type="button"
               class="rm-pay-btn rm-pay-gold"
               id="rmSendReceipt">
-        Send Payment Receipt on WhatsApp031110070
+        Send Payment Receipt on WhatsApp
       </button>
 
       <button type="button"
@@ -2133,29 +2113,22 @@ document.querySelectorAll(
 (() => {
   const root = document.getElementById('smmPanelSection');
   if (!root) return;
+  const platformBox = document.getElementById('smmPlatformButtons');
   const categoryBox = document.getElementById('smmCategoryButtons');
   const listBox = document.getElementById('smmServiceList');
   const statusBox = document.getElementById('smmStatus');
   const searchBox = document.getElementById('smmSearch');
   const refreshButton = document.getElementById('smmRefresh');
   let allServices = [];
-  let activeCategory = 'All Services';
-
-  // Friendly buttons collect provider categories and keyword-matched services.
-  const groups = [
-    {name:'All Services', test:() => true},
-    {name:'TikTok Followers', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /follower/i.test(s.name+' '+s.category)},
-    {name:'TikTok Likes', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /like/i.test(s.name+' '+s.category)},
-    {name:'TikTok Views', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /view/i.test(s.name+' '+s.category)},
-    {name:'TikTok Comments', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /comment/i.test(s.name+' '+s.category)},
-    {name:'TikTok Shares & Saves', test:s => /tiktok|tik tok/i.test(s.name+' '+s.category) && /share|save|favorite|repost/i.test(s.name+' '+s.category)},
-    {name:'YouTube Subscribers', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /subscriber/i.test(s.name+' '+s.category)},
-    {name:'YouTube Likes', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /like/i.test(s.name+' '+s.category)},
-    {name:'YouTube Views', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /view/i.test(s.name+' '+s.category)},
-    {name:'YouTube Comments', test:s => /youtube|you tube/i.test(s.name+' '+s.category) && /comment/i.test(s.name+' '+s.category)},
-    {name:'Other Services', test:s => !(/tiktok|tik tok|youtube|you tube/i.test(s.name+' '+s.category))}
+  let activePlatform = '';
+  let activeCategory = '';
+  const platforms = [
+    {name:'TikTok Services', icon:'🎵', test:s => /tiktok|tik tok/i.test((s.name||'')+' '+(s.category||''))},
+    {name:'YouTube Services', icon:'▶️', test:s => /youtube|you tube/i.test((s.name||'')+' '+(s.category||''))},
+    {name:'Facebook Services', icon:'📘', test:s => /facebook|fb/i.test((s.name||'')+' '+(s.category||''))},
+    {name:'Instagram Services', icon:'📸', test:s => /instagram|insta/i.test((s.name||'')+' '+(s.category||''))},
+    {name:'Other Services', icon:'🌐', test:s => !/(tiktok|tik tok|youtube|you tube|facebook|fb|instagram|insta)/i.test((s.name||'')+' '+(s.category||''))}
   ];
-
   function esc(value) {
     return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
@@ -2163,73 +2136,50 @@ document.querySelectorAll(
     const n = Number(value);
     return Number.isFinite(n) ? n.toFixed(4) : '—';
   }
-  function renderButtons() {
-    categoryBox.innerHTML = groups.map(g => {
-      const count = allServices.filter(g.test).length;
-      if (g.name !== 'All Services' && count === 0) return '';
-      return `<button type="button" data-smm-category="${esc(g.name)}" class="${activeCategory===g.name?'active':''}">${esc(g.name)} (${count})</button>`;
-    }).join('');
-    // Provider categories not covered by the friendly buttons remain available too.
-    const existing = new Set(groups.map(g => g.name));
-    const providerCategories = [...new Set(allServices.map(s => s.category || 'Other'))].sort();
-    providerCategories.forEach(category => {
-      if (existing.has(category)) return;
-      const count = allServices.filter(s => (s.category || 'Other') === category).length;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.dataset.smmCategory = 'provider:' + category;
-      btn.className = activeCategory === 'provider:' + category ? 'active' : '';
-      btn.textContent = `${category} (${count})`;
-      categoryBox.appendChild(btn);
-    });
+  function platformServices() {
+    const platform = platforms.find(p => p.name === activePlatform);
+    return platform ? allServices.filter(platform.test) : [];
   }
-  function selectedServices() {
-    let items = allServices;
-    const group = groups.find(g => g.name === activeCategory);
-    if (group) items = items.filter(group.test);
-    else if (activeCategory.startsWith('provider:')) {
-      const category = activeCategory.slice(9);
-      items = items.filter(s => (s.category || 'Other') === category);
+  function renderPlatforms() {
+    platformBox.innerHTML = platforms.map(p => {
+      const count = allServices.filter(p.test).length;
+      if (!count) return '';
+      return `<button type="button" data-platform="${esc(p.name)}" class="${activePlatform===p.name?'active':''}">${p.icon} ${esc(p.name)} <span>(${count})</span></button>`;
+    }).join('');
+  }
+  function renderCategories() {
+    const items = platformServices();
+    if (!activePlatform || !items.length) {
+      categoryBox.hidden = true;
+      categoryBox.innerHTML = '';
+      return;
     }
-    const q = searchBox.value.trim().toLowerCase();
-    if (q) items = items.filter(s => `${s.service} ${s.name} ${s.category}`.toLowerCase().includes(q));
-    return items;
+    const categories = [...new Set(items.map(s => s.category || 'Other'))].sort();
+    categoryBox.hidden = false;
+    categoryBox.innerHTML = `<button type="button" data-subcategory="__all" class="${activeCategory==='__all'?'active':''}">All ${esc(activePlatform.replace(' Services',''))} (${items.length})</button>` + categories.map(c => {
+      const count = items.filter(s => (s.category || 'Other') === c).length;
+      return `<button type="button" data-subcategory="${esc(c)}" class="${activeCategory===c?'active':''}">${esc(c)} (${count})</button>`;
+    }).join('');
   }
   function renderServices() {
-    const items = selectedServices();
+    if (!activePlatform) {
+      listBox.innerHTML = '';
+      statusBox.textContent = allServices.length ? 'اوپر TikTok، YouTube یا کسی دوسری سروس کی لائن پر کلک کریں۔' : 'کوئی سروس دستیاب نہیں۔';
+      return;
+    }
+    let items = platformServices();
+    if (activeCategory && activeCategory !== '__all') items = items.filter(s => (s.category || 'Other') === activeCategory);
+    const q = searchBox.value.trim().toLowerCase();
+    if (q) items = items.filter(s => `${s.service} ${s.name} ${s.category}`.toLowerCase().includes(q));
     listBox.innerHTML = items.map(s => `
       <article class="wallet-card smm-service-card">
         <div class="smm-service-id">Service ID: ${esc(s.service)}</div>
         <h4>${esc(s.name)}</h4>
-        <div class="wallet-price">Rate / 1000: Rs. ${money(s.customerRate)}</div>
-        <div class="smm-service-meta">Category: ${esc(s.category || 'Other')}<br>Minimum: ${esc(s.min)}<br>Maximum: ${esc(s.max)}</div>
-        <label class="field"><span>POST / PROFILE LINK</span><input class="smm-link" type="url" placeholder="https://..." required></label>
-        <label class="field"><span>QUANTITY</span><input class="smm-quantity" type="number" min="${esc(s.min)}" max="${esc(s.max)}" value="${esc(s.min)}" required></label>
-        <div class="wallet-price smm-total">Estimated total: Rs. ${money(Math.ceil(s.customerRate * s.min / 1000))}</div>
-        <button type="button" class="smm-order-button" data-service="${esc(s.service)}">Place Order</button>
-        <p class="wallet-result smm-order-result" role="status"></p>
+        <div class="wallet-price">Rate / 1000: $${money(s.rate)}</div>
+        <div class="smm-service-meta">Category: ${esc(s.category || 'Other')}<br>Minimum: ${esc(s.min)}<br>Maximum: ${esc(s.max)}${s.type ? '<br>Type: '+esc(s.type) : ''}</div>
       </article>`).join('');
-    listBox.querySelectorAll('.smm-service-card').forEach(card => {
-      const service = items.find(item => String(item.service) === card.querySelector('[data-service]')?.dataset.service);
-      const qty = card.querySelector('.smm-quantity'), total = card.querySelector('.smm-total');
-      const result = card.querySelector('.smm-order-result');
-      qty.addEventListener('input', () => total.textContent = 'Estimated total: Rs. ' + money(Math.ceil(service.customerRate * Number(qty.value || 0) / 1000)));
-      card.querySelector('.smm-order-button').addEventListener('click', async event => {
-        const button = event.currentTarget, link = card.querySelector('.smm-link').value.trim(), quantity = Number(qty.value);
-        if (!link || !Number.isSafeInteger(quantity) || quantity < service.min || quantity > service.max) { result.textContent = 'Valid link اور quantity درج کریں۔'; return; }
-        const estimate = Math.ceil(service.customerRate * quantity / 1000);
-        if (!confirm(`یہ آرڈر Rs. ${estimate} کا ہے۔ کیا آرڈر دینا ہے؟`)) return;
-        button.disabled = true; result.textContent = 'آرڈر بھیجا جا رہا ہے...';
-        try {
-          const response = await fetch('/api/smm/order',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({service:service.service,link,quantity})});
-          const data = await response.json().catch(()=>({}));
-          if (!response.ok || !data.ok) throw new Error(data.error || 'Order failed.');
-          result.textContent = `Order #${data.order} submitted. Charged Rs. ${data.charge}. Balance Rs. ${data.balance}.`;
-          if (typeof loadMe === 'function') await loadMe();
-        } catch(error) { result.textContent = error.message || 'Order failed.'; }
-        finally { button.disabled = false; }
-      });
-    });
+    statusBox.textContent = items.length ? `${items.length} services shown. صرف سروسز کی فہرست ہے؛ آرڈر ابھی فعال نہیں۔` : 'اس کیٹیگری میں کوئی سروس نہیں ملی۔';
+  }
   async function loadServices() {
     refreshButton.disabled = true;
     statusBox.textContent = 'SMM PK PANEL سے services لوڈ ہو رہی ہیں...';
@@ -2237,32 +2187,38 @@ document.querySelectorAll(
       const response = await fetch('/api/smm/services', {credentials:'same-origin', cache:'no-store'});
       const data = await response.json().catch(() => ({}));
       if (response.status === 401 || response.status === 403) throw new Error('Services دیکھنے کے لیے پہلے لاگ اِن کریں۔');
-      if (!response.ok || data.ok !== true || !Array.isArray(data.services)) throw new Error(data.error || 'Services لوڈ نہیں ہو سکیں۔ Render میں SMM_API_KEY اور SMM_API_URL چیک کریں۔');
+      if (!response.ok || data.ok !== true || !Array.isArray(data.services)) throw new Error(data.error || 'Services لوڈ نہیں ہو سکیں۔ سرور پر SMM_API_KEY اور SMM_API_URL چیک کریں۔');
       allServices = data.services;
-      if (!groups.some(g => g.name === activeCategory) && !activeCategory.startsWith('provider:')) activeCategory = 'All Services';
-      renderButtons();
+      renderPlatforms();
+      renderCategories();
       renderServices();
     } catch (error) {
       statusBox.textContent = error.message || 'Services لوڈ کرنے میں مسئلہ آیا۔';
+      platformBox.innerHTML = '';
+      categoryBox.hidden = true;
       listBox.innerHTML = '';
     } finally {
       refreshButton.disabled = false;
     }
   }
-  categoryBox.addEventListener('click', event => {
-    const button = event.target.closest('button[data-smm-category]');
+  platformBox.addEventListener('click', event => {
+    const button = event.target.closest('button[data-platform]');
     if (!button) return;
-    activeCategory = button.dataset.smmCategory;
-    renderButtons();
+    activePlatform = button.dataset.platform;
+    activeCategory = '__all';
+    renderPlatforms();
+    renderCategories();
+    renderServices();
+  });
+  categoryBox.addEventListener('click', event => {
+    const button = event.target.closest('button[data-subcategory]');
+    if (!button) return;
+    activeCategory = button.dataset.subcategory;
+    renderCategories();
     renderServices();
   });
   searchBox.addEventListener('input', renderServices);
   refreshButton.addEventListener('click', loadServices);
-  // The section is revealed by the existing login flow; load on login and also on first reveal.
-  const originalLoadMe = window.loadMe;
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && !root.hidden && allServices.length === 0) loadServices();
-  });
   const observer = new MutationObserver(() => {
     if (!root.hidden && allServices.length === 0) loadServices();
   });
