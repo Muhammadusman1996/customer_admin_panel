@@ -2,7 +2,7 @@
  "name": "paytech-hub-customer-admin",
   "version": "1.0.0",
   "private": true,
-  "description": "PayTech Hub customer and admin portal",
+  "description": "Pay-Tech-Hub customer and admin portal",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
