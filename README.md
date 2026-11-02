@@ -1,4 +1,4 @@
-# VIP Customer + Admin Panel
+# PayTech Hub Customer + Admin Panel
 
 A starter Node.js website with a glossy premium dark navy, champagne-gold and teal design.
 
