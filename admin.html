@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Royal Member Admin</title>
+<title>PayTech Hub | Admin Panel</title>
 <style>
 :root{--gold:#f2d27b;--panel:#0c1428;--line:#35415d;--muted:#a9b4cc}
 *{box-sizing:border-box}
@@ -34,13 +34,97 @@ th,td{text-align:left;padding:10px 7px;border-bottom:1px solid #293650;font-size
 th{color:var(--gold)} td button{margin:3px;font-size:12px}.status{color:var(--gold);font-weight:bold}
 .status-blocked{color:#ff9a9a}.status-active{color:#7df0bb}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:15px}}
+
+
+:root{
+  --gold:#55e6c1;--bg:#07121b;--panel:#0d202b;--text:#f3fbfa;
+  --muted:#9ab5b5;--line:rgba(85,230,193,.24);--cyan:#8aa8ff;
+}
+html{background:#07121b}
+body{
+  color:var(--text)!important;
+  background:
+    radial-gradient(ellipse at 12% 4%,rgba(35,190,157,.22),transparent 38%),
+    radial-gradient(ellipse at 88% 92%,rgba(92,105,230,.2),transparent 40%),
+    linear-gradient(135deg,#061018,#0a1c29 52%,#10172b)!important;
+  background-attachment:fixed!important;
+}
+body:before{opacity:.28!important}
+.wrap{max-width:1160px}
+.brand h1,h1{letter-spacing:1.2px}
+.logo{
+  color:#041a19!important;
+  background:linear-gradient(135deg,#a2ffe7,#42d6b2 55%,#8aa8ff)!important;
+  box-shadow:0 0 30px rgba(66,214,178,.28)!important;
+}
+.card,.panel{
+  background:linear-gradient(145deg,rgba(15,39,49,.96),rgba(9,24,36,.97))!important;
+  border:1px solid rgba(85,230,193,.22)!important;
+  border-radius:22px!important;
+  box-shadow:0 22px 65px rgba(0,0,0,.34),0 0 28px rgba(46,194,163,.06)!important;
+  backdrop-filter:blur(14px);
+}
+h1,h2,h3,.card h3{color:#effffc}
+.intro h2{
+  background:linear-gradient(100deg,#fff,#72f2d0 48%,#a9b9ff)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;
+}
+.eyebrow,.brand p,th,label{color:#72e8ca!important}
+.field span,label{color:#d7efeb!important}
+.field input,.field select,.field textarea,input,select,textarea,.creditbox input{
+  background:#071720!important;color:#f5fffd!important;
+  border:1px solid rgba(110,205,190,.24)!important;border-radius:12px!important;
+}
+.field input:focus,.field select:focus,.field textarea:focus,input:focus{
+  border-color:#55e6c1!important;box-shadow:0 0 0 3px rgba(85,230,193,.12)!important;
+}
+.btn,button:not(.secondary):not(.danger),.tab.active{
+  color:#06201d!important;
+  background:linear-gradient(110deg,#83f4d7,#43d0b0 55%,#a4b4ff)!important;
+  box-shadow:0 8px 24px rgba(48,202,168,.16)!important;
+}
+.btn:hover,button:not(.secondary):not(.danger):hover{
+  filter:brightness(1.08);box-shadow:0 0 24px rgba(85,230,193,.24)!important;
+}
+.btn.secondary,.secondary,.tab{
+  color:#eafaf7!important;background:#142d3a!important;
+  border:1px solid rgba(110,205,190,.22)!important;box-shadow:none!important;
+}
+.danger{background:#6e3345!important;color:#fff!important}
+.stat,.chip,.switch{
+  background:rgba(20,48,58,.72)!important;
+  border:1px solid rgba(85,230,193,.18)!important;color:#eafaf7!important;
+}
+.stat strong,.balance{color:#70edcf!important}
+.status.approved,.success{color:#8af0c8!important}
+.status.pending{color:#ffd48a!important}
+.status.disabled,.error{color:#ff9fb1!important}
+.member-info-bar{
+  border:1px solid rgba(85,230,193,.4)!important;
+  background:linear-gradient(100deg,#0b3538,#124d55,#24365c)!important;
+  box-shadow:0 0 18px rgba(85,230,193,.12)!important;
+  animation:none!important;
+}
+.member-info-item span{color:#91e8da!important}
+.member-info-item strong,.member-bar-section h3{color:#c1fff0!important}
+.member-bar-actions a,.member-bar-actions button{
+  border-color:#4ccdb6!important;background:#0b2632!important;color:#f4fffd!important;
+}
+a{color:#70edcf}
+table th,th{color:#72e8ca!important}
+td{color:#e2f2ef}
+@media(max-width:760px){
+  .card,.panel{border-radius:18px!important}
+}
+
+
 </style>
 </head>
 <body>
 <main class="wrap">
   <section id="loginView" class="panel login">
     <div style="font-size:55px">👑</div>
-    <h1>ROYAL MEMBER</h1>
+    <h1>PAYTECH HUB</h1>
     <p class="muted">Secure Administrator Login</p>
     <form id="loginForm">
       <div class="field"><label for="email">Admin Email</label><input id="email" type="email" autocomplete="username" required placeholder="Admin email"></div>
@@ -48,12 +132,12 @@ th{color:var(--gold)} td button{margin:3px;font-size:12px}.status{color:var(--go
       <button class="full" type="submit">LOGIN TO ADMIN PANEL</button>
     </form>
     <p id="loginMsg" class="notice" aria-live="polite"></p>
-    <p class="muted">Royal Member • Secure Access</p>
+    <p class="muted">PayTech Hub • Secure Access</p>
   </section>
 
   <section id="dashboard" class="hidden">
     <header class="top">
-      <div><h1>👑 ROYAL MEMBER</h1><p class="muted">Administrator Dashboard</p></div>
+      <div><h1>👑 PAYTECH HUB</h1><p class="muted">Administrator Dashboard</p></div>
       <button id="logoutBtn" class="secondary">Log out</button>
     </header>
     <p id="globalMsg" class="notice" aria-live="polite"></p>
